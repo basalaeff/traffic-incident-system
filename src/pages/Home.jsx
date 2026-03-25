@@ -195,7 +195,7 @@ function Home() {
                     Тип: <b>{incident.type}</b> | Статус: <b>{incident.status}</b>
                   </div>
                   <button
-                    onClick={() => navigate(`/incident/$(incident.id)`)}
+                    onClick={() => navigate(`/incident/${incident.id}`)}
                     style={{ marginTop: '8px', cursor: 'pointer' }}
                   >
                     Подробнее
