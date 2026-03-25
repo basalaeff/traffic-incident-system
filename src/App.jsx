@@ -2,15 +2,18 @@
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 
-// Компоненты
+// ============================================================================
+// КОМПОНЕНТЫ
+// ============================================================================
 import Home from './pages/Home';
 import IncidentDetail from './pages/IncidentDetail';
 import IncidentForm from './pages/IncidentForm';
 import Login from './pages/Login';
 import Registration from './pages/Registration';
 
-// Основная функция приложения
-
+// ============================================================================
+// ОСНОВНАЯ ФУНКЦИЯ ПРИЛОЖЕНИЯ
+// ============================================================================
 const App = () => {
   return (
     <Router>
