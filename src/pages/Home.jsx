@@ -9,6 +9,53 @@ import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import 'leaflet/dist/leaflet.css';
 
+// Нужна библиотека для работы с иконками
+import L from 'leaflet';
+
+// ============================================================================
+// НАСТРОЙКА МАРКЕРОВ
+// ============================================================================
+// Есть несколько типов инцидентов (пока ДТП и опасные участки, но может придумаю еще)
+// У каждого типа инцидента будет свой маркер
+// Напишу функцию, которая будет возвращать маркеры по типу инцидента
+// Взял с GitHub: https://github.com/pointhi/leaflet-color-markers
+
+const getCustomIcon = (type, status) => {
+  // Пропишу иконки
+  // Красный маркер (для ДТП)
+  const redIconUrl = '/markers/marker-icon-2x-red.png';
+  // Оранжевый маркер (для опасных участков)
+  const orangeIconUrl = '/markers/marker-icon-2x-orange.png';
+  // возьмем серый для "Устранено"
+  const grayIconUrl = '/markers/marker-icon-2x-grey.png';
+  // Синий по умолчанию
+  const blueIconUrl = '/markers/marker-icon-2x-blue.png';
+
+  let chosenUrl = blueIconUrl; // По умолчанию ставим синюю
+
+  // Реализую логику выбора цвета
+  if (status === 'inactive') {
+    // Если инцидент устранен - ставим серую
+    chosenUrl = grayIconUrl;
+  } else if (type === 'accident') {
+    // Если тип accident - ставим красную
+    chosenUrl = redIconUrl;
+  } else if (type === 'hazard') {
+    // Если тип hazard - ставим оранжевую
+    chosenUrl = orangeIconUrl;
+  }
+  // А теперь просто возвращаем созданный объект
+  // Размеры взял с того же гит хаб
+  // Создал общую конструкцию для вывода иконок
+  return L.icon({
+    iconUrl: chosenUrl, // Ссылка на выбранный маркер
+    iconSize: [25, 41], // Размер иконки [ширина, высота] в пикселях.
+    iconAnchor: [12, 41], // Точка привязки
+    // 20 - это центр по горизонтали, 40 - это высота.
+    popupAnchor: [1, -34], // Отсюда открывается попап.
+  });
+};
+
 function Home() {
   // Напишем массивы для хранения данных с использованием деструкционализации
   // Создадим массив для хранения инцидентов
@@ -117,15 +164,47 @@ function Home() {
         // 1 - Планета, 19 - Крыша дома
         // Поставим пока 13
         zoom={13}
+        // Крч планета это слишком много
+        // Мне пока лень делать кластеризацию, поэтому просто ограничу масштаб
+        maxZoom={19}
+        minZoom={12}
         // Нужно указать стиль карты
         // Высота (примерно 600). Важно!
         // Ширина (настроили по всей области)
-        // Закругли углы чуток. Люблю закругленные углы
+        // Закруглю углы чуток. Люблю закругленные углы
         style={{ height: '600px', width: '100%', borderRadius: '10px' }}
       >
         {/* Подгрузка плиточек карты */}
         {/* Используем OpenStreetMap */}
         <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
+
+        {/* Отрисовка маркеров */}
+        {incidents.map((incident) => {
+          return (
+            <Marker
+              key={incident.id}
+              position={[incident.lat, incident.lng]}
+              icon={getCustomIcon(incident.type, incident.status)}
+            >
+              <Popup>
+                {/* Нужно написать стили для всплывающего окна  */}
+                <div style={{ minWidth: '200px' }}>
+                  <h3 style={{ margin: '0 0 5px 0' }}>{incident.title}</h3>
+                  <p style={{ margin: 0, fontSize: '14px' }}>{incident.description}</p>
+                  <div style={{ marginTop: '8px', fontSize: '12px', color: '#555' }}>
+                    Тип: <b>{incident.type}</b> | Статус: <b>{incident.status}</b>
+                  </div>
+                  <button
+                    onClick={() => navigate(`/incident/$(incident.id)`)}
+                    style={{ marginTop: '8px', cursor: 'pointer' }}
+                  >
+                    Подробнее
+                  </button>
+                </div>
+              </Popup>
+            </Marker>
+          );
+        })}
       </MapContainer>
     </div>
   );
