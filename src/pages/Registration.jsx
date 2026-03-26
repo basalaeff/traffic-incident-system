@@ -16,7 +16,6 @@ function Registration() {
       >
         Форма регистрации в разработке
       </div>
-      <p>Раздел в разработке</p>
       <button
         onClick={() => window.history.back()}
         style={{
