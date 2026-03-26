@@ -10,9 +10,30 @@ function IncidentDetail() {
     // Такой же внешний контейнер как в home
     <div style={{ padding: '20px' }}>
       <h1>Детали инцидента №{id}</h1>
-      <p>Раздел в разработке</p>
-      {/* Нужна кнопка назад, чтобы вернуться на предыдущую страницу */}
-      <button onClick={() => window.history.back()}>← Назад к карте</button>
+      <div
+        style={{
+          border: '1px dashed #ccc',
+          padding: '20px',
+          textAlign: 'center',
+          color: '#666',
+          marginTop: '20px',
+        }}
+      >
+        Страница детализации находится в разработке
+      </div>
+      <button
+        onClick={() => window.history.back()}
+        style={{
+          marginTop: '20px',
+          padding: '8px 16px',
+          cursor: 'pointer',
+          backgroundColor: '#f0f0f0',
+          border: '1px solid #ccc',
+          borderRadius: '4px',
+        }}
+      >
+        Назад
+      </button>
     </div>
   );
 }
