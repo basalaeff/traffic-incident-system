@@ -3,8 +3,7 @@
         {
             "id": 1,
             "email": "test@user.com",
-            "password": "12345",
-            "name": "Ivan"
+            "password": "12345"
         }
     ],
     "incidents": [
