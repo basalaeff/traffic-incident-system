@@ -14,7 +14,7 @@ function Registration() {
           marginTop: '20px',
         }}
       >
-        Форма регистрации в разработке
+        Регистрация временно не доступна
       </div>
       <button
         onClick={() => window.history.back()}
