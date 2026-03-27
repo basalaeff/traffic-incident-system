@@ -3,8 +3,11 @@ import './Login.css';
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { toast } from 'react-toastify';
-
-function Login() {
+// ============================================================================
+// ФУНКЦИЯ ДЛЯ ЛОГИНА
+// ============================================================================
+// ({JS})
+function Login({}) {
   // ============================================================================
   // ПЕРЕМЕННЫЕ СОСТОЯНИЙ
   // ============================================================================
@@ -12,6 +15,7 @@ function Login() {
   const [email, setEmail] = useState('');
   // ...и пароля
   const [password, setPassword] = useState('');
+  // ...а еще ошибок
   const [error, setError] = useState('');
 
   // ============================================================================
@@ -44,23 +48,26 @@ function Login() {
     toast.success(`Вход: ${email}`);
     // Нужно написать логику отправки на сервер
   };
+
   // ============================================================================
   // ОСНОВНОЙ ИНТЕРФЕЙС
   // ============================================================================
   // Пишем интерфейс на JSX
   return (
-    <div class="login-page">
-      <div class="login-card">
-        <div class="login-header">
+    <div className="login-page">
+      <div className="login-card">
+        <div className="login-header">
           <h2>🔐 Вход </h2>
-          <p class="login-subtitle">Используйте ваш аккаунт</p>
+          <p className="login-subtitle">Используйте ваш аккаунт</p>
         </div>
-        <div class="login-form">
+        {/* login-header */}
+        <div className="login-form">
           <form onSubmit={handleSubmit}>
-            <div class="form-group">
+            <div className="form-group">
               <label className="form-label" htmlFor="email-input">
                 Email
               </label>
+              {/* form-label */}
               <input
                 // Свяжем поле ввода с заголовком. Теперь можно тыкнуть на название поля и курсор перепрыгнет в поле
                 id="email-input"
@@ -74,10 +81,12 @@ function Login() {
                 required //Обязательно для заполнения
               />
             </div>
-            <div class="form-group">
+            {/* form-group */}
+            <div className="form-group">
               <label className="form-label" htmlFor="password-input">
                 Password
               </label>
+              {/* form-label */}
               <input
                 id="password-input"
                 className="form-input"
@@ -90,18 +99,24 @@ function Login() {
                 required //Обязательно для заполнения
               />
             </div>
+            {/* form-group */}
             {/* Нужно добавить кнопку отправки */}
             <button type="submit" className="btn-primary">
               Войти
             </button>
+            {/* btn-primary */}
           </form>
           <div className="login-footer">
             {/* Ссылка ведет на страницу регистрации */}
             Нет аккаунта? <Link to="/create-account">Зарегистрироваться</Link>
           </div>
+          {/* login-footer */}
         </div>
+        {/* login-form */}
       </div>
+      {/* login-card */}
     </div>
+    // login-page
   );
 }
 export default Login;
