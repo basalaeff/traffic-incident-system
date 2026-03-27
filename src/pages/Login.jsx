@@ -59,42 +59,57 @@ function Login({}) {
         <div className="login-header">
           <h2>🔐 Вход </h2>
           <p className="login-subtitle">Используйте ваш аккаунт</p>
+          <div className="one-footer">
+            <Link to="/">На главную</Link>
+          </div>
+          {/* one-footer */}
         </div>
         {/* login-header */}
         <div className="login-form">
           <form onSubmit={handleSubmit}>
-              <input
-                // Свяжем поле ввода с заголовком. Теперь можно тыкнуть на название поля и курсор перепрыгнет в поле
-                className="form-input"
-                type="email"
-                value={email}
-                // Надо зафиксировать изменения
-                onChange={handleEmailChange}
-                // Добавлю подсказку (исчезнет при вводе)
-                placeholder="Электронная почта"
-                required //Обязательно для заполнения
-              />
-              <input
-                className="form-input"
-                type="password"
-                value={password}
-                // Надо зафиксировать изменения
-                onChange={handlePasswordChange}
-                // Добавлю подсказку (исчезнет при вводе)
-                placeholder="Пароль"
-                required //Обязательно для заполнения
-              />
+            <input
+              className="form-input"
+              type="email"
+              value={email}
+              // Надо зафиксировать изменения
+              onChange={handleEmailChange}
+              // Добавлю подсказку (исчезнет при вводе)
+              placeholder="Электронная почта"
+              required //Обязательно для заполнения
+            />
+            <input
+              className="form-input"
+              type="password"
+              value={password}
+              // Надо зафиксировать изменения
+              onChange={handlePasswordChange}
+              // Добавлю подсказку (исчезнет при вводе)
+              placeholder="Пароль"
+              required //Обязательно для заполнения
+            />
+            <p
+              className="login-subtitle"
+              onClick={() =>
+                toast.info(
+                  'Пока вы не можете восстановить доступ к аккаунту. У нас недостаточно информации для того, чтобы определить, принадлежит ли он вам.'
+                )
+              }
+              style={{ cursor: 'pointer' }} // чтобы было видно, что можно кликнуть
+            >
+              Забыли пароль?
+            </p>
+            {/* login-subtitle */}
             {/* Нужно добавить кнопку отправки */}
             <button type="submit" className="btn-primary">
               Войти
             </button>
             {/* btn-primary */}
           </form>
-          <div className="login-footer">
+          <div className="two-footer">
             {/* Ссылка ведет на страницу регистрации */}
             Нет аккаунта? <Link to="/create-account">Зарегистрироваться</Link>
           </div>
-          {/* login-footer */}
+          {/* two-footer */}
         </div>
         {/* login-form */}
       </div>
