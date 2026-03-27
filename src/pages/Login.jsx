@@ -63,43 +63,27 @@ function Login({}) {
         {/* login-header */}
         <div className="login-form">
           <form onSubmit={handleSubmit}>
-            <div className="form-group">
-              <label className="form-label" htmlFor="email-input">
-                Email
-              </label>
-              {/* form-label */}
               <input
                 // Свяжем поле ввода с заголовком. Теперь можно тыкнуть на название поля и курсор перепрыгнет в поле
-                id="email-input"
                 className="form-input"
                 type="email"
                 value={email}
                 // Надо зафиксировать изменения
                 onChange={handleEmailChange}
                 // Добавлю подсказку (исчезнет при вводе)
-                placeholder="user@test.com"
+                placeholder="Электронная почта"
                 required //Обязательно для заполнения
               />
-            </div>
-            {/* form-group */}
-            <div className="form-group">
-              <label className="form-label" htmlFor="password-input">
-                Password
-              </label>
-              {/* form-label */}
               <input
-                id="password-input"
                 className="form-input"
                 type="password"
                 value={password}
                 // Надо зафиксировать изменения
                 onChange={handlePasswordChange}
                 // Добавлю подсказку (исчезнет при вводе)
-                placeholder="********"
+                placeholder="Пароль"
                 required //Обязательно для заполнения
               />
-            </div>
-            {/* form-group */}
             {/* Нужно добавить кнопку отправки */}
             <button type="submit" className="btn-primary">
               Войти
