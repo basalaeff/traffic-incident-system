@@ -1,35 +1,40 @@
 {
-    "users": [
-        {
-            "id": 1,
-            "email": "test@user.com",
-            "password": "12345"
-        }
-    ],
-    "incidents": [
-        {
-            "id": 1,
-            "type": "accident",
-            "title": "ДТП на перекрестке",
-            "description": "Столкнулись две машины, перекрыта полоса.",
-            "lat": 55.751244,
-            "lng": 37.618423,
-            "status": "active",
-            "userId": 1,
-            "date": "21.03.2026",
-            "time": "10:00:00"
-        },
-        {
-            "id": 2,
-            "type": "hazard",
-            "title": "Глубокая яма",
-            "description": "Опасная яма на трассе",
-            "lat": 55.755814,
-            "lng": 37.617635,
-            "status": "inactive",
-            "userId": 1,
-            "date": "21.03.2026",
-            "time": "10:00:00"
-        }
-    ]
+  "users": [
+    {
+      "id": 1,
+      "email": "test@user.com",
+      "password": "12345"
+    },
+    {
+      "id": 1,
+      "email": "q@user.com",
+      "password": "qawsedrf"
+    }
+  ],
+  "incidents": [
+    {
+      "id": 1,
+      "type": "accident",
+      "title": "ДТП на перекрестке",
+      "description": "Столкнулись две машины, перекрыта полоса.",
+      "lat": 55.751244,
+      "lng": 37.618423,
+      "status": "active",
+      "userId": 1,
+      "date": "21.03.2026",
+      "time": "10:00:00"
+    },
+    {
+      "id": 2,
+      "type": "hazard",
+      "title": "Глубокая яма",
+      "description": "Опасная яма на трассе",
+      "lat": 55.755814,
+      "lng": 37.617635,
+      "status": "inactive",
+      "userId": 1,
+      "date": "21.03.2026",
+      "time": "10:00:00"
+    }
+  ]
 }
