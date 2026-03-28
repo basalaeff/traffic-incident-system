@@ -18,14 +18,19 @@ const App = () => {
   return (
     <Router>
       <Routes>
+        {/* page A */}
         {/* Если http://localhost:5173/ тогда отобразится Home(); */}
         <Route path='/' element={<Home />} />
+        {/* page B */}
         {/* Если http://localhost:5173/incident/:id тогда отобразится IncidentDetail(); */}
         <Route path='/incident/:id' element={<IncidentDetail />} />
+        {/* page C */}
         {/* Если http://localhost:5173/create-incident тогда отобразится IncidentForm(); */}
         <Route path='/create-incident' element={<IncidentForm />} />
+        {/* page D */}
         {/* Если http://localhost:5173/login тогда отобразится Login(); */}
         <Route path='/login' element={<Login />} />
+        {/* page E */}
         {/* Если http://localhost:5173/create-account тогда отобразится Registration(); */}
         <Route path='/create-account' element={<Registration />} />
       </Routes>
