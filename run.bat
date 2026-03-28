@@ -13,6 +13,8 @@ timeout /t 3 /nobreak >nul
 A:\VScode\traffic-incident-system\nircmd.exe win min class "ConsoleWindowClass"
 timeout /t 2 /nobreak >nul
 start "" http://localhost:5173/
+taskkill /F /IM HWEAudioSession.exe 2>nul
+
 
 
 
