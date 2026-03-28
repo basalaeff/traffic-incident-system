@@ -139,9 +139,10 @@ function Home() {
   // ============================================================================
   if (loading || !userLocation) {
     return (
-      <div style={{ padding: '20px', fontSize: '18px' }}>
-        Загрузка карты и определение местоположения...
+      <div className="loading-screen">
+        <div className="spinner-large"></div>
       </div>
+      // loading-screen
     );
   }
 
