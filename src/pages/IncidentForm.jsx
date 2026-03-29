@@ -35,9 +35,7 @@ function IncidentForm() {
   const [description, setDescription] = useState('');
   const [lat, setLat] = useState('');
   const [lng, setLng] = useState('');
-  const [status, setStatus] = useState('');
   const [userId, setUserId] = useState('');
-  const [time, setTime] = useState('');
   // загрузка
   // false - загрузки нет, кнопка активна
   // true - загрузка есть, кнопка не активна
@@ -96,10 +94,9 @@ function IncidentForm() {
     // Нужно заблокировать повторные запросы при тыканье на кнопку
     // Пока нет ответа. Новый запрос не будет отправлен
     setIsLoading(true);
-    setStatus('active');
-    const now = new Date().toLocaleString('ru-RU');
-    setTime(now);
     try {
+      const now = new Date().toLocaleString('ru-RU');
+
       // ============================================================================
       // POST-ЗАПРОС НА СЕРВЕР http://localhost:3001/incidents
       // ============================================================================
@@ -107,8 +104,10 @@ function IncidentForm() {
         type,
         title,
         description,
-        status,
-        time,
+        status: 'active',
+        lat: lat ? parseFloat(lat) : 0, // Преобразуем в число (чтобы карта не ломалась)
+        lng: lng ? parseFloat(lng) : 0, // Преобразуем в число
+        time: now,
         userId,
       });
 
@@ -144,16 +143,12 @@ function IncidentForm() {
         {/* form-header */}
         <div className="form">
           <form onSubmit={handleSubmit}>
-            <input
-              className="form-input"
-              type="text"
-              value={type}
-              // Надо зафиксировать изменения
-              onChange={handleTypeChange}
-              // Добавлю подсказку (исчезнет при вводе)
-              placeholder="Тип инцидента"
-              required //Обязательно для заполнения
-            />
+            <select className="form-input" value={type} onChange={handleTypeChange} required>
+              <option value="" disabled></option>
+              <option value="accident">ДТП</option>
+              <option value="hazard">Опасный участок</option>
+              <option value="other">Другое</option>
+            </select>
             <input
               className="form-input"
               type="text"
