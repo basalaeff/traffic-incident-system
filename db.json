@@ -9,6 +9,11 @@
       "id": 1,
       "email": "q@user.com",
       "password": "qawsedrf"
+    },
+    {
+      "email": "lbasalaeff@gmail.com",
+      "password": "1q2w3e4r",
+      "id": 2
     }
   ],
   "incidents": [
