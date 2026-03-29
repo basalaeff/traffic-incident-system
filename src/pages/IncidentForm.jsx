@@ -1,7 +1,7 @@
 // стили
 import './IncidentForm.css';
 // Импортируем хук useState из библиотеки React.
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 // ссылки и навигация
 import { Link, useNavigate } from 'react-router-dom';
 // всплывающие уведомления тоже могут пригодиться
@@ -13,6 +13,8 @@ import axios from 'axios';
 import { getCurrentUser } from '../auth';
 
 function IncidentForm() {
+  const navigate = useNavigate(); //хук для переброса на авторизацию
+
   // ============================================================================
   // ПЕРЕМЕННЫЕ СОСТОЯНИЙ
   // ============================================================================
@@ -40,6 +42,18 @@ function IncidentForm() {
   // false - загрузки нет, кнопка активна
   // true - загрузка есть, кнопка не активна
   const [isLoading, setIsLoading] = useState(false);
+
+  useEffect(() => {
+    const user = getCurrentUser();
+    if (user) {
+      setUserId(user.id);
+      console.info('Current user: ', user);
+    } else {
+      console.warn('Пользователь не авторизован');
+      toast.warn('Форма добавления инцидентов доступна только авторизированным пользователям!');
+      navigate('/login');
+    }
+  }, []);
   // ============================================================================
   // ФУНКЦИЯ ОБРАБОТКИ ИЗМЕНЕНИЯ В ПОЛЕ TYPE
   // ============================================================================
@@ -85,14 +99,18 @@ function IncidentForm() {
     setStatus('active');
     const now = new Date().toLocaleString('ru-RU');
     setTime(now);
-    const user = getCurrentUser();
-    setUserId(user)
-
     try {
       // ============================================================================
       // POST-ЗАПРОС НА СЕРВЕР http://localhost:3001/incidents
       // ============================================================================
-      await axios.post('http://localhost:3001/incidents', { type, title, description, status, time, userId});
+      await axios.post('http://localhost:3001/incidents', {
+        type,
+        title,
+        description,
+        status,
+        time,
+        userId,
+      });
 
       toast.success(`Инцидент добавлен!`);
       // нужна задержка, чтобы пользователь посмотрел уведомление (3000)
