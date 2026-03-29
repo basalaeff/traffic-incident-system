@@ -64,7 +64,7 @@ function IncidentForm() {
   // Вызывается каждый раз, когда происходит изменение в поле
   const handleDescriptionChange = (e) => {
     // Берем текущий текст из поля с помощью e.target.value
-    setTitle(e.target.value);
+    setDescription(e.target.value);
   };
   // ============================================================================
   // ФУНКЦИЯ ОТПРАВКИ ФОРМЫ
