@@ -147,8 +147,14 @@ function Login({}) {
             </p>
             {/* login-subtitle */}
             {/* Нужно добавить кнопку отправки */}
-            <button type="submit" className="btn-primary">
-              Войти
+            <button type="submit" className="btn-primary" disabled={isLoading}>
+              {isLoading ? (
+                <div className="loading-button">
+                  <div className="spinner-mini"></div>
+                </div>
+              ) : (
+                'Войти'
+              )}
             </button>
             {/* btn-primary */}
           </form>
