@@ -1,11 +1,11 @@
 import './Login.css';
 // Импортируем хук useState из библиотеки React.
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import axios from 'axios';
 // нужно подключить метод для сохранения данных пользователя
-import { loginUser } from '../auth';
+import { loginUser, getCurrentUser } from '../auth';
 
 // ============================================================================
 // ФУНКЦИЯ ДЛЯ ЛОГИНА
@@ -24,6 +24,16 @@ function Login({}) {
   // false - загрузки нет, кнопка активна
   // true - загрузка есть, кнопка не активна
   const [isLoading, setIsLoading] = useState(false);
+
+  useEffect(() => {
+    const user = getCurrentUser();
+    if (user) {
+      console.info('Current user: ', user);
+      console.warn('Пользователь уже вошел');
+      toast.warn('Вы уже вошли в аккаунт!');
+      navigate('/');
+    }
+  }, []);
 
   // ============================================================================
   // ФУНКЦИЯ ОБРАБОТКИ ИЗМЕНЕНИЯ В ПОЛЕ EMAIL
@@ -93,9 +103,9 @@ function Login({}) {
     }
     // catch
     // меняем состояние кнопки
-     setTimeout(() => {
-       setIsLoading(false); // нужно добавить переменную состояния
-     }, 1000);
+    setTimeout(() => {
+      setIsLoading(false); // нужно добавить переменную состояния
+    }, 1000);
   };
 
   // ============================================================================
