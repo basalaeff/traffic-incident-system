@@ -67,6 +67,14 @@ function IncidentForm() {
     setDescription(e.target.value);
   };
   // ============================================================================
+  // ФУНКЦИЯ СБРОСА ПОЛЕЙ
+  // ============================================================================
+  const handleReset = () => {
+    setType('');
+    setDescription('');
+    setTitle('');
+  }
+  // ============================================================================
   // ФУНКЦИЯ ОТПРАВКИ ФОРМЫ
   // ============================================================================
   const handleSubmit = async (e) => {
@@ -139,7 +147,7 @@ function IncidentForm() {
             required //Обязательно для заполнения
           />
           <div className="group-btn">
-            <button type="reset" className="btn">
+            <button type="button" className="btn" onClick={handleReset}>
               Очистить
             </button>
             <button type="submit" className="btn" disabled={isLoading}>
