@@ -25,10 +25,9 @@ function IncidentForm() {
   //     "lng": 37.618423,
   //     "status": "active",
   //     "userId": 1,
-  //     "date": "21.03.2026",
-  //     "time": "10:00:00"
+  //     "time": "21.03.2026",
   //   },
-  const [id, setId] = useState('');
+  // id добавляется автоматически
   const [type, setType] = useState('');
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
@@ -36,7 +35,6 @@ function IncidentForm() {
   const [lng, setLng] = useState('');
   const [status, setStatus] = useState('');
   const [userId, setUserId] = useState('');
-  const [date, setDate] = useState('');
   const [time, setTime] = useState('');
   // загрузка
   // false - загрузки нет, кнопка активна
@@ -73,6 +71,7 @@ function IncidentForm() {
     setType('');
     setDescription('');
     setTitle('');
+    setIsLoading(false);
   };
   // ============================================================================
   // ФУНКЦИЯ ОТПРАВКИ ФОРМЫ
@@ -83,17 +82,22 @@ function IncidentForm() {
     // Нужно заблокировать повторные запросы при тыканье на кнопку
     // Пока нет ответа. Новый запрос не будет отправлен
     setIsLoading(true);
+    setStatus('active');
+    const now = new Date().toLocaleString('ru-RU');
+    setTime(now);
+    const user = getCurrentUser();
+    setUserId(user)
+
     try {
       // ============================================================================
       // POST-ЗАПРОС НА СЕРВЕР http://localhost:3001/incidents
       // ============================================================================
-      await axios.post('http://localhost:3001/incidents', { type, title, description});
+      await axios.post('http://localhost:3001/incidents', { type, title, description, status, time, userId});
 
       toast.success(`Инцидент добавлен!`);
       // нужна задержка, чтобы пользователь посмотрел уведомление (3000)
       // поставим 4000
       setTimeout(() => {
-        setIsLoading(false);
         // нужно направить пользователя на главную (useNavigate)
         navigate('/');
       }, 4000);
