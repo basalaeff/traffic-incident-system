@@ -16,9 +16,28 @@ function IncidentForm() {
   // ============================================================================
   // ПЕРЕМЕННЫЕ СОСТОЯНИЙ
   // ============================================================================
+  // {
+  //     "id": 1,
+  //     "type": "accident",
+  //     "title": "ДТП на перекрестке",
+  //     "description": "Столкнулись две машины, перекрыта полоса.",
+  //     "lat": 55.751244,
+  //     "lng": 37.618423,
+  //     "status": "active",
+  //     "userId": 1,
+  //     "date": "21.03.2026",
+  //     "time": "10:00:00"
+  //   },
+  const [id, setId] = useState('');
   const [type, setType] = useState('');
   const [title, setTitle] = useState('');
-
+  const [description, setDescription] = useState('');
+  const [lat, setLat] = useState('');
+  const [lng, setLng] = useState('');
+  const [status, setStatus] = useState('');
+  const [userId, setUserId] = useState('');
+  const [date, setDate] = useState('');
+  const [time, setTime] = useState('');
   // загрузка
   // false - загрузки нет, кнопка активна
   // true - загрузка есть, кнопка не активна
@@ -36,6 +55,14 @@ function IncidentForm() {
   // ============================================================================
   // Вызывается каждый раз, когда происходит изменение в поле
   const handleTitleChange = (e) => {
+    // Берем текущий текст из поля с помощью e.target.value
+    setTitle(e.target.value);
+  };
+  // ============================================================================
+  // ФУНКЦИЯ ОБРАБОТКИ ИЗМЕНЕНИЯ В ПОЛЕ DESCRIPTION
+  // ============================================================================
+  // Вызывается каждый раз, когда происходит изменение в поле
+  const handleDescriptionChange = (e) => {
     // Берем текущий текст из поля с помощью e.target.value
     setTitle(e.target.value);
   };
@@ -78,14 +105,6 @@ function IncidentForm() {
       <div className="form-card">
         <div className="form-header">
           <h2>Добавьте новый инцидент</h2>
-          <div className="form-subtitle">
-            Форма для создания нового сообщения о ДТП или опасности.
-          </div>
-          {/* form-subtitle */}
-          <div className="btn" onClick={() => window.history.back()}>
-            Назад
-          </div>
-          {/* btn */}
         </div>
         {/* form-header */}
         <div className="form">
@@ -107,6 +126,16 @@ function IncidentForm() {
             onChange={handleTitleChange}
             // Добавлю подсказку (исчезнет при вводе)
             placeholder="Заголовок"
+            required //Обязательно для заполнения
+          />
+          <input
+            className="form-input"
+            type="text"
+            value={description}
+            // Надо зафиксировать изменения
+            onChange={handleDescriptionChange}
+            // Добавлю подсказку (исчезнет при вводе)
+            placeholder="Описание"
             required //Обязательно для заполнения
           />
           <div className="group-btn">
