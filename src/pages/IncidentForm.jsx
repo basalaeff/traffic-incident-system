@@ -73,7 +73,7 @@ function IncidentForm() {
     setType('');
     setDescription('');
     setTitle('');
-  }
+  };
   // ============================================================================
   // ФУНКЦИЯ ОТПРАВКИ ФОРМЫ
   // ============================================================================
@@ -84,6 +84,11 @@ function IncidentForm() {
     // Пока нет ответа. Новый запрос не будет отправлен
     setIsLoading(true);
     try {
+      // ============================================================================
+      // POST-ЗАПРОС НА СЕРВЕР http://localhost:3001/incidents
+      // ============================================================================
+      await axios.post('http://localhost:3001/incidents', { type, title, description});
+
       toast.success(`Инцидент добавлен!`);
       // нужна задержка, чтобы пользователь посмотрел уведомление (3000)
       // поставим 4000
@@ -116,52 +121,54 @@ function IncidentForm() {
         </div>
         {/* form-header */}
         <div className="form">
-          <input
-            className="form-input"
-            type="text"
-            value={type}
-            // Надо зафиксировать изменения
-            onChange={handleTypeChange}
-            // Добавлю подсказку (исчезнет при вводе)
-            placeholder="Тип инцидента"
-            required //Обязательно для заполнения
-          />
-          <input
-            className="form-input"
-            type="text"
-            value={title}
-            // Надо зафиксировать изменения
-            onChange={handleTitleChange}
-            // Добавлю подсказку (исчезнет при вводе)
-            placeholder="Заголовок"
-            required //Обязательно для заполнения
-          />
-          <input
-            className="form-input"
-            type="text"
-            value={description}
-            // Надо зафиксировать изменения
-            onChange={handleDescriptionChange}
-            // Добавлю подсказку (исчезнет при вводе)
-            placeholder="Описание"
-            required //Обязательно для заполнения
-          />
-          <div className="group-btn">
-            <button type="button" className="btn" onClick={handleReset}>
-              Очистить
-            </button>
-            <button type="submit" className="btn" disabled={isLoading}>
-              {isLoading ? (
-                <div className="loading-button">
-                  <div className="spinner-mini"></div>
-                </div>
-              ) : (
-                'Сохранить'
-              )}
-            </button>
-            {/* btn*/}
-          </div>
-          {/* group-btn */}
+          <form onSubmit={handleSubmit}>
+            <input
+              className="form-input"
+              type="text"
+              value={type}
+              // Надо зафиксировать изменения
+              onChange={handleTypeChange}
+              // Добавлю подсказку (исчезнет при вводе)
+              placeholder="Тип инцидента"
+              required //Обязательно для заполнения
+            />
+            <input
+              className="form-input"
+              type="text"
+              value={title}
+              // Надо зафиксировать изменения
+              onChange={handleTitleChange}
+              // Добавлю подсказку (исчезнет при вводе)
+              placeholder="Заголовок"
+              required //Обязательно для заполнения
+            />
+            <input
+              className="form-input"
+              type="text"
+              value={description}
+              // Надо зафиксировать изменения
+              onChange={handleDescriptionChange}
+              // Добавлю подсказку (исчезнет при вводе)
+              placeholder="Описание"
+              required //Обязательно для заполнения
+            />
+            <div className="group-btn">
+              <button type="button" className="btn" onClick={handleReset}>
+                Очистить
+              </button>
+              <button type="submit" className="btn" disabled={isLoading}>
+                {isLoading ? (
+                  <div className="loading-button">
+                    <div className="spinner-mini"></div>
+                  </div>
+                ) : (
+                  'Сохранить'
+                )}
+              </button>
+              {/* btn*/}
+            </div>
+            {/* group-btn */}
+          </form>
         </div>
         {/* form */}
       </div>
