@@ -1,3 +1,4 @@
+import './Home.css';
 import { useState, useEffect } from 'react';
 
 // Добавлю компоненты карты
@@ -11,6 +12,10 @@ import 'leaflet/dist/leaflet.css';
 
 // Нужна библиотека для работы с иконками
 import L from 'leaflet';
+import Avatar from 'react-avatar';
+
+// всплывающие уведомления тоже могут пригодиться
+import { toast } from 'react-toastify';
 
 import { getCurrentUser, logoutUser } from '../auth';
 
@@ -81,7 +86,7 @@ function Home() {
     // Некоторые браузеры могут не поддерживать эту функцию (либо старый браузер, либо чел параноик)
     // Если не поддерживает геолокацию?
     if (!navigator.geolocation) {
-      alert('Ваш браузер не поддерживает геолокацию');
+      toast.info('Ваш браузер не поддерживает геолокацию');
       // Это флаг загрузки. Позиция false указывает, что загрузка завершена успешно.
       setLoading(false);
       return;
@@ -128,14 +133,31 @@ function Home() {
         const response = await axios.get('http://localhost:3001/incidents');
         // Теперь нужно добавить данные в массив для хранения инцидентов
         setIncidents(response.data);
-      } catch (error) {
+      } catch (err) {
         // Выводим ошибку в консоль разработчика
-        console.error('Ошибка загрузки инцидентов:', error);
+        // Будем выводить ошибки в консоль
+        // Первый параметр это префикс. Так удобнее
+        console.error('Ошибка загрузки инцидентов: ', err);
+        // Выведем уведомление (3000)
+        // Если что-то не так, то выведет второе (дефолтное)
+        toast.error(err.message || 'Ошибка загрузки инцидентов');
       }
     };
     // Нужно запустить функцию
     fetchIncidents();
   }, []);
+  // ============================================================================
+  // ДЛЯ АВТОРИЗАЦИИ/ВЫХОДА ПОЛЬЗОВАТЕЛЯ
+  // ============================================================================
+  const user = getCurrentUser();
+  const handleAuthClick = () => {
+    if (user) {
+      logoutUser(); // Если вошел — выходим
+      window.location.reload(); // Перезагружаем страницу для обновления состояния
+    } else {
+      navigate('/login'); // Если не вошел идем на логин
+    }
+  };
   // ============================================================================
   // РЕНДЕРИНГ
   // ============================================================================
@@ -144,7 +166,6 @@ function Home() {
       <div className="loading-screen">
         <div className="spinner-large"></div>
       </div>
-      // loading-screen
     );
   }
 
@@ -154,68 +175,82 @@ function Home() {
   return (
     // Внешний контейнер для всей страницы
     // Нужно добавить отступ в 20 пикселей, чтобы было красивенько и не прилипало
-    <div style={{ padding: '20px' }}>
-      {/* Header 1 */}
-      <h1>🗺️ Карта дорожных инцидентов</h1>
-      <p>Загрузка данных о происшествиях...</p>
-      <button
-        onClick={() => logoutUser()}
-        style={{ marginTop: '8px', cursor: 'pointer' }}
-      >
-        Выйти
-      </button>
-      {/* Нужно настроить отрисовку пустой карты */}
-      {/* Это компонент карты от библиотеки react-leaflet. */}
-      <MapContainer
-        // Здесь настроим центрирование карты (на Москве или на пользователе)
-        center={userLocation}
-        // Установим масштаб. Доступно от 1 до 19.
-        // 1 - Планета, 19 - Крыша дома
-        // Поставим пока 13
-        zoom={13}
-        // Крч планета это слишком много
-        // Мне пока лень делать кластеризацию, поэтому просто ограничу масштаб
-        maxZoom={19}
-        minZoom={12}
-        // Нужно указать стиль карты
-        // Высота (примерно 600). Важно!
-        // Ширина (настроили по всей области)
-        // Закруглю углы чуток. Люблю закругленные углы
-        style={{ height: '600px', width: '100%', borderRadius: '10px' }}
-      >
-        {/* Подгрузка плиточек карты */}
-        {/* Используем OpenStreetMap */}
-        <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
+    <div className="home-page">
+      <div className="floating-btns">
+        {user && (
+          <button
+            className="circle-btn"
+            onClick={() => alert('Нажата круглая кнопка!')}
+            title="Добавить инцидент"
+          >
+            <img src="https://s.kontur.ru/common-v2/icons-ui/black/plus-circle/plus-circle-32-Regular.png" />
+          </button>
+        )}
 
-        {/* Отрисовка маркеров */}
-        {incidents.map((incident) => {
-          return (
-            <Marker
-              key={incident.id}
-              position={[incident.lat, incident.lng]}
-              icon={getCustomIcon(incident.type, incident.status)}
-            >
-              <Popup>
-                {/* Нужно написать стили для всплывающего окна  */}
-                <div style={{ minWidth: '200px' }}>
-                  <h3 style={{ margin: '0 0 5px 0' }}>{incident.title}</h3>
-                  <p style={{ margin: 0, fontSize: '14px' }}>{incident.description}</p>
-                  <div style={{ marginTop: '8px', fontSize: '12px', color: '#555' }}>
-                    Тип: <b>{incident.type}</b> | Статус: <b>{incident.status}</b>
+        <button className="circle-btn" onClick={handleAuthClick} title={user ? 'Выйти' : 'Войти'}>
+          {user ? (
+            <Avatar name={user?.email} size="46" round={true} src={false} />
+          ) : (
+            <img src="https://s.kontur.ru/common-v2/icons-ui/black/arrow-ui-auth-login/arrow-ui-auth-login-32-Regular.svg" />
+          )}
+        </button>
+      </div>
+      {/* floating-btns */}
+      <main className="map-container">
+        {/* Нужно настроить отрисовку пустой карты */}
+        {/* Это компонент карты от библиотеки react-leaflet. */}
+        <MapContainer
+          // Здесь настроим центрирование карты (на Москве или на пользователе)
+          center={userLocation}
+          // Установим масштаб. Доступно от 1 до 19.
+          // 1 - Планета, 19 - Крыша дома
+          // Поставим пока 13
+          zoom={13}
+          // Крч планета это слишком много
+          // Мне пока лень делать кластеризацию, поэтому просто ограничу масштаб
+          maxZoom={19}
+          minZoom={12}
+          // Нужно указать стиль карты
+          // Ширина (настроили по всей области)
+          // 867px на глазок
+          style={{ height: '867px', width: '100%' }}
+        >
+          {/* Подгрузка плиточек карты */}
+          {/* Используем OpenStreetMap */}
+          <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
+
+          {/* Отрисовка маркеров */}
+          {incidents.map((incident) => {
+            return (
+              <Marker
+                key={incident.id}
+                position={[incident.lat, incident.lng]}
+                icon={getCustomIcon(incident.type, incident.status)}
+              >
+                <Popup>
+                  {/* Нужно написать стили для всплывающего окна  */}
+                  <div style={{ minWidth: '200px' }}>
+                    <h3 style={{ margin: '0 0 5px 0' }}>{incident.title}</h3>
+                    <p style={{ margin: 0, fontSize: '14px' }}>{incident.description}</p>
+                    <div style={{ marginTop: '8px', fontSize: '12px', color: '#555' }}>
+                      Тип: <b>{incident.type}</b> | Статус: <b>{incident.status}</b>
+                    </div>
+                    <button
+                      onClick={() => navigate(`/incident/${incident.id}`)}
+                      style={{ marginTop: '8px', cursor: 'pointer' }}
+                    >
+                      Подробнее
+                    </button>
                   </div>
-                  <button
-                    onClick={() => navigate(`/incident/${incident.id}`)}
-                    style={{ marginTop: '8px', cursor: 'pointer' }}
-                  >
-                    Подробнее
-                  </button>
-                </div>
-              </Popup>
-            </Marker>
-          );
-        })}
-      </MapContainer>
+                </Popup>
+              </Marker>
+            );
+          })}
+        </MapContainer>
+      </main>
+      {/* map-container */}
     </div>
+    // home-page
   );
 }
 
