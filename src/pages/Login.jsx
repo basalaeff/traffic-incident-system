@@ -6,6 +6,7 @@ import { toast } from 'react-toastify';
 import axios from 'axios';
 // нужно подключить метод для сохранения данных пользователя
 import { loginUser, getCurrentUser } from '../auth';
+import bcrypt from 'bcryptjs';
 
 // ============================================================================
 // ФУНКЦИЯ ДЛЯ ЛОГИНА
@@ -76,8 +77,8 @@ function Login({}) {
         throw new Error('Пользователь с таким email не найден');
       }
       const user = response.data[0];
-
-      if (user.password != password) {
+      const isValid = bcrypt.compareSync(password, user.password);
+      if (!isValid) {
         throw new Error('Неверный пароль');
       }
       // сохранение
