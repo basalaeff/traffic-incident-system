@@ -4,9 +4,10 @@
 .form-page {
   font-family: 'Roboto', Arial, sans-serif;
   display: flex; /* Включаем гибкую верстку */
+  justify-content: center; /* Центрируем по горизонтали */
   align-items: center; /* Центрируем по вертикали */
   flex-direction: column;
-  /* min-height: 100vh; Минимальная высота - весь экран */
+  min-height: 100vh; /* Минимальная высота - весь экран */
   padding: 20px; /* Отступы от краев на мобильных */
   background-color: var(--gray-light); /* Фон из переменных */
   width: 100%;
