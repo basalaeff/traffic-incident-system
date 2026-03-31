@@ -25,6 +25,14 @@ function IncidentDetail() {
   // загрузка
   const [isLoading, setIsLoading] = useState(false);
 
+  // Режим редактирования
+  const [isEditing, setIsEditing] = useState(false);
+
+  // состояния для редактируемых полей (разрешено только 3 поля)
+  const [editTitle, setEditTitle] = useState('');
+  const [editDescription, setEditDescription] = useState('');
+  const [editStatus, setEditStatus] = useState('');
+
   useEffect(() => {
     const fetchIncidents = async () => {
       setIsLoading(true);
@@ -34,6 +42,12 @@ function IncidentDetail() {
         // ============================================================================
         const responseIncidents = await axios.get(`http://localhost:3001/incidents/${id}`);
         setIncident(responseIncidents.data);
+
+        // Нужно, чтобы при редактировании в полях был текст
+        setEditTitle(responseIncidents.data?.title || '');
+        setEditDescription(responseIncidents.data?.description || '');
+        setEditStatus(responseIncidents.data?.status || '');
+
         // проверка перед запросом
         if (responseIncidents.data?.userId) {
           // ============================================================================
@@ -61,6 +75,37 @@ function IncidentDetail() {
   // перезапускается при изменении id
 
   // ============================================================================
+  // ОБРАБОТЧИК ДЛЯ СОХРАНЕНИЯ ИЗМЕНЕНИЯ
+  // ============================================================================
+  const handleSave = async () => {
+    setIsLoading(true);
+    try {
+      // ============================================================================
+      // PUT-ЗАПРОС НА СЕРВЕР http://localhost:3001/incidents
+      // ============================================================================
+      await axios.put(`http://localhost:3001/incidents/${id}`, {
+        title: editTitle,
+        description: editDescription,
+        status: editStatus,
+      });
+
+      // копируем старые свойства в новый объект
+      setIncident((prev) => ({
+        ...prev,
+        title: editTitle,
+        description: editDescription,
+        status: editStatus,
+      }));
+      toast.success('Инцидент успешно обновлён!');
+      setIsEditing(false);
+    } catch (err) {
+      toast.error('Не удалось сохранить изменения');
+      toast.error(err.response?.data?.message || err.message);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+  // ============================================================================
   // РЕНДЕРИНГ
   // ============================================================================
   if (isLoading) {
@@ -75,10 +120,12 @@ function IncidentDetail() {
   return (
     <div className="detail-page">
       <div className="detail-floating-btns">
-        {user?.id === incident?.userId && (
+        {user?.id === incident?.userId && !isEditing && (
+          // скрываем во время редактирования
           <button
             className="circle-btn"
             title="Редактировать"
+            onClick={() => setIsEditing(true)}
             style={{ backgroundColor: 'var(--primary-color)' }}
           >
             <img src="https://s.kontur.ru/common-v2/icons-ui/black/tool-pencil-line/tool-pencil-line-32-Regular.svg" />
@@ -92,9 +139,34 @@ function IncidentDetail() {
         </div>
         {/* detail-header */}
         <div className="detail">
-          <div className="detail-title">{incident?.title}</div>
+          <div className="detail-title">
+            {isEditing ? (
+              <input
+                type="text"
+                className="edit-input, detail-title"
+                value={editTitle}
+                onChange={(e) => setEditTitle(e.target.value)}
+                placeholder="Введите название инцидента"
+              />
+            ) : (
+              incident?.title
+            )}
+          </div>
           {/* detail-title */}
-          <div className="detail-description">{incident?.description}</div>
+          <div className="detail-description">
+            {isEditing ? (
+              <textarea
+                type="text"
+                className="edit-input, detail-description"
+                value={editDescription}
+                onChange={(e) => setEditDescription(e.target.value)}
+                placeholder="Опишите ситуацию"
+                rows={4}
+              />
+            ) : (
+              incident?.description
+            )}
+          </div>
           {/* detail-description */}
           <table className="detail-table">
             <tbody>
@@ -124,8 +196,20 @@ function IncidentDetail() {
               <tr>
                 <td>Статус</td>
                 <td>
-                  {incident?.status}
-                  {/* detail-status */}
+                  {isEditing ? (
+                    <select
+                      className="edit-select"
+                      value={editStatus}
+                      onChange={(e) => setEditStatus(e.target.value)}
+                    >
+                      <option value="active">Активный</option>
+                      <option value="inactive">Неактивный</option>
+                    </select>
+                  ) : (
+                    <span>
+                      {incident?.status === 'active' ? 'Активный' : 'Неактивный'}
+                    </span>
+                  )}
                 </td>
               </tr>
             </tbody>
