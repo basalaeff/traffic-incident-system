@@ -299,6 +299,7 @@ function Home() {
                     <h3>{incident.title}</h3>
                     <p>{incident.description}</p>
                     Тип: <b>{incident.type}</b> | Статус: <b>{incident.status}</b>
+                    <p></p>
                     <button className="popup-btn" onClick={() => navigate(`/incident/${incident.id}`)}>
                       Подробнее
                     </button>
