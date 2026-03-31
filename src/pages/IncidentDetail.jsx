@@ -68,20 +68,49 @@ function IncidentDetail() {
           {/* detail-title */}
           <div className="detail-description">{incident?.description}</div>
           {/* detail-description */}
-          <div className="detail-type">{incident?.type}</div>
-          {/* detail-type */}
-          <div className="detail-position">
-            {incident?.lat}, {incident?.lng}
-          </div>
-          {/* detail-position */}
-          <div className="detail-user">{user?.email}</div>
-          {/* detail-user */}
-          <div className="detail-time">
-            {incident?.time}
-          </div>
-          {/* detail-time */}
-          <div className="detail-status">{incident?.status}</div>
-          {/* detail-status */}
+          <table className="detail-table">
+            <tbody>
+              <tr>
+                <td>Тип инцидента</td>
+                <td>
+                  {incident?.type}
+                </td>
+              </tr>
+              <tr>
+                <td>Широта</td>
+                <td>
+                  {incident?.lat}
+                </td>
+              </tr>
+              <tr>
+                <td>Долгота</td>
+                <td>
+                  {incident?.lng}
+                </td>
+              </tr>
+              <tr>
+                <td>Пользователь</td>
+                <td>
+                  {user?.email}
+                </td>
+              </tr>
+              <tr>
+                <td>Время</td>
+                <td>
+                  {incident?.time}
+                  {/* detail-time */}
+                </td>
+              </tr>
+              <tr>
+                <td>Статус</td>
+                <td>
+                  {incident?.status}
+                  {/* detail-status */}
+                </td>
+              </tr>
+            </tbody>
+          </table>
+          {/* detail-table */}
         </div>
         {/* detail */}
       </div>
