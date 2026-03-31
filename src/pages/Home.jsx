@@ -34,6 +34,8 @@ const getCustomIcon = (type, status) => {
   const redIconUrl = '/markers/marker-icon-2x-red.png';
   // Оранжевый маркер (для опасных участков)
   const orangeIconUrl = '/markers/marker-icon-2x-orange.png';
+  // Зеленый маркер (для другое)
+  const greenIconUrl = '/markers/marker-icon-2x-green.png';
   // возьмем серый для "Устранено"
   const grayIconUrl = '/markers/marker-icon-2x-grey.png';
   // Синий по умолчанию
@@ -51,6 +53,8 @@ const getCustomIcon = (type, status) => {
   } else if (type === 'hazard') {
     // Если тип hazard - ставим оранжевую
     chosenUrl = orangeIconUrl;
+  } else if (type === 'other') {
+    chosenUrl = greenIconUrl;
   }
   // А теперь просто возвращаем созданный объект
   // Размеры взял с того же гит хаб
