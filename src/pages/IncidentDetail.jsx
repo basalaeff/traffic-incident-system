@@ -77,7 +77,7 @@ function IncidentDetail() {
           <div className="detail-user">{user?.email}</div>
           {/* detail-user */}
           <div className="detail-time">
-            {incident?.date}, {incident?.time}
+            {incident?.time}
           </div>
           {/* detail-time */}
           <div className="detail-status">{incident?.status}</div>
