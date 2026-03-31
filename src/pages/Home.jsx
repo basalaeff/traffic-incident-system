@@ -3,7 +3,8 @@ import { useState, useEffect } from 'react';
 
 // Добавлю компоненты карты
 // Контейнер карты, улицы, маркеры, всплывающее окно
-import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
+// useMapEvents добавил для того чтобы ставить метку на карту
+import { MapContainer, TileLayer, Marker, Popup, useMapEvents } from 'react-leaflet';
 
 // Нужен хук для роутинга
 import { useNavigate } from 'react-router-dom';
@@ -63,6 +64,25 @@ const getCustomIcon = (type, status) => {
   });
 };
 
+//  Нужно придумать как ловить клики по карте
+// ============================================================================
+// КОМПОНЕНТ ДЛЯ ОБРАБОТКИ КЛИКОВ ПО КАРТЕ
+// ============================================================================
+function MapClickHandler({ setTempMarker, isAddingMode }) {
+  // нужен хук useMapEvents для доступа к объекту карты
+  useMapEvents({
+    // обработчик клика
+    click: (e) => {
+      if (isAddingMode) {
+        // e.latlng - объект, содержит координаты
+        // передаем в функцию
+        setTempMarker([e.latlng.lat, e.latlng.lng]);
+      }
+    },
+  });
+  return null;
+}
+
 function Home() {
   // Напишем массивы для хранения данных с использованием деструкционализации
   // Создадим массив для хранения инцидентов
@@ -71,6 +91,10 @@ function Home() {
   const [userLocation, setUserLocation] = useState(null);
   // для хранения флага загрузки
   const [loading, setLoading] = useState(true);
+  // для хранения состояния кнопки добавления инцидента
+  const [isAddingMode, setIsAddingMode] = useState(false);
+  // временный маркер для отображения на карте
+  const [tempMarker, setTempMarker] = useState(null);
   // для переключения между страницами
   const navigate = useNavigate();
 
@@ -158,6 +182,42 @@ function Home() {
       navigate('/login'); // Если не вошел идем на логин
     }
   };
+
+  // ============================================================================
+  // ДЛЯ СОЗДАНИЯ ИНЦИДЕНТА
+  // ============================================================================
+  const handleCreateIncident = () => {
+    // разрешили добавление
+    setIsAddingMode(true);
+    toast.info('Кликните по карте, чтобы установить маркер');
+  };
+  // ============================================================================
+  // ДЛЯ ОБРАБОТКИ СОЗДАНИЯ ИНЦИДЕНТА ПОСЛЕ ВЫБОРА КООРДИНАТ
+  // ============================================================================
+  const handleConfirmCreateIncident = () => {
+    // защита от ошибок при вызове координат
+    if (!tempMarker) return;
+    navigate('/create-incident', {
+      // для переброса координат на страницу формы буду использовать state
+      // самое приятное, что он передает данные в скрытом режиме,
+      // не отображая их в адресной строке.
+      state: { lat: tempMarker[0], lng: tempMarker[1] },
+    });
+    // сбрасываем маркер
+    setTempMarker(null);
+    // выключаем добавление
+    setIsAddingMode(false);
+  };
+  // ============================================================================
+  // ДЛЯ ОТМЕНЫ ДОБАВЛЕНИЯ ИНЦИДЕНТА
+  // ============================================================================
+  const handleCancelCreateIncident = () => {
+    // убираем временный маркер
+    setTempMarker(null);
+    setIsAddingMode(false);
+    toast.info('Создание инцидента отменено');
+  };
+
   // ============================================================================
   // РЕНДЕРИНГ
   // ============================================================================
@@ -177,19 +237,25 @@ function Home() {
     // Нужно добавить отступ в 20 пикселей, чтобы было красивенько и не прилипало
     <div className="home-page">
       <div className="floating-btns">
-        {user && (
+        {isAddingMode && (
           <button
             className="circle-btn"
-            onClick={() => alert('Нажата круглая кнопка!')}
-            title="Добавить инцидент"
+            onClick={handleCancelCreateIncident}
+            title="Отмена"
+            style={{ backgroundColor: 'var(--danger-color)' }}
           >
+            <img src="https://s.kontur.ru/common-v2/icons-ui/black/x-circle/x-circle-32-Regular.svg" />
+          </button>
+        )}
+        {user && !isAddingMode && (
+          <button className="circle-btn" onClick={handleCreateIncident} title="Добавить инцидент">
             <img src="https://s.kontur.ru/common-v2/icons-ui/black/plus-circle/plus-circle-32-Regular.png" />
           </button>
         )}
 
         <button className="circle-btn" onClick={handleAuthClick} title={user ? 'Выйти' : 'Войти'}>
           {user ? (
-            <Avatar name={user?.email} size="46" round={true} src={false} />
+            <Avatar name={user?.email} size="46" round={true} />
           ) : (
             <img src="https://s.kontur.ru/common-v2/icons-ui/black/arrow-ui-auth-login/arrow-ui-auth-login-32-Regular.svg" />
           )}
@@ -208,7 +274,7 @@ function Home() {
           zoom={13}
           // Крч планета это слишком много
           // Мне пока лень делать кластеризацию, поэтому просто ограничу масштаб
-          maxZoom={19}
+          maxZoom={18}
           minZoom={12}
           // Нужно указать стиль карты
           // Ширина (настроили по всей области)
@@ -218,7 +284,6 @@ function Home() {
           {/* Подгрузка плиточек карты */}
           {/* Используем OpenStreetMap */}
           <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
-
           {/* Отрисовка маркеров */}
           {incidents.map((incident) => {
             return (
@@ -229,23 +294,42 @@ function Home() {
               >
                 <Popup>
                   {/* Нужно написать стили для всплывающего окна  */}
-                  <div style={{ minWidth: '200px' }}>
-                    <h3 style={{ margin: '0 0 5px 0' }}>{incident.title}</h3>
-                    <p style={{ margin: 0, fontSize: '14px' }}>{incident.description}</p>
-                    <div style={{ marginTop: '8px', fontSize: '12px', color: '#555' }}>
-                      Тип: <b>{incident.type}</b> | Статус: <b>{incident.status}</b>
-                    </div>
-                    <button
-                      onClick={() => navigate(`/incident/${incident.id}`)}
-                      style={{ marginTop: '8px', cursor: 'pointer' }}
-                    >
+                  {/* нужно добавить css */}
+                  <div className="popup-content">
+                    <h3>{incident.title}</h3>
+                    <p>{incident.description}</p>
+                    Тип: <b>{incident.type}</b> | Статус: <b>{incident.status}</b>
+                    <button className="popup-btn" onClick={() => navigate(`/incident/${incident.id}`)}>
                       Подробнее
                     </button>
+                    {/* popup-btn */}
                   </div>
+                  {/* popup-content */}
                 </Popup>
               </Marker>
             );
           })}
+          {/* Компонент для обработки кликов по карте */}
+          <MapClickHandler setTempMarker={setTempMarker} isAddingMode={isAddingMode} />
+          {/* Добавление инцидента */}
+          {tempMarker && (
+            <Marker position={tempMarker} icon={getCustomIcon('new', 'active')}>
+              {/* у Popup пока нет css, написал только функциональность */}
+              <Popup>
+                <div className="popup-content">
+                  <h3>Новый инцидент</h3>
+                  <p>
+                    Координаты: {tempMarker[0]}, {tempMarker[1]}
+                  </p>
+                  <button className="popup-btn" onClick={handleConfirmCreateIncident}>
+                    Создать
+                  </button>
+                  {/* popup-btn */}
+                </div>
+                {/* popup-content */}
+              </Popup>
+            </Marker>
+          )}
         </MapContainer>
       </main>
       {/* map-container */}

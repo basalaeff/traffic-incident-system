@@ -3,7 +3,9 @@ import './IncidentForm.css';
 // Импортируем хук useState из библиотеки React.
 import { useState, useEffect } from 'react';
 // ссылки и навигация
-import { Link, useNavigate } from 'react-router-dom';
+// убрал Link (не использую ссылки в этом компоненте)
+// добавил useLocation (нужно получать координаты с хома)
+import { useLocation, useNavigate } from 'react-router-dom';
 // всплывающие уведомления тоже могут пригодиться
 import { toast } from 'react-toastify';
 // запросы
@@ -14,6 +16,7 @@ import { getCurrentUser } from '../auth';
 
 function IncidentForm() {
   const navigate = useNavigate(); //хук для переброса на авторизацию
+  const location = useLocation(); // хук для координат с хома
 
   // ============================================================================
   // ПЕРЕМЕННЫЕ СОСТОЯНИЙ
@@ -40,6 +43,25 @@ function IncidentForm() {
   // false - загрузки нет, кнопка активна
   // true - загрузка есть, кнопка не активна
   const [isLoading, setIsLoading] = useState(false);
+
+  // на данную страницу можно попасть через адресную строку (я так и сюда и зашел)
+  // но это означает, что пользователь может сломать мне карту (ранее я указал 0, 0 в таких случаях)
+  // но это решение лишь ставит маркер в море рядом в Африкой, а там вообще не дорог
+  // надо писать запрет добавления вовсе и переброс на главную
+
+  useEffect(() => {
+    // проверка
+    const hasCoords = location.state && 'lat' in location.state && 'lng' in location.state;
+    if (!hasCoords) {
+      toast.warn('Координаты не выбраны. ');
+      navigate('/');
+      return;
+    }
+    setLat(location.state.lat);
+    setLng(location.state.lng);
+  }, []);
+
+
 
   useEffect(() => {
     const user = getCurrentUser();
@@ -105,6 +127,7 @@ function IncidentForm() {
         title,
         description,
         status: 'active',
+        // оставим (Африка лучше, чем сломанная карта)
         lat: lat ? parseFloat(lat) : 0, // Преобразуем в число (чтобы карта не ломалась)
         lng: lng ? parseFloat(lng) : 0, // Преобразуем в число
         time: now,
