@@ -60,6 +60,17 @@ function IncidentDetail() {
   }, [id]);
   // перезапускается при изменении id
 
+  // ============================================================================
+  // РЕНДЕРИНГ
+  // ============================================================================
+  if (isLoading) {
+    return (
+      <div className="loading-screen">
+        <div className="spinner-large"></div>
+      </div>
+    );
+  }
+
   // Пишем интерфейс на JSX
   return (
     <div className="detail-page">
