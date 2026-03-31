@@ -58,6 +58,16 @@ function IncidentDetail() {
   // Пишем интерфейс на JSX
   return (
     <div className="detail-page">
+      <div className='floating-btns'>
+        <button
+          className="circle-btn"
+          title="Редактировать"
+          style={{ backgroundColor: 'var(--primary-color)' }}
+        >
+          <img src="https://s.kontur.ru/common-v2/icons-ui/black/tool-pencil-line/tool-pencil-line-32-Regular.svg" />
+        </button>
+      </div>
+      {/* floating-btns */}
       <div className="detail-card">
         <div className="detail-header">
           <h2>Детали инцидента </h2>
@@ -72,27 +82,19 @@ function IncidentDetail() {
             <tbody>
               <tr>
                 <td>Тип инцидента</td>
-                <td>
-                  {incident?.type}
-                </td>
+                <td>{incident?.type}</td>
               </tr>
               <tr>
                 <td>Широта</td>
-                <td>
-                  {incident?.lat}
-                </td>
+                <td>{incident?.lat}</td>
               </tr>
               <tr>
                 <td>Долгота</td>
-                <td>
-                  {incident?.lng}
-                </td>
+                <td>{incident?.lng}</td>
               </tr>
               <tr>
                 <td>Пользователь</td>
-                <td>
-                  {user?.email}
-                </td>
+                <td>{user?.email}</td>
               </tr>
               <tr>
                 <td>Время</td>
