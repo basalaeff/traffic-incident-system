@@ -7,15 +7,20 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { toast } from 'react-toastify';
 // запросы
 import axios from 'axios';
+// нужен текущий юзер в системе
+import { getCurrentUser } from '../auth';
 
 function IncidentDetail() {
   // Достаем id c помощью хука
   const { id } = useParams();
   const navigate = useNavigate();
+  const user = getCurrentUser();
 
   // Создадим массив для хранения инцидента
   const [incident, setIncident] = useState([]);
-  const [user, setUser] = useState([]);
+  // храним юзера-владельца
+  // только этому юзеру можно редактировать
+  const [owner, setOwner] = useState([]);
 
   // загрузка
   const [isLoading, setIsLoading] = useState(false);
@@ -34,10 +39,10 @@ function IncidentDetail() {
           // ============================================================================
           // GET-ЗАПРОС НА СЕРВЕР http://localhost:3001/user
           // ============================================================================
-          const responseUser = await axios.get(
+          const responseOwner = await axios.get(
             `http://localhost:3001/users/${responseIncidents.data.userId}`
           );
-          setUser(responseUser.data);
+          setOwner(responseOwner.data);
         } else {
           toast.error('Ошибка загрузки данных во втором запросе');
         }
@@ -58,16 +63,18 @@ function IncidentDetail() {
   // Пишем интерфейс на JSX
   return (
     <div className="detail-page">
-      <div className='floating-btns'>
-        <button
-          className="circle-btn"
-          title="Редактировать"
-          style={{ backgroundColor: 'var(--primary-color)' }}
-        >
-          <img src="https://s.kontur.ru/common-v2/icons-ui/black/tool-pencil-line/tool-pencil-line-32-Regular.svg" />
-        </button>
+      <div className="detail-floating-btns">
+        {user?.id === incident?.userId && (
+          <button
+            className="circle-btn"
+            title="Редактировать"
+            style={{ backgroundColor: 'var(--primary-color)' }}
+          >
+            <img src="https://s.kontur.ru/common-v2/icons-ui/black/tool-pencil-line/tool-pencil-line-32-Regular.svg" />
+          </button>
+        )}
       </div>
-      {/* floating-btns */}
+      {/* detail-floating-btns */}
       <div className="detail-card">
         <div className="detail-header">
           <h2>Детали инцидента </h2>
@@ -94,7 +101,7 @@ function IncidentDetail() {
               </tr>
               <tr>
                 <td>Пользователь</td>
-                <td>{user?.email}</td>
+                <td>{owner?.email}</td>
               </tr>
               <tr>
                 <td>Время</td>
