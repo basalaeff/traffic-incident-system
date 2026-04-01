@@ -121,38 +121,32 @@ function IncidentDetail() {
   // Пишем интерфейс на JSX
   return (
     <div className="detail-page">
-      <div className="detail-floating-btns">
-        {user?.id === incident?.userId && !isEditing && (
-          // скрываем во время редактирования
-          <button
-            className="circle-btn"
-            title="Редактировать"
-            onClick={() => setIsEditing(true)}
-            style={{ backgroundColor: 'var(--primary-color)' }}
-          >
-            <img src="https://s.kontur.ru/common-v2/icons-ui/black/tool-pencil-line/tool-pencil-line-32-Regular.svg" />
-          </button>
-        )}
-        {user?.id === incident?.userId && isEditing && (
-          <button
-            className="circle-btn"
-            title="Отмена"
-            onClick={() => setIsEditing(false)}
-            style={{ backgroundColor: 'var(--danger-color)' }}
-          >
-            <img src="https://s.kontur.ru/common-v2/icons-ui/black/x-circle/x-circle-32-Regular.svg" />
-          </button>
-        )}
-      </div>
-      {/* detail-floating-btns */}
-
       <div className="detail-card">
         <div className="detail-header">
           <h2>Детали инцидента </h2>
           <div className="detail-btn">
+            {/* Кнопка редактировать */}
+            {user?.id === incident?.userId && !isEditing && (
+              // скрываем во время редактирования
+              <button
+                className="detail-circle-btn"
+                title="Редактировать"
+                onClick={() => setIsEditing(true)}
+                style={{ backgroundColor: 'var(--primary-color)' }}
+              >
+                <img src="https://s.kontur.ru/common-v2/icons-ui/black/tool-pencil-line/tool-pencil-line-32-Regular.svg" />
+              </button>
+            )}
+
+            {/* Кнопка отмена */}
             {user?.id === incident?.userId && isEditing && (
-              <button className="btn" title="Сохранить" onClick={handleSave}>
-                Сохранить
+              <button
+                className="detail-circle-btn"
+                title="Отмена"
+                onClick={() => setIsEditing(false)}
+                style={{ backgroundColor: 'var(--danger-color)' }}
+              >
+                <img src="https://s.kontur.ru/common-v2/icons-ui/black/x-circle/x-circle-32-Regular.svg" />
               </button>
             )}
           </div>
@@ -234,6 +228,12 @@ function IncidentDetail() {
             </tbody>
           </table>
           {/* detail-table */}
+          {/* Кнопка сохранить */}
+          {user?.id === incident?.userId && isEditing && (
+            <button className="btn" title="Сохранить" onClick={handleSave}>
+              Сохранить
+            </button>
+          )}
         </div>
         {/* detail */}
       </div>
