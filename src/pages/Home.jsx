@@ -101,6 +101,7 @@ function Home() {
   const [tempMarker, setTempMarker] = useState(null);
   // для переключения между страницами
   const navigate = useNavigate();
+  const [users, setUsers] = useState(null);
 
   // ============================================================================
   // ПОЛУЧЕНИЕ ГЕОЛОКАЦИИ
@@ -158,9 +159,16 @@ function Home() {
     const fetchIncidents = async () => {
       // так при запросе серверу все может упасть. нужна обработка ошибок
       try {
-        const response = await axios.get('http://localhost:3001/incidents');
+        const responseIncidents = await axios.get('http://localhost:3001/incidents');
         // Теперь нужно добавить данные в массив для хранения инцидентов
-        setIncidents(response.data);
+        setIncidents(responseIncidents.data);
+        // ============================================================================
+        // GET-ЗАПРОС НА СЕРВЕР http://localhost:3001/user
+        // ============================================================================
+        const responseUsers = await axios.get(
+          `http://localhost:3001/users/`
+        );
+          setUsers(responseUsers.data);
       } catch (err) {
         // Выводим ошибку в консоль разработчика
         // Будем выводить ошибки в консоль
@@ -292,19 +300,26 @@ function Home() {
           {incidents.map((incident) => {
             return (
               <Marker
-                key={incident.id}
-                position={[incident.lat, incident.lng]}
-                icon={getCustomIcon(incident.type, incident.status)}
+                key={incident?.id}
+                position={[incident?.lat, incident?.lng]}
+                icon={getCustomIcon(incident?.type, incident?.status)}
               >
                 <Popup>
                   {/* Нужно написать стили для всплывающего окна  */}
                   {/* нужно добавить css */}
                   <div className="popup-content">
-                    <h3>{incident.title}</h3>
-                    <p>{incident.description}</p>
-                    Тип: <b>{incident.type}</b> | Статус: <b>{incident.status}</b>
+                    <h3>{incident?.title}</h3>
+                    <p>{incident?.description}</p>
+                    Тип: <b>{incident?.type}</b> | Статус: <b>{incident?.status}</b>
                     <p></p>
-                    <button className="popup-btn" onClick={() => navigate(`/incident/${incident.id}`)}>
+                    {/* юзеров много в этот раз. поэтому буду использовать find */}
+                    {/* работает как фильтр: пробегает по массиву и находит подходящего юзера */}
+                    Пользователь: <b>{users?.find((users) => users.id === incident?.userId)?.email || ''}</b>
+                    <p></p>
+                    <button
+                      className="popup-btn"
+                      onClick={() => navigate(`/incident/${incident.id}`)}
+                    >
                       Подробнее
                     </button>
                     {/* popup-btn */}
