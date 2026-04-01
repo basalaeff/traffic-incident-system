@@ -17,10 +17,10 @@ function IncidentDetail() {
   const user = getCurrentUser();
 
   // Создадим массив для хранения инцидента
-  const [incident, setIncident] = useState([]);
+  const [incident, setIncident] = useState(null);
   // храним юзера-владельца
   // только этому юзеру можно редактировать
-  const [owner, setOwner] = useState([]);
+  const [owner, setOwner] = useState(null);
 
   // загрузка
   const [isLoading, setIsLoading] = useState(false);
@@ -80,10 +80,12 @@ function IncidentDetail() {
   const handleSave = async () => {
     setIsLoading(true);
     try {
+      // put меняет все поля целиком, поэтому словив несколько ошибок при отображении
+      // координат, я вспомнил про patch (частичное обновление)
       // ============================================================================
-      // PUT-ЗАПРОС НА СЕРВЕР http://localhost:3001/incidents
+      // PATCH-ЗАПРОС НА СЕРВЕР http://localhost:3001/incidents
       // ============================================================================
-      await axios.put(`http://localhost:3001/incidents/${id}`, {
+      await axios.patch(`http://localhost:3001/incidents/${id}`, {
         title: editTitle,
         description: editDescription,
         status: editStatus,
@@ -131,11 +133,30 @@ function IncidentDetail() {
             <img src="https://s.kontur.ru/common-v2/icons-ui/black/tool-pencil-line/tool-pencil-line-32-Regular.svg" />
           </button>
         )}
+        {user?.id === incident?.userId && isEditing && (
+          <button
+            className="circle-btn"
+            title="Отмена"
+            onClick={() => setIsEditing(false)}
+            style={{ backgroundColor: 'var(--danger-color)' }}
+          >
+            <img src="https://s.kontur.ru/common-v2/icons-ui/black/x-circle/x-circle-32-Regular.svg" />
+          </button>
+        )}
       </div>
       {/* detail-floating-btns */}
+
       <div className="detail-card">
         <div className="detail-header">
           <h2>Детали инцидента </h2>
+          <div className="detail-btn">
+            {user?.id === incident?.userId && isEditing && (
+              <button className="btn" title="Сохранить" onClick={handleSave}>
+                Сохранить
+              </button>
+            )}
+          </div>
+          {/* detail-btn */}
         </div>
         {/* detail-header */}
         <div className="detail">
