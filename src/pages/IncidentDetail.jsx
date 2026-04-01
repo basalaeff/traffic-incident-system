@@ -107,6 +107,29 @@ function IncidentDetail() {
       setIsLoading(false);
     }
   };
+
+  // ============================================================================
+  // ОБРАБОТЧИК ДЛЯ УДАЛЕНИЯ
+  // ============================================================================
+  const handleDelete = async () => {
+    try {
+      setIsLoading(true);
+      // ============================================================================
+      // DELETE-ЗАПРОС НА СЕРВЕР http://localhost:3001/incidents
+      // ============================================================================
+      await axios.delete(`http://localhost:3001/incidents/${id}`);
+
+      toast.success('Инцидент успешно удален!', {
+        onClose: () => navigate('/')
+      });
+      setIsEditing(false);
+    } catch (err) {
+      toast.error('Не удалось удалить инцидент');
+      toast.error(err.response?.data?.message || err.message);
+    } finally {
+      setIsLoading(false);
+    }
+  };
   // ============================================================================
   // РЕНДЕРИНГ
   // ============================================================================
@@ -147,6 +170,18 @@ function IncidentDetail() {
                 style={{ backgroundColor: 'var(--danger-color)' }}
               >
                 <img src="https://s.kontur.ru/common-v2/icons-ui/black/x-circle/x-circle-32-Regular.svg" />
+              </button>
+            )}
+
+            {/* Кнопка удалить */}
+            {user?.id === incident?.userId && !isEditing && (
+              <button
+                className="detail-circle-btn"
+                title="Удалить"
+                onClick={handleDelete}
+                style={{ backgroundColor: 'var(--danger-color)' }}
+              >
+                <img src="https://s.kontur.ru/common-v2/icons-ui/black/trash-can/trash-can-32-Regular.svg" />
               </button>
             )}
           </div>
