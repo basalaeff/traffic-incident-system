@@ -143,7 +143,7 @@ function IncidentDetail() {
             {isEditing ? (
               <input
                 type="text"
-                className="edit-input, detail-title"
+                className="edit-input detail-title"
                 value={editTitle}
                 onChange={(e) => setEditTitle(e.target.value)}
                 placeholder="Введите название инцидента"
@@ -152,12 +152,12 @@ function IncidentDetail() {
               incident?.title
             )}
           </div>
-          {/* detail-title */}
+          {/* edit-input detail-title */}
           <div className="detail-description">
             {isEditing ? (
               <textarea
                 type="text"
-                className="edit-input, detail-description"
+                className="edit-input detail-description"
                 value={editDescription}
                 onChange={(e) => setEditDescription(e.target.value)}
                 placeholder="Опишите ситуацию"
@@ -167,7 +167,7 @@ function IncidentDetail() {
               incident?.description
             )}
           </div>
-          {/* detail-description */}
+          {/* edit-input detail-description */}
           <table className="detail-table">
             <tbody>
               <tr>
@@ -206,9 +206,7 @@ function IncidentDetail() {
                       <option value="inactive">Неактивный</option>
                     </select>
                   ) : (
-                    <span>
-                      {incident?.status === 'active' ? 'Активный' : 'Неактивный'}
-                    </span>
+                    <span>{incident?.status === 'active' ? 'Активный' : 'Неактивный'}</span>
                   )}
                 </td>
               </tr>
