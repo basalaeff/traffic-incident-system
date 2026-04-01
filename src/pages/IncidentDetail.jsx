@@ -24,6 +24,8 @@ function IncidentDetail() {
 
   // загрузка
   const [isLoading, setIsLoading] = useState(false);
+  // состояние для подтверждения удаления
+  const [showDelete, setShowDelete] = useState(false);
 
   // Режим редактирования
   const [isEditing, setIsEditing] = useState(false);
@@ -111,25 +113,69 @@ function IncidentDetail() {
   // ============================================================================
   // ОБРАБОТЧИК ДЛЯ УДАЛЕНИЯ
   // ============================================================================
-  const handleDelete = async () => {
-    try {
-      setIsLoading(true);
-      // ============================================================================
-      // DELETE-ЗАПРОС НА СЕРВЕР http://localhost:3001/incidents
-      // ============================================================================
-      await axios.delete(`http://localhost:3001/incidents/${id}`);
+  // Основная проблема: моментальное удаление без подтверждения от пользователя.
+  // Кажется через toast это можно сделать
 
-      toast.success('Инцидент успешно удален!', {
-        onClose: () => navigate('/')
-      });
-      setIsEditing(false);
-    } catch (err) {
-      toast.error('Не удалось удалить инцидент');
-      toast.error(err.response?.data?.message || err.message);
-    } finally {
-      setIsLoading(false);
-    }
+  const handleDelete = async () => {
+    setShowDelete(true);
+    toast(
+      <div className="toast-notification">
+        <p>Вы уверены, что хотите удалить инцидент?</p>
+        <div className="toast-action">
+          <button
+            className="toast-btn toast-btn-cancel"
+            // при нажатии отмены нужно просто закрыть уведомление
+            // toast.dismiss() без аргументов закрывает последнее/активное уведомление
+            onClick={() => { toast.dismiss(); setShowDelete(false) }}
+          >
+            Отмена
+          </button>
+          <button
+            className="toast-btn toast-btn-delete"
+            onClick={async () => {
+              try {
+                setIsLoading(true);
+                // ============================================================================
+                // DELETE-ЗАПРОС НА СЕРВЕР http://localhost:3001/incidents
+                // ============================================================================
+                await axios.delete(`http://localhost:3001/incidents/${id}`);
+
+                toast.success('Инцидент успешно удален!', {
+                  onClose: () => navigate('/'),
+                });
+                setIsEditing(false);
+              } catch (err) {
+                toast.error('Не удалось удалить инцидент');
+                toast.error(err.response?.data?.message || err.message);
+              } finally {
+                setIsLoading(false);
+                setShowDelete(false);
+                toast.dismiss();
+              }
+            }}
+          >
+            Удалить
+          </button>
+        </div>
+        {/* toast-action */}
+      </div>, // дальше второй аргумент
+      // toast-notification
+      // Далее нужно настроить настройки поведения уведомления
+      {
+        // закрытие по таймеру выключено
+        autoClose: false,
+        // по клику закрыть нельзя
+        closeOnClick: false,
+        // и перетаскиванием тоже
+        draggable: false,
+        // крестик убрал тоже
+        closeButton: false,
+        // выведу снизу справа (по приколу)
+        position: 'bottom-right',
+      }
+    );
   };
+
   // ============================================================================
   // РЕНДЕРИНГ
   // ============================================================================
@@ -149,7 +195,7 @@ function IncidentDetail() {
           <h2>Детали инцидента </h2>
           <div className="detail-btn">
             {/* Кнопка редактировать */}
-            {user?.id === incident?.userId && !isEditing && (
+            {user?.id === incident?.userId && !isEditing && !showDelete && (
               // скрываем во время редактирования
               <button
                 className="detail-circle-btn"
@@ -162,7 +208,7 @@ function IncidentDetail() {
             )}
 
             {/* Кнопка отмена */}
-            {user?.id === incident?.userId && isEditing && (
+            {user?.id === incident?.userId && isEditing && !showDelete && (
               <button
                 className="detail-circle-btn"
                 title="Отмена"
@@ -174,7 +220,7 @@ function IncidentDetail() {
             )}
 
             {/* Кнопка удалить */}
-            {user?.id === incident?.userId && !isEditing && (
+            {user?.id === incident?.userId && !isEditing && !showDelete && (
               <button
                 className="detail-circle-btn"
                 title="Удалить"
@@ -264,7 +310,7 @@ function IncidentDetail() {
           </table>
           {/* detail-table */}
           {/* Кнопка сохранить */}
-          {user?.id === incident?.userId && isEditing && (
+          {user?.id === incident?.userId && isEditing && !showDelete && (
             <button className="btn" title="Сохранить" onClick={handleSave}>
               Сохранить
             </button>
@@ -277,4 +323,5 @@ function IncidentDetail() {
     // detail-page
   );
 }
+
 export default IncidentDetail;

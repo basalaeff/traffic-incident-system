@@ -208,3 +208,68 @@
 .btn:active {
   transform: scale(0.95);
 }
+
+/* ============================================================================ */
+/* СТИЛИ ДЛЯ ПОДТВЕРЖДЕНИЯ УДАЛЕНИЯ (TOAST) */
+/* ============================================================================ */
+/* окно уведомления */
+.toast-notification {
+  /* внутренние отступы */
+  padding: 8px 4px;
+  min-width: 280px;
+}
+/* надпись */
+.toast-notification p {
+  /* сверху справа снизу слева */
+  margin: 0 0 8px 0;
+  font-weight: 500;
+  color: var(--gray-dark);
+}
+/* контейнер для кнопок */
+.toast-actions {
+  display: flex;
+  gap: 20px;
+}
+/* кнопка  */
+.toast-btn {
+  /* внутренние отступы */
+  padding: 8px 20px;
+  /* убрал рамку */
+  border: none;
+  /* закруглил */
+  border-radius: var(--radius-md);
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+  font-family: inherit;
+}
+/* отмена */
+.toast-btn-cancel {
+  background: var(--gray-light);
+  color: var(--gray-dark);
+}
+
+.toast-btn-cancel:hover {
+  background: var(--gray-medium);
+  color: var(--white);
+  transform: scale(1.05); /* Легкое увеличение при наведении */
+}
+
+.toast-btn-cancel:active {
+  transform: scale(0.95);
+}
+
+.toast-btn-delete {
+  background: var(--danger-color);
+  color: var(--white);
+}
+
+.toast-btn-delete:hover {
+  background: var(--danger-color);
+  transform: scale(1.05); /* Легкое увеличение при наведении */
+}
+
+.toast-btn-delete:active {
+  transform: scale(0.95);
+}
