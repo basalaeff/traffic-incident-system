@@ -352,7 +352,10 @@ function Home() {
                     e.target.openPopup();
                   },
                   mouseout: (e) => {
-                    e.target.closePopup();
+                    // решил проблему с быстрым закрыванием
+                    setTimeout(() => {
+                      e.target.closePopup();
+                    }, 1000);
                   },
                 }}
               >
@@ -392,8 +395,11 @@ function Home() {
                   e.target.openPopup();
                 },
                 mouseout: (e) => {
-                  e.target.closePopup();
-                },
+                  // решил проблему с быстрым закрыванием
+                  setTimeout(() => {
+                    e.target.closePopup();
+                  }, 1000);
+                }
               }}
             >
               {/* у Popup пока нет css, написал только функциональность */}
