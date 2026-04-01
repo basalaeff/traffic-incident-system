@@ -346,10 +346,17 @@ function Home() {
                 key={incident?.id}
                 position={[incident?.lat, incident?.lng]}
                 icon={getCustomIcon(incident?.type, incident?.status)}
+                // хочу реализовать, чтобы открывался при наведении
+                eventHandlers={{
+                  mouseover: (e) => {
+                    e.target.openPopup();
+                  },
+                  mouseout: (e) => {
+                    e.target.closePopup();
+                  },
+                }}
               >
                 <Popup>
-                  {/* Нужно написать стили для всплывающего окна  */}
-                  {/* нужно добавить css */}
                   <div className="popup-content">
                     <h3>{incident?.title}</h3>
                     <p>{incident?.description}</p>
@@ -357,7 +364,7 @@ function Home() {
                     <p></p>
                     {/* юзеров много в этот раз. поэтому буду использовать find */}
                     {/* работает как фильтр: пробегает по массиву и находит подходящего юзера */}
-                    Пользователь:{' '}
+                    Пользователь:
                     <b>{users?.find((users) => users.id === incident?.userId)?.email || ''}</b>
                     <p></p>
                     <button
@@ -377,7 +384,18 @@ function Home() {
           <MapClickHandler setTempMarker={setTempMarker} isAddingMode={isAddingMode} />
           {/* Добавление инцидента */}
           {tempMarker && (
-            <Marker position={tempMarker} icon={getCustomIcon('new', 'active')}>
+            <Marker
+              position={tempMarker}
+              icon={getCustomIcon('new', 'active')}
+              eventHandlers={{
+                mouseover: (e) => {
+                  e.target.openPopup();
+                },
+                mouseout: (e) => {
+                  e.target.closePopup();
+                },
+              }}
+            >
               {/* у Popup пока нет css, написал только функциональность */}
               <Popup>
                 <div className="popup-content">
