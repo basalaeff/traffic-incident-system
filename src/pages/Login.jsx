@@ -115,14 +115,22 @@ function Login({}) {
   // Пишем интерфейс на JSX
   return (
     <div className="login-page">
+      <div className="login-home-btn-container">
+        <button
+          className="login-home-btn"
+          onClick={() => {navigate('/')}}
+          title="Главная"
+
+        >
+        <img src="https://s.kontur.ru/common-v2/icons-ui/black/building-home/building-home-32-Regular.svg" />
+        </button>
+        {/* login-home-btn */}
+      </div>
+      {/* login-home-btn-container */}
       <div className="login-card">
         <div className="login-header">
           <h2>🔐 Вход </h2>
           <p className="login-subtitle">Используйте ваш аккаунт</p>
-          <div className="one-footer">
-            <Link to="/">На главную</Link>
-          </div>
-          {/* one-footer */}
         </div>
         {/* login-header */}
         <div className="login-form">
@@ -171,11 +179,11 @@ function Login({}) {
             </button>
             {/* btn-primary */}
           </form>
-          <div className="two-footer">
+          <div className="footer">
             {/* Ссылка ведет на страницу регистрации */}
             Нет аккаунта? <Link to="/create-account">Зарегистрироваться</Link>
           </div>
-          {/* two-footer */}
+          {/* footer */}
         </div>
         {/* login-form */}
       </div>

@@ -159,6 +159,19 @@ function Registration() {
   // Пишем интерфейс на JSX
   return (
     <div className="form-page">
+      <div className="reg-home-btn-container">
+        <button
+          className="reg-home-btn"
+          onClick={() => {
+            navigate('/');
+          }}
+          title="Главная"
+        >
+          <img src="https://s.kontur.ru/common-v2/icons-ui/black/building-home/building-home-32-Regular.svg" />
+        </button>
+        {/* reg-home-btn */}
+      </div>
+      {/* reg-home-btn-container */}
       <div className="form-card">
         <div className="form-header">
           <h2>Зарегистрируйте ваш новый аккаунт</h2>

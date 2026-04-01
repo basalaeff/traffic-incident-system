@@ -159,6 +159,19 @@ function IncidentForm() {
   // Пишем интерфейс на JSX
   return (
     <div className="form-page">
+      <div className="inform-home-btn-container">
+        <button
+          className="inform-home-btn"
+          onClick={() => {
+            navigate('/');
+          }}
+          title="Главная"
+        >
+          <img src="https://s.kontur.ru/common-v2/icons-ui/black/building-home/building-home-32-Regular.svg" />
+        </button>
+        {/* inform-home-btn */}
+      </div>
+      {/* inform-home-btn-container */}
       <div className="form-card">
         <div className="form-header">
           <h2>Добавьте новый инцидент</h2>

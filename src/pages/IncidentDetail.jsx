@@ -190,6 +190,19 @@ function IncidentDetail() {
   // Пишем интерфейс на JSX
   return (
     <div className="detail-page">
+      <div className="detail-home-btn-container">
+        <button
+          className="detail-home-btn"
+          onClick={() => {
+            navigate('/');
+          }}
+          title="Главная"
+        >
+          <img src="https://s.kontur.ru/common-v2/icons-ui/black/building-home/building-home-32-Regular.svg" />
+        </button>
+        {/* detail-home-btn */}
+      </div>
+      {/* detail-home-btn-container */}
       <div className="detail-card">
         <div className="detail-header">
           <h2>Детали инцидента </h2>
