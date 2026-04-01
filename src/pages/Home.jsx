@@ -103,6 +103,8 @@ function Home() {
   const navigate = useNavigate();
   const [users, setUsers] = useState(null);
 
+  const [displayLogout, setDisplayLogout] = useState(false);
+
   // ============================================================================
   // ПОЛУЧЕНИЕ ГЕОЛОКАЦИИ
   // ============================================================================
@@ -165,10 +167,8 @@ function Home() {
         // ============================================================================
         // GET-ЗАПРОС НА СЕРВЕР http://localhost:3001/user
         // ============================================================================
-        const responseUsers = await axios.get(
-          `http://localhost:3001/users/`
-        );
-          setUsers(responseUsers.data);
+        const responseUsers = await axios.get(`http://localhost:3001/users/`);
+        setUsers(responseUsers.data);
       } catch (err) {
         // Выводим ошибку в консоль разработчика
         // Будем выводить ошибки в консоль
@@ -188,8 +188,50 @@ function Home() {
   const user = getCurrentUser();
   const handleAuthClick = () => {
     if (user) {
-      logoutUser(); // Если вошел — выходим
-      window.location.reload(); // Перезагружаем страницу для обновления состояния
+      setDisplayLogout(true);
+      toast(
+        <div className="home-toast-notification">
+          <p>Вы уверены, что хотите выйти?</p>
+          <div className="home-toast-action">
+            <button
+              className="home-toast-btn home-toast-btn-cancel"
+              // при нажатии отмены нужно просто закрыть уведомление
+              // toast.dismiss() без аргументов закрывает последнее/активное уведомление
+              onClick={() => {
+                toast.dismiss();
+                setDisplayLogout(false);
+              }}
+            >
+              Отмена
+            </button>
+            <button
+              className="home-toast-btn home-toast-btn-logout"
+              onClick={() => {
+                logoutUser();
+                setDisplayLogout(false);
+                window.location.reload();
+              }}
+            >
+              Выйти
+            </button>
+          </div>
+          {/* home-toast-action */}
+        </div>, // дальше второй аргумент
+        // home-toast-notification
+        // Далее нужно настроить настройки поведения уведомления
+        {
+          // закрытие по таймеру выключено
+          autoClose: false,
+          // по клику закрыть нельзя
+          closeOnClick: false,
+          // и перетаскиванием тоже
+          draggable: false,
+          // крестик убрал тоже
+          closeButton: false,
+          // выведу снизу справа (по приколу)
+          position: 'bottom-right',
+        }
+      );
     } else {
       navigate('/login'); // Если не вошел идем на логин
     }
@@ -249,7 +291,7 @@ function Home() {
     // Нужно добавить отступ в 20 пикселей, чтобы было красивенько и не прилипало
     <div className="home-page">
       <div className="floating-btns">
-        {isAddingMode && (
+        {isAddingMode && !displayLogout && (
           <button
             className="circle-btn"
             onClick={handleCancelCreateIncident}
@@ -259,19 +301,20 @@ function Home() {
             <img src="https://s.kontur.ru/common-v2/icons-ui/black/x-circle/x-circle-32-Regular.svg" />
           </button>
         )}
-        {user && !isAddingMode && (
+        {user && !isAddingMode && !displayLogout && (
           <button className="circle-btn" onClick={handleCreateIncident} title="Добавить инцидент">
             <img src="https://s.kontur.ru/common-v2/icons-ui/black/plus-circle/plus-circle-32-Regular.png" />
           </button>
         )}
-
-        <button className="circle-btn" onClick={handleAuthClick} title={user ? 'Выйти' : 'Войти'}>
-          {user ? (
-            <Avatar name={user?.email} size="46" round={true} />
-          ) : (
-            <img src="https://s.kontur.ru/common-v2/icons-ui/black/arrow-ui-auth-login/arrow-ui-auth-login-32-Regular.svg" />
-          )}
-        </button>
+        {!displayLogout && (
+          <button className="circle-btn" onClick={handleAuthClick} title={user ? 'Выйти' : 'Войти'}>
+            {user ? (
+              <Avatar name={user?.email} size="46" round={true} />
+            ) : (
+              <img src="https://s.kontur.ru/common-v2/icons-ui/black/arrow-ui-auth-login/arrow-ui-auth-login-32-Regular.svg" />
+            )}
+          </button>
+        )}
       </div>
       {/* floating-btns */}
       <main className="map-container">
@@ -314,7 +357,8 @@ function Home() {
                     <p></p>
                     {/* юзеров много в этот раз. поэтому буду использовать find */}
                     {/* работает как фильтр: пробегает по массиву и находит подходящего юзера */}
-                    Пользователь: <b>{users?.find((users) => users.id === incident?.userId)?.email || ''}</b>
+                    Пользователь:{' '}
+                    <b>{users?.find((users) => users.id === incident?.userId)?.email || ''}</b>
                     <p></p>
                     <button
                       className="popup-btn"
