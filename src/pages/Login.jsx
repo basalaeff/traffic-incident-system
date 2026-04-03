@@ -155,18 +155,7 @@ function Login({}) {
               placeholder="Пароль"
               required //Обязательно для заполнения
             />
-            <p
-              className="login-subtitle"
-              onClick={() =>
-                toast.info(
-                  'Пока вы не можете восстановить доступ к аккаунту. У нас недостаточно информации для того, чтобы определить, принадлежит ли он вам.'
-                )
-              }
-              style={{ cursor: 'pointer' }} // чтобы было видно, что можно кликнуть
-            >
-              Забыли пароль?
-            </p>
-            {/* login-subtitle */}
+
             {/* Нужно добавить кнопку отправки */}
             <button type="submit" className="btn-primary" disabled={isLoading}>
               {isLoading ? (
