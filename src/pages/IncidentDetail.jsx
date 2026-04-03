@@ -60,13 +60,13 @@ function IncidentDetail() {
           );
           setOwner(responseOwner.data);
         } else {
-          toast.error('Ошибка загрузки данных во втором запросе');
+          toast.error(`Ошибка загрузки пользователя: ${error.message}`);
         }
         setIsLoading(false);
       } catch (err) {
-        console.error(`Ошибка загрузки данных:`, err);
-        toast.error('Ошибка загрузки данных');
-        toast.error(err.message);
+        console.error(`Ошибка загрузки инцидента:`, err.response?.data?.message);
+        toast.error(`Ошибка загрузки инцидента: ${err.response?.data?.message}`);
+        if (err.response?.status === 404) navigate('/');
       } finally {
         setIsLoading(false);
       }
@@ -103,8 +103,7 @@ function IncidentDetail() {
       toast.success('Инцидент успешно обновлён!');
       setIsEditing(false);
     } catch (err) {
-      toast.error('Не удалось сохранить изменения');
-      toast.error(err.response?.data?.message || err.message);
+      toast.error(`Не удалось сохранить изменения: ${err.response?.data?.message}`);
     } finally {
       setIsLoading(false);
     }
@@ -145,8 +144,7 @@ function IncidentDetail() {
                 });
                 setIsEditing(false);
               } catch (err) {
-                toast.error('Не удалось удалить инцидент');
-                toast.error(err.response?.data?.message || err.message);
+                toast.error(`Не удалось удалить инцидент: ${err.response?.data?.message}`);
               } finally {
                 setIsLoading(false);
                 setShowDelete(false);
