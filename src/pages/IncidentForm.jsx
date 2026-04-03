@@ -32,7 +32,7 @@ function IncidentForm() {
   //     "userId": 1,
   //     "time": "21.03.2026",
   //   },
-  // id добавляется автоматически
+  const [id, setId] = useState('');
   const [type, setType] = useState('');
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
@@ -118,11 +118,15 @@ function IncidentForm() {
     setIsLoading(true);
     try {
       const now = new Date().toLocaleString('ru-RU');
-
+      // буду генерировать id cам (безопасность, не нужен GET-запрос, чтобы достать id,
+      // которое придумает json-server для переброса на детализацию
+      const uuid = crypto.randomUUID();
+      setId(uuid);
       // ============================================================================
       // POST-ЗАПРОС НА СЕРВЕР http://localhost:3001/incidents
       // ============================================================================
       await axios.post('http://localhost:3001/incidents', {
+        id: uuid,
         type,
         title,
         description,
@@ -138,7 +142,8 @@ function IncidentForm() {
       // нужна задержка, чтобы пользователь посмотрел уведомление (3000)
       // поставим 4000
       setTimeout(() => {
-        // нужно направить пользователя на главную (useNavigate)
+        // не нужно направлять пользователя на главную (это вообще не user friendly)
+        // надо стразу на детализацию инцидента
         navigate('/');
       }, 4000);
       // try

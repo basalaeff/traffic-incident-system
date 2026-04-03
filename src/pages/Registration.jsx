@@ -22,7 +22,6 @@ function Registration() {
   //     "password": "12345"
   //   },
 
-  // id добавляется автоматически
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [repeatPassword, setRepeatPassword] = useState('');
@@ -125,11 +124,13 @@ function Registration() {
       // у каждого пользователя своя уникальная соль
       const salt = bcrypt.genSaltSync(10);
       const hashedPassword = bcrypt.hashSync(password, salt);
+      const uuid = crypto.randomUUID();
 
       // ============================================================================
       // POST-ЗАПРОС НА СЕРВЕР http://localhost:3001/users
       // ============================================================================
       await axios.post('http://localhost:3001/users', {
+        id: uuid,
         email,
         password: hashedPassword,
       });
