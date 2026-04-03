@@ -22,7 +22,7 @@ function IncidentForm() {
   // ПЕРЕМЕННЫЕ СОСТОЯНИЙ
   // ============================================================================
   // {
-  //     "id": 1,
+  //     "id": uuid(универсальный уникальный идентификатор),
   //     "type": "accident",
   //     "title": "ДТП на перекрестке",
   //     "description": "Столкнулись две машины, перекрыта полоса.",
@@ -32,7 +32,6 @@ function IncidentForm() {
   //     "userId": 1,
   //     "time": "21.03.2026",
   //   },
-  const [id, setId] = useState('');
   const [type, setType] = useState('');
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
@@ -60,8 +59,6 @@ function IncidentForm() {
     setLat(location.state.lat);
     setLng(location.state.lng);
   }, []);
-
-
 
   useEffect(() => {
     const user = getCurrentUser();
@@ -121,7 +118,6 @@ function IncidentForm() {
       // буду генерировать id cам (безопасность, не нужен GET-запрос, чтобы достать id,
       // которое придумает json-server для переброса на детализацию
       const uuid = crypto.randomUUID();
-      setId(uuid);
       // ============================================================================
       // POST-ЗАПРОС НА СЕРВЕР http://localhost:3001/incidents
       // ============================================================================
@@ -144,7 +140,7 @@ function IncidentForm() {
       setTimeout(() => {
         // не нужно направлять пользователя на главную (это вообще не user friendly)
         // надо стразу на детализацию инцидента
-        navigate('/');
+        navigate(`/incident/${uuid}`);
       }, 4000);
       // try
     } catch (err) {
