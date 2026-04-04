@@ -1,6 +1,7 @@
 // Это инструменты из библиотеки
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+import { toast } from 'react-toastify';
 
 // ============================================================================
 // КОМПОНЕНТЫ
@@ -15,6 +16,34 @@ import Registration from './pages/Registration';
 // ОСНОВНАЯ ФУНКЦИЯ ПРИЛОЖЕНИЯ
 // ============================================================================
 const App = () => {
+  // В моем приложении есть карта, которая зависит от интернета
+  // Когда я запускаю приложение локально и оно не грузиться, я и сам не сразу понимаю,
+  // когда пропал интернет. Решил написать простой трекер для отслеживания
+
+  useEffect(() => {
+    // Проверка при старте
+    if (!navigator.onLine) {
+      handleOffline;
+    }
+    // Функции для установки состояния true/false
+    const handleOnline = () => {
+      toast.success('Подключение восстановлено!');
+    };
+    const handleOffline = () => {
+      toast.warn('Упс! Кажется у вас пропал интернет. Восстановите подключение к интернету!');
+    };
+    // создадим трекер для проверки
+    // вызовет функцию при событии
+    window.addEventListener('online', handleOnline);
+    window.addEventListener('offline', handleOffline);
+
+    // очищаем трекер, когда закрываем приложение
+    return () => {
+      window.removeEventListener('online', handleOnline);
+      window.removeEventListener('offline', handleOffline);
+    };
+  }, []); // Вызывает один раз при запуске
+
   return (
     <Router>
       <Routes>
