@@ -309,7 +309,7 @@ function Home() {
         {!displayLogout && (
           <button className="circle-btn" onClick={handleAuthClick} title={user ? 'Выйти' : 'Войти'}>
             {user ? (
-              <Avatar name={user?.email} size="46" round={true} />
+              <Avatar name={user?.login} size="46" round={true} />
             ) : (
               <img src="https://s.kontur.ru/common-v2/icons-ui/black/arrow-ui-auth-login/arrow-ui-auth-login-32-Regular.svg" />
             )}
@@ -368,7 +368,7 @@ function Home() {
                     {/* юзеров много в этот раз. поэтому буду использовать find */}
                     {/* работает как фильтр: пробегает по массиву и находит подходящего юзера */}
                     Пользователь:
-                    <b>{users?.find((users) => users.id === incident?.userId)?.email || ''}</b>
+                    <b>{users?.find((users) => users.id === incident?.userId)?.login || ''}</b>
                     <p></p>
                     <button
                       className="popup-btn"
@@ -399,7 +399,7 @@ function Home() {
                   setTimeout(() => {
                     e.target.closePopup();
                   }, 1000);
-                }
+                },
               }}
             >
               {/* у Popup пока нет css, написал только функциональность */}

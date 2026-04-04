@@ -17,8 +17,8 @@ function Login({}) {
   // ============================================================================
   // ПЕРЕМЕННЫЕ СОСТОЯНИЙ
   // ============================================================================
-  // Создам переменную состояния для хранения почты
-  const [email, setEmail] = useState('');
+  // Создам переменную состояния для хранения логина
+  const [login, setLogin] = useState('');
   // ...и пароля
   const [password, setPassword] = useState('');
   // загрузка
@@ -37,12 +37,12 @@ function Login({}) {
   }, []);
 
   // ============================================================================
-  // ФУНКЦИЯ ОБРАБОТКИ ИЗМЕНЕНИЯ В ПОЛЕ EMAIL
+  // ФУНКЦИЯ ОБРАБОТКИ ИЗМЕНЕНИЯ В ПОЛЕ LOGIN
   // ============================================================================
   // Вызывается каждый раз, когда происходит изменение в поле
-  const handleEmailChange = (e) => {
+  const handleLoginChange = (e) => {
     // Берем текущий текст из поля с помощью e.target.value
-    setEmail(e.target.value);
+    setLogin(e.target.value);
   };
   // ============================================================================
   // ФУНКЦИЯ ОБРАБОТКИ ИЗМЕНЕНИЯ В ПОЛЕ PASSWORD
@@ -63,28 +63,28 @@ function Login({}) {
     setIsLoading(true);
     // Нужно написать запрос
     try {
-      // Пользователь ввел email
+      // Пользователь ввел логин
       // Нужно найти данные пользователя на сервере
       // ============================================================================
       // GET-ЗАПРОС НА СЕРВЕР http://localhost:3001/users
       // ============================================================================
-      const response = await axios.get(`http://localhost:3001/users?email=${email}`);
+      const response = await axios.get(`http://localhost:3001/users?login=${login}`);
       // ============================================================================
-      // ПРОВЕРКА ПОЧТЫ И ПАРОЛЯ
+      // ПРОВЕРКА ЛОГИНА И ПАРОЛЯ
       // ============================================================================
       // если длина нулевая, значит ничего не нашлось
       if (response.data.length === 0) {
-        throw new Error('Пользователь с таким email не найден');
+        throw new Error('Пользователь не найден!');
       }
       const user = response.data[0];
       const isValid = bcrypt.compareSync(password, user.password);
       if (!isValid) {
-        throw new Error('Неверный пароль');
+        throw new Error('Неверный пароль!');
       }
       // сохранение
       loginUser(user);
 
-      toast.success(`Успешный вход: ${email}`);
+      toast.success(`Успешный вход: ${login}`);
       // нужна задержка, чтобы пользователь посмотрел уведомление (3000)
       // поставим 4000
       setTimeout(() => {
@@ -118,11 +118,12 @@ function Login({}) {
       <div className="login-home-btn-container">
         <button
           className="login-home-btn"
-          onClick={() => {navigate('/')}}
+          onClick={() => {
+            navigate('/');
+          }}
           title="Главная"
-
         >
-        <img src="https://s.kontur.ru/common-v2/icons-ui/black/building-home/building-home-32-Regular.svg" />
+          <img src="https://s.kontur.ru/common-v2/icons-ui/black/building-home/building-home-32-Regular.svg" />
         </button>
         {/* login-home-btn */}
       </div>
@@ -137,12 +138,12 @@ function Login({}) {
           <form onSubmit={handleSubmit}>
             <input
               className="form-input"
-              type="email"
-              value={email}
+              type="login"
+              value={login}
               // Надо зафиксировать изменения
-              onChange={handleEmailChange}
+              onChange={handleLoginChange}
               // Добавлю подсказку (исчезнет при вводе)
-              placeholder="Электронная почта"
+              placeholder="Логин"
               required //Обязательно для заполнения
             />
             <input

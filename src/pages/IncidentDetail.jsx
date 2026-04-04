@@ -125,7 +125,10 @@ function IncidentDetail() {
             className="toast-btn toast-btn-cancel"
             // при нажатии отмены нужно просто закрыть уведомление
             // toast.dismiss() без аргументов закрывает последнее/активное уведомление
-            onClick={() => { toast.dismiss(); setShowDelete(false) }}
+            onClick={() => {
+              toast.dismiss();
+              setShowDelete(false);
+            }}
           >
             Отмена
           </button>
@@ -291,7 +294,7 @@ function IncidentDetail() {
               </tr>
               <tr>
                 <td>Пользователь</td>
-                <td>{owner?.email}</td>
+                <td>{owner?.login}</td>
               </tr>
               <tr>
                 <td>Время</td>

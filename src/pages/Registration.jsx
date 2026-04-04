@@ -2,8 +2,8 @@
 import './Registration.css';
 // Импортируем хук useState из библиотеки React.
 import { useState, useEffect } from 'react';
-// ссылки и навигация
-import { Link, useNavigate } from 'react-router-dom';
+// навигация
+import { useNavigate } from 'react-router-dom';
 // всплывающие уведомления тоже могут пригодиться
 import { toast } from 'react-toastify';
 // запросы
@@ -13,16 +13,15 @@ import axios from 'axios';
 import { getCurrentUser } from '../auth';
 import bcrypt from 'bcryptjs';
 
-
 function Registration() {
   const navigate = useNavigate(); //хук для переброса на авторизацию
   // {
   //     "id": 1,
-  //     "email": "test@user.com",
+  //     "login": "test",
   //     "password": "12345"
   //   },
 
-  const [email, setEmail] = useState('');
+  const [login, setLogin] = useState('');
   const [password, setPassword] = useState('');
   const [repeatPassword, setRepeatPassword] = useState('');
 
@@ -42,12 +41,12 @@ function Registration() {
   }, []);
 
   // ============================================================================
-  // ФУНКЦИЯ ОБРАБОТКИ ИЗМЕНЕНИЯ В ПОЛЕ EMAIL
+  // ФУНКЦИЯ ОБРАБОТКИ ИЗМЕНЕНИЯ В ПОЛЕ LOGIN
   // ============================================================================
   // Вызывается каждый раз, когда происходит изменение в поле
-  const handleEmailChange = (e) => {
+  const handleLoginChange = (e) => {
     // Берем текущий текст из поля с помощью e.target.value
-    setEmail(e.target.value);
+    setLogin(e.target.value);
   };
   // ============================================================================
   // ФУНКЦИЯ ОБРАБОТКИ ИЗМЕНЕНИЯ В ПОЛЕ PASSWORD
@@ -70,7 +69,7 @@ function Registration() {
   // ФУНКЦИЯ СБРОСА ПОЛЕЙ
   // ============================================================================
   const handleReset = () => {
-    setEmail('');
+    setLogin('');
     setPassword('');
     setRepeatPassword('');
     setIsLoading(false);
@@ -82,7 +81,7 @@ function Registration() {
     // Нужно запретить перезагрузку страницы при отправке формы
     e.preventDefault();
     // При регистрации пользователя выявлены следующие проблемы:
-    // 1) Почта может быть не уникальной
+    // 1) Логин может быть не уникальным
     // 2) Пароль может быть любым (даже один символ)
     // 3) Поля пароль и повторить пароль не связаны
     // 4) Пользователь вводит почту и пароль, однако он узнает, что почта уже существует
@@ -96,14 +95,14 @@ function Registration() {
     // Пока нет ответа. Новый запрос не будет отправлен
     setIsLoading(true);
     try {
-      // Сделаем так чтобы почта была уникальной
+      // Сделаем так чтобы логин был уникальным
       // ============================================================================
       // GET-ЗАПРОС НА СЕРВЕР http://localhost:3001/users
       // ============================================================================
       // делаем максимально просто
-      // запрашиваем введенную почту у сервера из db.json
-      // если получили данные, значит почта уже существует, тогда выводим ошибку
-      const checkResponse = await axios.get(`http://localhost:3001/users?email=${email}`);
+      // запрашиваем введенный логин у сервера из db.json
+      // если получили данные, значит логин уже существует, тогда выводим ошибку
+      const checkResponse = await axios.get(`http://localhost:3001/users?login=${login}`);
       // если длина > 0, тогда данные есть
       if (checkResponse.data.length > 0) {
         throw new Error('Этот пользователь уже зарегистрирован!');
@@ -131,7 +130,7 @@ function Registration() {
       // ============================================================================
       await axios.post('http://localhost:3001/users', {
         id: uuid,
-        email,
+        login,
         password: hashedPassword,
       });
 
@@ -182,12 +181,12 @@ function Registration() {
           <form onSubmit={handleSubmit}>
             <input
               className="form-input"
-              type="email"
-              value={email}
+              type="login"
+              value={login}
               // Надо зафиксировать изменения
-              onChange={handleEmailChange}
+              onChange={handleLoginChange}
               // Добавлю подсказку (исчезнет при вводе)
-              placeholder="Электронная почта"
+              placeholder="Логин"
               required //Обязательно для заполнения
             />
             <input
