@@ -4,10 +4,10 @@
 .home-page {
   display: flex; /* Включаем гибкую верстку */
   /* 100% экрана */
-  height: 100%;
-  width: 100%;
+  height: 100vh;
+  width: 100vw;
   font-family: 'Roboto', Arial, sans-serif;
-  position: relative; /* относительное позиционирование  */
+
   /* запрещаем прокрутку и выход за экран */
   overflow: hidden;
 }
@@ -18,6 +18,8 @@
 .map-container {
   flex: 1;
   height: 100%;
+  width: 100%;
+  position: relative; /* относительное позиционирование  */
 }
 
 /* ============================================================================ */
