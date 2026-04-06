@@ -1,0 +1,170 @@
+/* ============================================================================ */
+/* КОНТЕЙНЕР ДЛЯ ГЛАВНОЙ СТРАНИЦЫ */
+/* ============================================================================ */
+.home-page {
+  display: flex; /* Включаем гибкую верстку */
+  /* 100% экрана */
+  height: 100vh;
+  width: 100vw;
+  font-family: 'Roboto', Arial, sans-serif;
+
+  /* запрещаем прокрутку и выход за экран */
+  overflow: hidden;
+}
+
+/* ============================================================================ */
+/* КОНТЕЙНЕР КАРТЫ */
+/* ============================================================================ */
+.map-container {
+  flex: 1;
+  height: 100%;
+  width: 100%;
+  position: relative; /* относительное позиционирование  */
+}
+
+/* ============================================================================ */
+/* КОНТЕЙНЕР ДЛЯ ПЛАВАЮЩИХ КНОПОК */
+/* ============================================================================ */
+.floating-btns {
+  /* вырываемся из нормального потока документа */
+  position: absolute;
+  /* теперь другие элементы будут думать, что этих элементов не существует */
+  bottom: 20px; /* Отступ снизу */
+  right: 20px; /* Отступ справа */
+  z-index: 1000; /* Чтобы быть выше карты (Leaflet использует z-index до 1000) */
+  display: flex;
+  gap: 10px; /* расстояние между соседями */
+}
+
+/* ============================================================================ */
+/* КРУГЛАЯ КНОПКА */
+/* ============================================================================ */
+.circle-btn {
+  width: 50px; /* Ширина */
+  height: 50px; /* Высота  */
+  border-radius: 50%; /* Делает кнопку круглой */
+  border: none; /* рамка удалена */
+  background-color: var(--white); /* Цвет фона */
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3); /* Тень для объема */
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  /* зададим время для анимации */
+  transition:
+    transform 0.2s,
+    background-color 0.2s;
+}
+
+.circle-btn:hover {
+  transform: scale(1.05); /* Легкое увеличение при наведении */
+}
+
+.circle-btn:active {
+  transform: scale(0.95);
+}
+
+/* ============================================================================ */
+/* ПОПАП (ВСПЛЫВАЮЩЕЕ ОКНО) */
+/* ============================================================================ */
+.popup-content {
+  min-width: 200px;
+}
+
+.popup-content h3 {
+  /* сверху справа снизу слева */
+  margin: 0 0 5px 0;
+  font-size: 18px;
+  color: var(--gray-dark);
+}
+
+.popup-content .meta-info {
+  margin-top: 8px;
+  font-size: 12px;
+  color: #555;
+}
+
+/* ============================================================================ */
+/* КНОПКИ ВНУТРИ ПОПАПА */
+/* ============================================================================ */
+.popup-btn {
+  margin-top: 8px;
+  cursor: pointer;
+  padding: 6px 12px;
+  background-color: var(--primary-color);
+  color: var(--white);
+  border: none;
+  border-radius: var(--radius-md);
+  font-size: 14px;
+  font-weight: bold;
+  transition: background-color 0.2s;
+}
+
+.popup-btn:hover {
+  background-color: var(--primary-hover);
+}
+
+/* ============================================================================ */
+/* СТИЛИ ДЛЯ ПОДТВЕРЖДЕНИЯ УДАЛЕНИЯ (TOAST) */
+/* ============================================================================ */
+/* окно уведомления */
+.home-toast-notification {
+  /* внутренние отступы */
+  padding: 8px 4px;
+  min-width: 280px;
+}
+/* надпись */
+.home-toast-notification p {
+  /* сверху справа снизу слева */
+  margin: 0 0 8px 0;
+  font-weight: 500;
+  color: var(--gray-dark);
+}
+/* контейнер для кнопок */
+.home-toast-actions {
+  display: flex;
+  gap: 20px;
+}
+/* кнопка  */
+.home-toast-btn {
+  /* внутренние отступы */
+  padding: 8px 20px;
+  /* убрал рамку */
+  border: none;
+  /* закруглил */
+  border-radius: var(--radius-md);
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+  font-family: inherit;
+}
+/* отмена */
+.home-toast-btn-cancel {
+  background: var(--gray-light);
+  color: var(--gray-dark);
+}
+
+.home-toast-btn-cancel:hover {
+  background: var(--gray-medium);
+  color: var(--white);
+  transform: scale(1.05); /* Легкое увеличение при наведении */
+}
+
+.home-toast-btn-cancel:active {
+  transform: scale(0.95);
+}
+
+.home-toast-btn-logout {
+  background: var(--danger-color);
+  color: var(--white);
+}
+
+.home-toast-btn-logout:hover {
+  background: var(--danger-color);
+  transform: scale(1.05); /* Легкое увеличение при наведении */
+}
+
+.home-toast-btn-logout:active {
+  transform: scale(0.95);
+}

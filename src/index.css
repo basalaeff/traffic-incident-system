@@ -1,111 +1,137 @@
+/* ============================================================================ */
+/* ГЛОБАЛЬНЫЕ ПЕРЕМЕННЫЙ (НАСТРОЙКИ ДИЗАЙНА) */
+/* ============================================================================ */
 :root {
-  --text: #6b6375;
-  --text-h: #08060d;
-  --bg: #fff;
-  --border: #e5e4e7;
-  --code-bg: #f4f3ec;
-  --accent: #aa3bff;
-  --accent-bg: rgba(170, 59, 255, 0.1);
-  --accent-border: rgba(170, 59, 255, 0.5);
-  --social-bg: rgba(244, 243, 236, 0.5);
-  --shadow:
-    rgba(0, 0, 0, 0.1) 0 10px 15px -3px, rgba(0, 0, 0, 0.05) 0 4px 6px -2px;
+  /*ЦВЕТОВАЯ ПАЛИТРА*/
+  --primary-color: #007bff; /* Основной синий */
+  --primary-hover: #0056b3; /* Синий при наведении */
+  --success-color: #28a745; /* Зеленый */
+  --danger-color: #dc3545; /* Красный */
+  --warning-color: #ffc107; /* Желтый*/
+  --gray-light: #f8f9fa; /* Светло-серый фон */
+  --gray-medium: #6c757d; /* Серый текст */
+  --gray-dark: #343a40; /* Темный текст/фон */
+  --white: #ffffff; /* Белый */
 
-  --sans: system-ui, 'Segoe UI', Roboto, sans-serif;
-  --heading: system-ui, 'Segoe UI', Roboto, sans-serif;
-  --mono: ui-monospace, Consolas, monospace;
+  /* ТЕНИ И СКРУГЛЕНИЯ */
+  --shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.05); /* Легкая тень */
+  --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.1); /* Средняя тень (карточки) */
+  --radius-md: 8px; /* Стандартное скругление углов */
+  --radius-lg: 12px; /* Большое скругление */
 
-  font: 18px/145% var(--sans);
-  letter-spacing: 0.18px;
-  color-scheme: light dark;
-  color: var(--text);
-  background: var(--bg);
-  font-synthesis: none;
-  text-rendering: optimizeLegibility;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-
-  @media (max-width: 1024px) {
-    font-size: 16px;
-  }
+  /* --- ШРИФТЫ --- */
+  --font-main: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --text: #9ca3af;
-    --text-h: #f3f4f6;
-    --bg: #16171d;
-    --border: #2e303a;
-    --code-bg: #1f2028;
-    --accent: #c084fc;
-    --accent-bg: rgba(192, 132, 252, 0.15);
-    --accent-border: rgba(192, 132, 252, 0.5);
-    --social-bg: rgba(47, 48, 58, 0.5);
-    --shadow:
-      rgba(0, 0, 0, 0.4) 0 10px 15px -3px, rgba(0, 0, 0, 0.25) 0 4px 6px -2px;
-  }
-
-  #social .button-icon {
-    filter: invert(1) brightness(2);
-  }
+/* ============================================================================ */
+/* НАСТРОЙКА БАЗОВЫХ СТИЛЕЙ */
+/* ============================================================================ */
+* {
+  box-sizing: border-box; /* Чтобы padding не увеличивал ширину элементов */
+  margin: 0; /* Убираем стандартные отступы браузера */
+  padding: 0;
 }
 
 body {
-  margin: 0;
+  font-family: var(--font-main); /* Используем наш шрифт */
+  background-color: var(--gray-light); /* Светлый фон страницы */
+  color: var(--gray-dark); /* Темный текст по умолчанию */
+  line-height: 1.6; /* Удобное расстояние между строками текста */
 }
 
-#root {
-  width: 1126px;
-  max-width: 100%;
-  margin: 0 auto;
-  text-align: center;
-  border-inline: 1px solid var(--border);
-  min-height: 100svh;
+/* Стили для ссылок по умолчанию */
+a {
+  text-decoration: none; /* Убираем подчеркивание */
+  color: var(--primary-color);
+  transition: color 0.2s; /* Плавное изменение цвета */
+}
+
+a:hover {
+  color: var(--primary-hover); /* Цвет при наведении */
+}
+
+/* ============================================================================ */
+/* КНОПОЧКИ ПО УМОЛЧАНИЮ */
+/* ============================================================================ */
+button {
+  font-family: var(--font-main);
+  cursor: pointer;
+  border: none;
+  outline: none;
+}
+
+/* ============================================================================ */
+/* ВЫКЛЮЧАЕТ ОТОБРАЖЕНИЯ ПОДПИСИ LEAFLET ПОД КАРТОЙ */
+/* ============================================================================ */
+.leaflet-control-attribution {
+  display: none !important;
+}
+
+/* при загрузки карты нужен спиннер во весь экран */
+/* ============================================================================ */
+/* СПИННЕР ДЛЯ ЗАГРУЗКИ СТРАНИЦЫ */
+/* ============================================================================ */
+/* важно, что спиннер был по центру экрана */
+/* создадим контейнер  */
+.loading-screen {
+  /* нужен флексбокс для центрирования*/
   display: flex;
-  flex-direction: column;
-  box-sizing: border-box;
+  /* нужно установить центр по горизонтали... */
+  justify-content: center;
+  /*...и по вертикали  */
+  align-items: center;
+  /* высоту нужно установить на весь экран */
+  height: 100vh;
+  /* вот добавим из переменных */
+  background-color: var(--gray-light);
 }
 
-h1,
-h2 {
-  font-family: var(--heading);
-  font-weight: 500;
-  color: var(--text-h);
+/* сделаем большой вращающийся круг */
+.spinner-large {
+  /* зададим ширину... */
+  width: 100px;
+  /* и высоту... */
+  height: 100px;
+  /* ну это квадрат */
+  /* надо превратить в круг */
+  border-radius: 50%;
+  /* надо, чтобы вращался бесконечно */
+  animation: spin 1s linear infinite;
+  /* нужно добавить цвета  */
+  border: 5px solid #e0e0e0; /* Толстая серая рамка (фон круга) */
+  border-top: 5px solid var(--primary-color); /* Верхняя часть рамки синяя (это будет "бегунок") */
 }
 
-h1 {
-  font-size: 56px;
-  letter-spacing: -1.68px;
-  margin: 32px 0;
-  @media (max-width: 1024px) {
-    font-size: 36px;
-    margin: 20px 0;
-  }
-}
-h2 {
-  font-size: 24px;
-  line-height: 118%;
-  letter-spacing: -0.24px;
-  margin: 0 0 8px;
-  @media (max-width: 1024px) {
-    font-size: 20px;
-  }
-}
-p {
-  margin: 0;
+/* маленький спиннер */
+/* будет крутиться в кнопках */
+
+.loading-button {
+  /* нужен флексбокс для центрирования*/
+  display: flex;
+  /* нужно установить центр по горизонтали... */
+  justify-content: center;
+  /*...и по вертикали  */
+  align-items: center;
 }
 
-code,
-.counter {
-  font-family: var(--mono);
-  display: inline-flex;
-  border-radius: 4px;
-  color: var(--text-h);
+.spinner-mini {
+  /* зададим ширину... */
+  width: 24px;
+  /* и высоту... */
+  height: 24px;
+  /* ну это квадрат */
+  /* надо превратить в круг */
+  border-radius: 50%;
+  /* надо, чтобы вращался бесконечно */
+  animation: spin 1s linear infinite;
+  /* нужно добавить цвета  */
+  border: 1px solid #e0e0e0; /* Толстая серая рамка (фон круга) */
+  border-top: 1px solid var(--primary-color); /* Верхняя часть рамки синяя (это будет "бегунок") */
 }
 
-code {
-  font-size: 15px;
-  line-height: 135%;
-  padding: 4px 8px;
-  background: var(--code-bg);
+/* нужна анимация */
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
 }
+
