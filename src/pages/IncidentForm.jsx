@@ -159,7 +159,7 @@ function IncidentForm() {
   return (
     <div className="page">
       <div className="card">
-        <div className="fist-block">
+        <div className="first-block">
           <button
             className="home-btn"
             onClick={() => {
@@ -170,7 +170,9 @@ function IncidentForm() {
             <img src="https://s.kontur.ru/common-v2/icons-ui/black/building-home/building-home-32-Regular.svg" />
           </button>
           {/* home-btn */}
-          <h2>Добавьте новый инцидент</h2>
+          <h2>Форма</h2>
+          <div className='subtitle'>Добавьте новый инцидент</div>
+          {/* subtitle */}
         </div>
         {/* first-block */}
         <div className="second-block">
