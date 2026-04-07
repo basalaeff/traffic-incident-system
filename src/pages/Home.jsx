@@ -190,11 +190,11 @@ function Home() {
     if (user) {
       setDisplayLogout(true);
       toast(
-        <div className="home-toast-notification">
+        <div className="toast-notification">
           <p>Вы уверены, что хотите выйти?</p>
           <div className="home-toast-action">
             <button
-              className="home-toast-btn home-toast-btn-cancel"
+              className="toast-btn toast-btn-cancel"
               // при нажатии отмены нужно просто закрыть уведомление
               // toast.dismiss() без аргументов закрывает последнее/активное уведомление
               onClick={() => {
@@ -205,7 +205,7 @@ function Home() {
               Отмена
             </button>
             <button
-              className="home-toast-btn home-toast-btn-logout"
+              className="toast-btn toast-btn-logout"
               onClick={() => {
                 logoutUser();
                 setDisplayLogout(false);
@@ -215,9 +215,9 @@ function Home() {
               Выйти
             </button>
           </div>
-          {/* home-toast-action */}
+          {/* toast-action */}
         </div>, // дальше второй аргумент
-        // home-toast-notification
+        // toast-notification
         // Далее нужно настроить настройки поведения уведомления
         {
           // закрытие по таймеру выключено
@@ -416,7 +416,7 @@ function Home() {
                   <p>
                     Координаты: {tempMarker[0]}, {tempMarker[1]}
                   </p>
-                  <button className="btn--popup" onClick={handleConfirmCreateIncident}>
+                  <button className="popup-btn" onClick={handleConfirmCreateIncident}>
                     Создать
                   </button>
                   {/* popup-btn */}
