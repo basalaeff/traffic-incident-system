@@ -1,5 +1,3 @@
-// стили
-import './IncidentDetail.css';
 //  Нужен хук, чтобы доставать id из ссылки
 import { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
@@ -190,29 +188,26 @@ function IncidentDetail() {
 
   // Пишем интерфейс на JSX
   return (
-    <div className="detail-page">
-      <div className="detail-home-btn-container">
-        <button
-          className="detail-home-btn"
-          onClick={() => {
-            navigate('/');
-          }}
-          title="Главная"
-        >
-          <img src="https://s.kontur.ru/common-v2/icons-ui/black/building-home/building-home-32-Regular.svg" />
-        </button>
-        {/* detail-home-btn */}
-      </div>
-      {/* detail-home-btn-container */}
-      <div className="detail-card">
-        <div className="detail-header">
+    <div className="page-detail">
+      <div className="card">
+        <div className="first-block-detail">
+          <button
+            className="home-btn"
+            onClick={() => {
+              navigate('/');
+            }}
+            title="Главная"
+          >
+            <img src="https://s.kontur.ru/common-v2/icons-ui/black/building-home/building-home-32-Regular.svg" />
+          </button>
+          {/* home-btn */}
           <h2>Детали инцидента </h2>
-          <div className="detail-btn">
+          <div className="ud-btn">
             {/* Кнопка редактировать */}
             {user?.id === incident?.userId && !isEditing && !showDelete && (
               // скрываем во время редактирования
               <button
-                className="detail-circle-btn"
+                className="circle-btn"
                 title="Редактировать"
                 onClick={() => setIsEditing(true)}
                 style={{ backgroundColor: 'var(--primary-color)' }}
@@ -224,7 +219,7 @@ function IncidentDetail() {
             {/* Кнопка отмена */}
             {user?.id === incident?.userId && isEditing && !showDelete && (
               <button
-                className="detail-circle-btn"
+                className="circle-btn"
                 title="Отмена"
                 onClick={() => setIsEditing(false)}
                 style={{ backgroundColor: 'var(--danger-color)' }}
@@ -236,7 +231,7 @@ function IncidentDetail() {
             {/* Кнопка удалить */}
             {user?.id === incident?.userId && !isEditing && !showDelete && (
               <button
-                className="detail-circle-btn"
+                className="circle-btn"
                 title="Удалить"
                 onClick={handleDelete}
                 style={{ backgroundColor: 'var(--danger-color)' }}
@@ -245,10 +240,10 @@ function IncidentDetail() {
               </button>
             )}
           </div>
-          {/* detail-btn */}
+          {/* ud-btn */}
         </div>
-        {/* detail-header */}
-        <div className="detail">
+        {/* first-block-detail */}
+        <div className="second-block">
           <div className="detail-title">
             {isEditing ? (
               <input
@@ -330,11 +325,11 @@ function IncidentDetail() {
             </button>
           )}
         </div>
-        {/* detail */}
+        {/* second-block */}
       </div>
-      {/* detail-card */}
+      {/* card */}
     </div>
-    // detail-page
+    // page
   );
 }
 

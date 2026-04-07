@@ -1,4 +1,3 @@
-import './Home.css';
 import { useState, useEffect } from 'react';
 
 // Добавлю компоненты карты
@@ -9,6 +8,7 @@ import { MapContainer, TileLayer, Marker, Popup, useMapEvents } from 'react-leaf
 // Нужен хук для роутинга
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import '../css/components/map.css';
 import 'leaflet/dist/leaflet.css';
 
 // Нужна библиотека для работы с иконками
@@ -288,8 +288,7 @@ function Home() {
   // ============================================================================
   return (
     // Внешний контейнер для всей страницы
-    // Нужно добавить отступ в 20 пикселей, чтобы было красивенько и не прилипало
-    <div className="home-page">
+    <div className="page-home">
       <div className="floating-btns">
         {isAddingMode && !displayLogout && (
           <button
@@ -302,12 +301,20 @@ function Home() {
           </button>
         )}
         {user && !isAddingMode && !displayLogout && (
-          <button className="circle-btn" onClick={handleCreateIncident} title="Добавить инцидент">
+          <button
+            className="circle-btn"
+            onClick={handleCreateIncident}
+            title="Добавить инцидент"
+          >
             <img src="https://s.kontur.ru/common-v2/icons-ui/black/plus-circle/plus-circle-32-Regular.png" />
           </button>
         )}
         {!displayLogout && (
-          <button className="circle-btn" onClick={handleAuthClick} title={user ? 'Выйти' : 'Войти'}>
+          <button
+            className="circle-btn"
+            onClick={handleAuthClick}
+            title={user ? 'Выйти' : 'Войти'}
+          >
             {user ? (
               <Avatar name={user?.login} size="46" round={true} />
             ) : (
@@ -355,7 +362,7 @@ function Home() {
                     // решил проблему с быстрым закрыванием
                     setTimeout(() => {
                       e.target.closePopup();
-                    }, 1000);
+                    }, 2000);
                   },
                 }}
               >
@@ -371,7 +378,7 @@ function Home() {
                     <b>{users?.find((users) => users.id === incident?.userId)?.login || ''}</b>
                     <p></p>
                     <button
-                      className="popup-btn"
+                      className="btn--popup"
                       onClick={() => navigate(`/incident/${incident.id}`)}
                     >
                       Подробнее
@@ -398,7 +405,7 @@ function Home() {
                   // решил проблему с быстрым закрыванием
                   setTimeout(() => {
                     e.target.closePopup();
-                  }, 1000);
+                  }, 2000);
                 },
               }}
             >
@@ -409,7 +416,7 @@ function Home() {
                   <p>
                     Координаты: {tempMarker[0]}, {tempMarker[1]}
                   </p>
-                  <button className="popup-btn" onClick={handleConfirmCreateIncident}>
+                  <button className="btn--popup" onClick={handleConfirmCreateIncident}>
                     Создать
                   </button>
                   {/* popup-btn */}
@@ -422,7 +429,7 @@ function Home() {
       </main>
       {/* map-container */}
     </div>
-    // home-page
+    // page-home
   );
 }
 
