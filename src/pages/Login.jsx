@@ -1,4 +1,3 @@
-import './Login.css';
 // Импортируем хук useState из библиотеки React.
 import { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
@@ -114,30 +113,27 @@ function Login({}) {
   // ============================================================================
   // Пишем интерфейс на JSX
   return (
-    <div className="login-page">
-      <div className="login-home-btn-container">
-        <button
-          className="login-home-btn"
-          onClick={() => {
-            navigate('/');
-          }}
-          title="Главная"
-        >
-          <img src="https://s.kontur.ru/common-v2/icons-ui/black/building-home/building-home-32-Regular.svg" />
-        </button>
-        {/* login-home-btn */}
-      </div>
-      {/* login-home-btn-container */}
-      <div className="login-card">
-        <div className="login-header">
+    <div className="page">
+      <div className="card">
+        <div className="first-block">
+          <button
+            className="home-btn"
+            onClick={() => {
+              navigate('/');
+            }}
+            title="Главная"
+          >
+            <img src="https://s.kontur.ru/common-v2/icons-ui/black/building-home/building-home-32-Regular.svg" />
+          </button>
+          {/* home-btn */}
           <h2>🔐 Вход </h2>
-          <p className="login-subtitle">Используйте ваш аккаунт</p>
+          <p className="subtitle">Используйте ваш аккаунт</p>
         </div>
-        {/* login-header */}
-        <div className="login-form">
+        {/* first-block */}
+        <div className="second-block">
           <form onSubmit={handleSubmit}>
             <input
-              className="form-input"
+              className="input"
               type="login"
               value={login}
               // Надо зафиксировать изменения
@@ -147,7 +143,7 @@ function Login({}) {
               required //Обязательно для заполнения
             />
             <input
-              className="form-input"
+              className="input"
               type="password"
               value={password}
               // Надо зафиксировать изменения
@@ -158,7 +154,7 @@ function Login({}) {
             />
 
             {/* Нужно добавить кнопку отправки */}
-            <button type="submit" className="btn-primary" disabled={isLoading}>
+            <button type="submit" className="btn" disabled={isLoading}>
               {isLoading ? (
                 <div className="loading-button">
                   <div className="spinner-mini"></div>
@@ -167,7 +163,7 @@ function Login({}) {
                 'Войти'
               )}
             </button>
-            {/* btn-primary */}
+            {/* btn */}
           </form>
           <div className="footer">
             {/* Ссылка ведет на страницу регистрации */}
@@ -175,11 +171,11 @@ function Login({}) {
           </div>
           {/* footer */}
         </div>
-        {/* login-form */}
+        {/* second-block */}
       </div>
-      {/* login-card */}
+      {/* card */}
     </div>
-    // login-page
+    // page
   );
 }
 export default Login;

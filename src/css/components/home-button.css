@@ -1,0 +1,35 @@
+
+/* ============================================================================ */
+/* КНОПКА ДОМОЙ */
+/* ============================================================================ */
+.home-btn {
+  position: absolute;
+  top: 0;
+  left: 0;
+  /* оставим 3 px от края */
+  margin-top: -45px;  /* Компенсируем padding-top карточки */
+  margin-left: -61px; /* Компенсируем padding-left карточки */
+  width: 30px; /* Ширина */
+  height: 30px; /* Высота  */
+
+  border-radius: 50%; /* Делает кнопку круглой */
+  border: none; /* рамка удалена */
+  background-color: var(--white); /* Цвет фона */
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  /* зададим время для анимации */
+  transition:
+    transform 0.2s,
+    background-color 0.2s;
+}
+
+.home-btn:hover {
+  transform: scale(1.05); /* Легкое увеличение при наведении */
+}
+
+.home-btn:active {
+  transform: scale(0.95);
+}

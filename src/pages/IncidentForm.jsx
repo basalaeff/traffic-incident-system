@@ -1,5 +1,3 @@
-// стили
-import './IncidentForm.css';
 // Импортируем хук useState из библиотеки React.
 import { useState, useEffect } from 'react';
 // ссылки и навигация
@@ -159,35 +157,34 @@ function IncidentForm() {
   };
   // Пишем интерфейс на JSX
   return (
-    <div className="form-page">
-      <div className="inform-home-btn-container">
-        <button
-          className="inform-home-btn"
-          onClick={() => {
-            navigate('/');
-          }}
-          title="Главная"
-        >
-          <img src="https://s.kontur.ru/common-v2/icons-ui/black/building-home/building-home-32-Regular.svg" />
-        </button>
-        {/* inform-home-btn */}
-      </div>
-      {/* inform-home-btn-container */}
-      <div className="form-card">
-        <div className="form-header">
-          <h2>Добавьте новый инцидент</h2>
+    <div className="page">
+      <div className="card">
+        <div className="first-block">
+          <button
+            className="home-btn"
+            onClick={() => {
+              navigate('/');
+            }}
+            title="Главная"
+          >
+            <img src="https://s.kontur.ru/common-v2/icons-ui/black/building-home/building-home-32-Regular.svg" />
+          </button>
+          {/* home-btn */}
+          <h2>Форма</h2>
+          <div className='subtitle'>Добавьте новый инцидент</div>
+          {/* subtitle */}
         </div>
-        {/* form-header */}
-        <div className="form">
+        {/* first-block */}
+        <div className="second-block">
           <form onSubmit={handleSubmit}>
-            <select className="form-input" value={type} onChange={handleTypeChange} required>
+            <select className="input" value={type} onChange={handleTypeChange} required>
               <option value="" disabled></option>
               <option value="accident">ДТП</option>
               <option value="hazard">Опасный участок</option>
               <option value="other">Другое</option>
             </select>
             <input
-              className="form-input"
+              className="input"
               type="text"
               value={title}
               // Надо зафиксировать изменения
@@ -197,7 +194,7 @@ function IncidentForm() {
               required //Обязательно для заполнения
             />
             <input
-              className="form-input"
+              className="input"
               type="text"
               value={description}
               // Надо зафиксировать изменения
@@ -224,9 +221,9 @@ function IncidentForm() {
             {/* group-btn */}
           </form>
         </div>
-        {/* form */}
+        {/* second-block */}
       </div>
-      {/* form-card */}
+      {/* card */}
     </div>
     // form-page
   );

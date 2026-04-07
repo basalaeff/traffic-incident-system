@@ -1,5 +1,3 @@
-// стили
-import './Registration.css';
 // Импортируем хук useState из библиотеки React.
 import { useState, useEffect } from 'react';
 // навигация
@@ -158,29 +156,28 @@ function Registration() {
   };
   // Пишем интерфейс на JSX
   return (
-    <div className="form-page">
-      <div className="reg-home-btn-container">
-        <button
-          className="reg-home-btn"
-          onClick={() => {
-            navigate('/');
-          }}
-          title="Главная"
-        >
-          <img src="https://s.kontur.ru/common-v2/icons-ui/black/building-home/building-home-32-Regular.svg" />
-        </button>
-        {/* reg-home-btn */}
-      </div>
-      {/* reg-home-btn-container */}
-      <div className="form-card">
-        <div className="form-header">
-          <h2>Зарегистрируйте ваш новый аккаунт</h2>
+    <div className="page">
+      <div className="card">
+        <div className="first-block">
+          <button
+            className="home-btn"
+            onClick={() => {
+              navigate('/');
+            }}
+            title="Главная"
+          >
+            <img src="https://s.kontur.ru/common-v2/icons-ui/black/building-home/building-home-32-Regular.svg" />
+          </button>
+          {/* home-btn */}
+          <h2>Регистрация</h2>
+          <div className="subtitle ">Зарегистрируйте ваш новый аккаунт</div>
+          {/* subtitle  */}
         </div>
         {/* form-header */}
-        <div className="form">
+        <div className="second-block">
           <form onSubmit={handleSubmit}>
             <input
-              className="form-input"
+              className="input"
               type="login"
               value={login}
               // Надо зафиксировать изменения
@@ -190,7 +187,7 @@ function Registration() {
               required //Обязательно для заполнения
             />
             <input
-              className="form-input"
+              className="input"
               type="password"
               value={password}
               // Надо зафиксировать изменения
@@ -200,7 +197,7 @@ function Registration() {
               required //Обязательно для заполнения
             />
             <input
-              className="form-input"
+              className="input"
               type="password"
               value={repeatPassword}
               // Надо зафиксировать изменения
@@ -227,11 +224,11 @@ function Registration() {
             {/* group-btn */}
           </form>
         </div>
-        {/* form */}
+        {/* second-block */}
       </div>
-      {/* form-card */}
+      {/* card */}
     </div>
-    // form-page
+    // page
   );
 }
 export default Registration;

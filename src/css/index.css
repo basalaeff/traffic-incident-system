@@ -1,0 +1,57 @@
+@import "base/variables.css";
+@import "base/typography.css";
+@import "components/spinners.css";
+@import "components/button.css";
+@import "layout/page.css";
+@import "components/card.css";
+@import "components/floating-button.css";
+@import "components/map.css";
+@import "components/popup.css";
+@import "components/toast.css";
+@import "components/input.css";
+@import "components/footer.css";
+@import "components/home-button.css";
+@import "components/detail-table.css";
+@import "components/detail.css";
+
+/* ============================================================================ */
+/* НАСТРОЙКА БАЗОВЫХ СТИЛЕЙ */
+/* ============================================================================ */
+* {
+  box-sizing: border-box; /* Чтобы padding не увеличивал ширину элементов */
+  margin: 0; /* Убираем стандартные отступы браузера */
+  padding: 0;
+}
+
+body {
+  font-family: var(--font-main); /* Используем наш шрифт */
+  background-color: var(--gray-light); /* Светлый фон страницы */
+  color: var(--gray-dark); /* Темный текст по умолчанию */
+  line-height: 1.6; /* Удобное расстояние между строками текста */
+}
+
+/* Стили для ссылок по умолчанию */
+a {
+  text-decoration: none; /* Убираем подчеркивание */
+  color: var(--primary-color);
+  transition: color 0.2s; /* Плавное изменение цвета */
+}
+
+a:hover {
+  color: var(--primary-hover); /* Цвет при наведении */
+}
+
+/* ============================================================================ */
+/* КНОПОЧКИ ПО УМОЛЧАНИЮ */
+/* ============================================================================ */
+button {
+  font-family: var(--font-main);
+  cursor: pointer;
+  border: none;
+  outline: none;
+}
+
+
+
+
+

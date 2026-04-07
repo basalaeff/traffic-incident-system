@@ -1,4 +1,3 @@
-import './Home.css';
 import { useState, useEffect } from 'react';
 
 // Добавлю компоненты карты
@@ -9,6 +8,7 @@ import { MapContainer, TileLayer, Marker, Popup, useMapEvents } from 'react-leaf
 // Нужен хук для роутинга
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import '../css/components/map.css';
 import 'leaflet/dist/leaflet.css';
 
 // Нужна библиотека для работы с иконками
@@ -190,11 +190,11 @@ function Home() {
     if (user) {
       setDisplayLogout(true);
       toast(
-        <div className="home-toast-notification">
+        <div className="toast-notification">
           <p>Вы уверены, что хотите выйти?</p>
           <div className="home-toast-action">
             <button
-              className="home-toast-btn home-toast-btn-cancel"
+              className="toast-btn toast-btn-cancel"
               // при нажатии отмены нужно просто закрыть уведомление
               // toast.dismiss() без аргументов закрывает последнее/активное уведомление
               onClick={() => {
@@ -205,7 +205,7 @@ function Home() {
               Отмена
             </button>
             <button
-              className="home-toast-btn home-toast-btn-logout"
+              className="toast-btn toast-btn-logout"
               onClick={() => {
                 logoutUser();
                 setDisplayLogout(false);
@@ -215,9 +215,9 @@ function Home() {
               Выйти
             </button>
           </div>
-          {/* home-toast-action */}
+          {/* toast-action */}
         </div>, // дальше второй аргумент
-        // home-toast-notification
+        // toast-notification
         // Далее нужно настроить настройки поведения уведомления
         {
           // закрытие по таймеру выключено
@@ -288,8 +288,7 @@ function Home() {
   // ============================================================================
   return (
     // Внешний контейнер для всей страницы
-    // Нужно добавить отступ в 20 пикселей, чтобы было красивенько и не прилипало
-    <div className="home-page">
+    <div className="page-home">
       <div className="floating-btns">
         {isAddingMode && !displayLogout && (
           <button
@@ -302,12 +301,20 @@ function Home() {
           </button>
         )}
         {user && !isAddingMode && !displayLogout && (
-          <button className="circle-btn" onClick={handleCreateIncident} title="Добавить инцидент">
+          <button
+            className="circle-btn"
+            onClick={handleCreateIncident}
+            title="Добавить инцидент"
+          >
             <img src="https://s.kontur.ru/common-v2/icons-ui/black/plus-circle/plus-circle-32-Regular.png" />
           </button>
         )}
         {!displayLogout && (
-          <button className="circle-btn" onClick={handleAuthClick} title={user ? 'Выйти' : 'Войти'}>
+          <button
+            className="circle-btn"
+            onClick={handleAuthClick}
+            title={user ? 'Выйти' : 'Войти'}
+          >
             {user ? (
               <Avatar name={user?.login} size="46" round={true} />
             ) : (
@@ -355,7 +362,7 @@ function Home() {
                     // решил проблему с быстрым закрыванием
                     setTimeout(() => {
                       e.target.closePopup();
-                    }, 1000);
+                    }, 2000);
                   },
                 }}
               >
@@ -371,7 +378,7 @@ function Home() {
                     <b>{users?.find((users) => users.id === incident?.userId)?.login || ''}</b>
                     <p></p>
                     <button
-                      className="popup-btn"
+                      className="btn--popup"
                       onClick={() => navigate(`/incident/${incident.id}`)}
                     >
                       Подробнее
@@ -398,7 +405,7 @@ function Home() {
                   // решил проблему с быстрым закрыванием
                   setTimeout(() => {
                     e.target.closePopup();
-                  }, 1000);
+                  }, 2000);
                 },
               }}
             >
@@ -422,7 +429,7 @@ function Home() {
       </main>
       {/* map-container */}
     </div>
-    // home-page
+    // page-home
   );
 }
 
