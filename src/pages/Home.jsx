@@ -378,7 +378,7 @@ function Home() {
                     <b>{users?.find((users) => users.id === incident?.userId)?.login || ''}</b>
                     <p></p>
                     <button
-                      className="btn--popup"
+                      className="popup-btn"
                       onClick={() => navigate(`/incident/${incident.id}`)}
                     >
                       Подробнее
