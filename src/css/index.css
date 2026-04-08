@@ -1,5 +1,4 @@
 @import "base/variables.css";
-@import "base/typography.css";
 @import "components/spinners.css";
 @import "components/button.css";
 @import "layout/page.css";
@@ -13,7 +12,6 @@
 @import "components/home-button.css";
 @import "components/detail-table.css";
 @import "components/detail.css";
-
 /* ============================================================================ */
 /* НАСТРОЙКА БАЗОВЫХ СТИЛЕЙ */
 /* ============================================================================ */
