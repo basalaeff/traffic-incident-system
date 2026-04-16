@@ -34,6 +34,7 @@ html, body {
   height: 100vh !important;
   width: 100vw !important;
   font-family: 'Roboto', Arial, sans-serif;
+  justify-content: center; /* Центрируем по горизонтали */
 
   /* запрещаем прокрутку и выход за экран */
   overflow: hidden !important;
