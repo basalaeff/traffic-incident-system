@@ -13,6 +13,14 @@
   display: flex; /* гибкие элементы */
   flex-direction: row; /* элементы горизонтально */
   gap: 16px; /* расстояние между элементами  */
+
+  /* Анимация */
+  transition: transform 0.3s ease;
+  transform-origin: center center; /* точка вращения */
+}
+
+.incident-card:hover {
+  transform: perspective(800px) rotateX(5deg);
 }
 
 .incident-card-first {
