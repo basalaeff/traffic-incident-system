@@ -95,6 +95,7 @@ function MapClickHandler({ setTempMarker, isAddingMode }) {
     // обработчик клика
     click: (e) => {
       if (isAddingMode) {
+        toast.dismiss();
         // e.latlng - объект, содержит координаты
         // передаем в функцию
         setTempMarker([e.latlng.lat, e.latlng.lng]);
@@ -273,12 +274,22 @@ function Home() {
   const handleCreateIncident = () => {
     // разрешили добавление
     setIsAddingMode(true);
-    toast.info('Кликните по карте, чтобы установить маркер');
+    toast.info('Кликните по карте, чтобы установить маркер', {
+      // закрытие по таймеру выключено
+      autoClose: false,
+      // по клику закрыть нельзя
+      closeOnClick: false,
+      // и перетаскиванием тоже
+      draggable: false,
+      // крестик убрал тоже
+      closeButton: false,
+    });
   };
   // ============================================================================
   // ДЛЯ ОБРАБОТКИ СОЗДАНИЯ ИНЦИДЕНТА ПОСЛЕ ВЫБОРА КООРДИНАТ
   // ============================================================================
   const handleConfirmCreateIncident = () => {
+    toast.dismiss();
     // защита от ошибок при вызове координат
     if (!tempMarker) return;
     navigate('/create-incident', {
@@ -296,6 +307,7 @@ function Home() {
   // ДЛЯ ОТМЕНЫ ДОБАВЛЕНИЯ ИНЦИДЕНТА
   // ============================================================================
   const handleCancelCreateIncident = () => {
+    toast.dismiss();
     // убираем временный маркер
     setTempMarker(null);
     setIsAddingMode(false);
