@@ -124,6 +124,8 @@ function Home() {
 
   const [displayMap, setDisplayMap] = useState(false);
 
+  const [displayFloatingBtn, setDisplayFloatingBtn] = useState(false);
+
   // переменная для управления масштабом карты
   const [currentZoom, setCurrentZoom] = useState(13);
 
@@ -319,7 +321,7 @@ function Home() {
     <div className="page-home">
       <div className="floating-btns">
         {/* Кнопка ОТМЕНА */}
-        {isAddingMode && !displayLogout && (
+        {displayFloatingBtn && isAddingMode && !displayLogout && (
           <button
             className="circle-btn"
             onClick={handleCancelCreateIncident}
@@ -330,36 +332,56 @@ function Home() {
           </button>
         )}
         {/* Кнопка ДОБАВЛЕНИЕ */}
-        {user && displayMap && !isAddingMode && !displayLogout && (
+        {displayFloatingBtn && user && displayMap && !isAddingMode && !displayLogout && (
           <button className="circle-btn" onClick={handleCreateIncident} title="Добавить инцидент">
             <img src="https://s.kontur.ru/common-v2/icons-ui/black/plus-circle/plus-circle-32-Regular.png" />
           </button>
         )}
         {/* Кнопка ЦЕНТИРОВАТЬ ПО ГЕОЛОКАЦИИ */}
-        {!displayLogout && displayMap && (
+        {displayFloatingBtn && !displayLogout && displayMap && (
           <button className="circle-btn" onClick={getLocation} title="Вернуться в координаты">
             <img src="https://s.kontur.ru/common-v2/icons-ui/black/location-pin/location-pin-32-Regular.svg" />
           </button>
         )}
-        {/* Кнопка КАРТА ПОЯВИСЬ */}
-        {!displayLogout && !displayMap && (
-          <button className="circle-btn" onClick={() => setDisplayMap(true)} title="Карта">
-            <img src="https://s.kontur.ru/common-v2/icons-ui/black/location-map/location-map-32-Regular.svg" />
-          </button>
-        )}
-        {/* Кнопка КАРТА ИСЧЕЗНИ */}
-        {!displayLogout && displayMap && (
-          <button className="circle-btn" onClick={() => setDisplayMap(false)} title="Карта">
-            <img src="https://s.kontur.ru/common-v2/icons-ui/black/building-home/building-home-32-Regular.svg" />
+        {/* Кнопка КАРТЫ */}
+        {displayFloatingBtn && !displayLogout && (
+          <button
+            className="circle-btn"
+            onClick={() => {
+              displayMap ? setDisplayMap(false) : setDisplayMap(true);
+            }}
+            title={displayMap ? 'Скрыть карту' : 'Показать карту'}
+          >
+            {displayMap ? (
+              <img src="https://s.kontur.ru/common-v2/icons-ui/black/building-home/building-home-32-Regular.svg" />
+            ) : (
+              <img src="https://s.kontur.ru/common-v2/icons-ui/black/location-map/location-map-32-Regular.svg" />
+            )}
           </button>
         )}
         {/* Кнопка ВХОДА */}
-        {!displayLogout && (
+        {displayFloatingBtn && !displayLogout && (
           <button className="circle-btn" onClick={handleAuthClick} title={user ? 'Выйти' : 'Войти'}>
             {user ? (
               <Avatar name={user?.login} size="46" round={true} />
             ) : (
               <img src="https://s.kontur.ru/common-v2/icons-ui/black/arrow-ui-auth-login/arrow-ui-auth-login-32-Regular.svg" />
+            )}
+          </button>
+        )}
+        {/* Кнопка МЕНЮ */}
+        {!displayLogout && (
+          <button
+            className="circle-btn"
+            onClick={() => {
+              displayFloatingBtn ? setDisplayFloatingBtn(false) : setDisplayFloatingBtn(true);
+            }}
+            title={user ? 'Скрыть' : 'Показать'}
+          >
+            {displayFloatingBtn ? (
+              <img src="https://s.kontur.ru/common-v2/icons-ui/black/arrow-shape-a-right/arrow-shape-a-right-32-Regular.svg" />
+            ) : (
+              <img src="https://s.kontur.ru/common-v2/icons-ui/black/ui-menu-bars-3-h/ui-menu-bars-3-h-32-Regular.svg" />
             )}
           </button>
         )}
