@@ -15,12 +15,18 @@
   gap: 16px; /* расстояние между элементами  */
 
   /* Анимация */
-  transition: transform 0.3s ease;
+  transition: transform 2s ease;
   transform-origin: center center; /* точка вращения */
 }
 
 .incident-card:hover {
-  transform: perspective(800px) rotateX(5deg);
+  transform: perspective(800px) rotateX(360deg) scale(1.1);
+  border-color: var(--primary-color);
+}
+
+.incident-card:active {
+  transform: scale(1.1);
+  border-color: var(--primary-color);
 }
 
 .incident-card-first {
