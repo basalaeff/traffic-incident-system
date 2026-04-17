@@ -22,7 +22,7 @@
   height: 50px; /* Высота  */
 
   border-radius: 50%; /* Делает кнопку круглой */
-  border: none; /* рамка удалена */
+  border: 1px solid #ddd;
   background-color: var(--white); /* Цвет фона */
   cursor: pointer;
   display: flex;
@@ -42,5 +42,36 @@
 }
 
 .circle-btn:active {
+  transform: scale(0.95);
+}
+
+/* ============================================================================ */
+/* КРУГЛАЯ КНОПКА В КАРТОЧКЕ*/
+/* ============================================================================ */
+.card-circle-btn {
+  flex-shrink: 0;
+
+  width: 50px; /* Ширина */
+  height: 50px; /* Высота  */
+
+  border-radius: 50%; /* Делает кнопку круглой */
+  border: none; /* рамка удалена */
+  background-color: var(--gray-light); /* Цвет фона */
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  /* зададим время для анимации */
+  transition:
+    transform 0.2s,
+    background-color 0.2s;
+}
+
+.card-circle-btn:hover {
+  transform: scale(1.05); /* Легкое увеличение при наведении */
+}
+
+.card-circle-btn:active {
   transform: scale(0.95);
 }

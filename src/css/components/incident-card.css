@@ -1,0 +1,53 @@
+/* Стили для карточек инцидентов */
+/* ============================================================================ */
+/*  Стиль карточки */
+/* ============================================================================ */
+.incident-card {
+  /* рамка */
+  border: 1px solid #ddd;
+  /* скругление углов */
+  border-radius: var(--radius-lg);
+  padding: 16px; /* Внутренние отступы */
+  background: var(--white);
+  box-shadow: var(--shadow-md);
+  display: flex; /* гибкие элементы */
+  flex-direction: row; /* элементы горизонтально */
+  gap: 16px; /* расстояние между элементами  */
+}
+
+.incident-card-first {
+  flex: 1; /* занимает доступное пространство */
+  position: relative;
+  text-align: left;
+  margin-bottom: 20px;
+}
+
+.incident-card-second {
+  display: flex;
+  flex-direction: column;
+  gap: 20px; /* отступы между группами полей */
+  /* сверху справа снизу слева */
+  flex: 0 0 100px 0;
+}
+.badge.active {
+  color: var(--danger-color);
+} /* Стиль для активного статуса */
+.card-title {
+  margin: 8px 0;
+  font-size: 1.1rem;
+} /* Отступы и размер заголовка */
+.card-desc {
+  margin: 0 0 10px;
+  color: #555;
+  font-size: 0.9rem;
+} /* Цвет и размер описания */
+.card-time {
+  display: block;
+  font-size: 0.8rem;
+  color: #888;
+} /* Стили времени */
+.coords {
+  font-family: monospace;
+  font-size: 0.85rem;
+  color: #444;
+} /* Моноширинный шрифт координат */

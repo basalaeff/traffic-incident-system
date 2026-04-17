@@ -107,6 +107,9 @@ function Home() {
 
   const [displayMap, setDisplayMap] = useState(false);
 
+  // переменная для управления масштабом карты
+  const [currentZoom, setCurrentZoom] = useState(13);
+
   // ============================================================================
   // ПОЛУЧЕНИЕ ГЕОЛОКАЦИИ
   // ============================================================================
@@ -335,51 +338,57 @@ function Home() {
       {/* floating-btns */}
       {!displayMap && (
         <div className="main-card">
-          <h2>Таблица инцидентов</h2>
-          <table className="detail-table">
-            <thead>
-              {/* Заголовочная строка таблицы */}
-              <tr>
-                <th>Тип</th>
-                <th>Заголовок</th>
-                <th>Описание</th>
-                <th>Статус</th>
-                <th>Координаты</th>
-                <th>Время</th>
-              </tr>
-            </thead>
-            <tbody>
-              {/* Итерируемся по массиву инцидентов для создания строк */}
-              {incidents.map((incident) => (
-                <tr key={incident.id}>
-                  {/* Тип происшествия */}
-                  <td>{incident.type}</td>
-                  {/* Название (Большая яма) */}
-                  <td>
-                    {incident.title}
+          <h1>Сервис мониторинга дорожных инцидентов</h1>
+          {incidents.map((incident) => {
+            return (
+              // Использую article
+              // каждый инцидент самостоятельная единица данных
+              <article className="incident-card" key={incident?.id}>
+                <div className="incident-card-first">
+                  <header className="incident-card-header">
+                    <spawn className={`badge ${incident?.status}`}>{incident?.status}</spawn>
+                  </header>
+                  {/* incident-card-header */}
+                  <h2 className="incident-card-title">{incident?.title}</h2>
+                  {/* incident-card-title */}
+                  <span className="incident-card-type">{incident?.type}</span>
+                  {/* incident-card-type */}
+                  <p className="incident-card-description">{incident?.description}</p>
+                  {/* incident-card-description */}
+                  <time className="incident-card-time">{incident?.time}</time>
+                  {/* incident-card-time */}
+                  <footer className="incident-card-footer">
+                    <span className="coords">
+                      {incident?.lat}, {incident?.lng}
+                    </span>
+                    {/* coords */}
+                  </footer>
+                  {/* incident-card-footer */}
+                </div>
+                {/* incident-card-first  */}
+                <div className="incident-card-second">
+                  <div className="ud-btn">
+                    {/* Кнопка посмотреть на карте */}
+                    <button className="card-circle-btn" title="Посмотреть на карте" onClick={() => {setUserLocation([incident?.lat, incident?.lng]); setDisplayMap(true); setCurrentZoom(18);}}>
+                      <img src="https://s.kontur.ru/common-v2/icons-ui/black/location-pin/location-pin-32-Regular.svg" />
+                    </button>
+
+                    {/* Кнопка на страницу детализации */}
                     <button
-                      className="circle-btn"
+                      className="card-circle-btn"
+                      title="Подробнее"
                       onClick={() => navigate(`/incident/${incident.id}`)}
-                      title="Карта"
                     >
                       <img src="https://s.kontur.ru/common-v2/icons-ui/black/arrow-ui-corner-out-up-right/arrow-ui-corner-out-up-right-32-Regular.svg" />
                     </button>
-                  </td>
-                  {/* Подробное описание */}
-                  <td>{incident.description}</td>
-                  {/* Текущий статус (active) */}
-                  <td>{incident.status}</td>
-                  {/* Объединяем широту и долготу для компактности */}
-                  <td>
-                    {incident.lat.toFixed(4)}, {incident.lng.toFixed(4)}
-                  </td>
-                  {/* Время происшествия */}
-                  <td>{incident.time}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-          {/* detail-table */}
+                  </div>
+                  {/* ud-btn */}
+                </div>
+                {/* incident-card-second */}
+              </article>
+              // incident-card
+            );
+          })}
         </div>
         // main-card
       )}
@@ -394,7 +403,7 @@ function Home() {
             // Установим масштаб. Доступно от 1 до 19.
             // 1 - Планета, 19 - Крыша дома
             // Поставим пока 13
-            zoom={13}
+            zoom={currentZoom}
             // Крч планета это слишком много
             // Мне пока лень делать кластеризацию, поэтому просто ограничу масштаб
             maxZoom={18}
