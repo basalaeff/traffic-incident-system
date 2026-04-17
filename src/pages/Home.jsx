@@ -3,7 +3,7 @@ import { useState, useEffect } from 'react';
 // Добавлю компоненты карты
 // Контейнер карты, улицы, маркеры, всплывающее окно
 // useMapEvents добавил для того чтобы ставить метку на карту
-import { MapContainer, TileLayer, Marker, Popup, useMapEvents } from 'react-leaflet';
+import { MapContainer, TileLayer, Marker, Popup, useMapEvents, useMap } from 'react-leaflet';
 
 // Нужен хук для роутинга
 import { useNavigate } from 'react-router-dom';
@@ -19,6 +19,23 @@ import Avatar from 'react-avatar';
 import { toast } from 'react-toastify';
 
 import { getCurrentUser, logoutUser } from '../auth';
+
+// ============================================================================
+// ЦЕНТРИРОВАНИЕ КАРТЫ ПО КООРДИНАТАМ ПОЛЬЗОВАТЕЛЯ
+// ============================================================================
+const RecenterAutomatically = ({ location }) => {
+  const map = useMap();
+
+  useEffect(() => {
+    if (location) {
+      // Перемещает камеру к новым координатам
+      map.flyTo(location, map.getZoom());
+      // Или map.flyTo(location, 13) для плавной анимации
+    }
+  }, [location, map]);
+
+  return null;
+};
 
 // ============================================================================
 // НАСТРОЙКА МАРКЕРОВ
@@ -115,7 +132,7 @@ function Home() {
   // ============================================================================
   // Пишем useEffect() - это хук, который выполняет код после того как компонент
   // отобразится на экране
-  useEffect(() => {
+  const getLocation = () => {
     // буду использовать объект navigator
     // Он встроен в браузер и дает доступ к функциям устройства
     // geolocation это его свойство. Я буду использовать его для определения местоположения
@@ -153,7 +170,12 @@ function Home() {
         );
       }
     );
-  }, []); //Работает только при старте
+  }; //Работает только при старте
+
+  // Вызываем один раз при старте
+  useEffect(() => {
+    getLocation();
+  }, []);
 
   // ============================================================================
   // ЗАГРУЗКА ДАННЫХ С СЕРВЕРА (API)
@@ -187,6 +209,7 @@ function Home() {
     // Нужно запустить функцию
     fetchIncidents();
   }, []);
+
   // ============================================================================
   // ДЛЯ АВТОРИЗАЦИИ/ВЫХОДА ПОЛЬЗОВАТЕЛЯ
   // ============================================================================
@@ -312,6 +335,12 @@ function Home() {
             <img src="https://s.kontur.ru/common-v2/icons-ui/black/plus-circle/plus-circle-32-Regular.png" />
           </button>
         )}
+        {/* Кнопка ЦЕНТИРОВАТЬ ПО ГЕОЛОКАЦИИ */}
+        {!displayLogout && displayMap && (
+          <button className="circle-btn" onClick={getLocation} title="Вернуться в координаты">
+            <img src="https://s.kontur.ru/common-v2/icons-ui/black/location-pin/location-pin-32-Regular.svg" />
+          </button>
+        )}
         {/* Кнопка КАРТА ПОЯВИСЬ */}
         {!displayLogout && !displayMap && (
           <button className="circle-btn" onClick={() => setDisplayMap(true)} title="Карта">
@@ -346,7 +375,7 @@ function Home() {
               <article className="incident-card" key={incident?.id}>
                 <div className="incident-card-first">
                   <header className="incident-card-header">
-                    <spawn className={`badge ${incident?.status}`}>{incident?.status}</spawn>
+                    <span className={`badge ${incident?.status}`}>{incident?.status}</span>
                   </header>
                   {/* incident-card-header */}
                   <h2 className="incident-card-title">{incident?.title}</h2>
@@ -369,7 +398,15 @@ function Home() {
                 <div className="incident-card-second">
                   <div className="ud-btn">
                     {/* Кнопка посмотреть на карте */}
-                    <button className="card-circle-btn" title="Посмотреть на карте" onClick={() => {setUserLocation([incident?.lat, incident?.lng]); setDisplayMap(true); setCurrentZoom(18);}}>
+                    <button
+                      className="card-circle-btn"
+                      title="Посмотреть на карте"
+                      onClick={() => {
+                        setUserLocation([incident?.lat, incident?.lng]);
+                        setDisplayMap(true);
+                        setCurrentZoom(18);
+                      }}
+                    >
                       <img src="https://s.kontur.ru/common-v2/icons-ui/black/location-pin/location-pin-32-Regular.svg" />
                     </button>
 
@@ -416,6 +453,7 @@ function Home() {
             {/* Подгрузка плиточек карты */}
             {/* Используем OpenStreetMap */}
             <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
+            <RecenterAutomatically location={userLocation} />
             {/* Отрисовка маркеров */}
             {incidents.map((incident) => {
               return (
