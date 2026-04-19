@@ -320,7 +320,10 @@ function Home() {
   if (loading || !userLocation) {
     return (
       <div className="loading-screen">
-        <div className="spinner-large"></div>
+        <div className="loading-card">
+          <div className="spinner-large"></div>
+        </div>
+        {/* loading-card */}
       </div>
     );
   }
