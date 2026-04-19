@@ -4,11 +4,13 @@
 .input {
   width: 100%; /* растягивание по ширине */
   padding:  12px 15px; /* внутренний отступ */
-  border: 1px solid #ddd; /* рамочка */
+  border: 1px solid var(--black); /* рамочка */
   border-radius: var(--radius-md); /* скругление углов*/
   font-size: 18px;
   font-family: inherit;
   margin-bottom: 8px; /* это отступ */
+  background: var(--bg-input);
+  color: var(--text-primary);
 }
 
 /* ============================================================================ */
@@ -17,6 +19,6 @@
 /* ============================================================================ */
 /* Эффект при клике на поле */
 .input:focus {
-  border-color: var(--primary-color);
+  border-color: var(--brand-primary);
   outline: none;
 }

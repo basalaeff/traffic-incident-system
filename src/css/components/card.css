@@ -5,10 +5,10 @@
   display: flex; /* гибкие элементы */
   flex-direction: row; /* элементы горизонтально */
   gap: 48px; /* расстояние между элементами  */
-  background: var(--white);
+  background: var(--bg-surface);
   padding: 48px 64px; /* внутренние отступы (сверху-снизу, слева-справа) */
   border-radius: var(--radius-lg); /* Скругление из переменных */
-  box-shadow: var(--shadow-md); /* Тень из переменных */
+  box-shadow: var(--shadow-lg); /* Тень из переменных */
   width: 100%;
   max-width: 900px; /* Ограничиваем ширину, чтобы не растягивалась */
 }
@@ -20,10 +20,10 @@
   display: flex; /* гибкие элементы */
   flex-direction: column; /* элементы горизонтально */
   gap: 48px; /* расстояние между элементами  */
-  background: var(--white);
+  background: var(--bg-surface);
   padding: 48px 64px; /* внутренние отступы (сверху-снизу, слева-справа) */
   border-radius: var(--radius-lg); /* Скругление из переменных */
-  box-shadow: var(--shadow-md); /* Тень из переменных */
+  box-shadow: var(--shadow-lg); /* Тень из переменных */
   width: 100%;
   max-width: 900px; /* Ограничиваем ширину, чтобы не растягивалась */
 }
@@ -66,7 +66,6 @@
   margin: 0 0 8px 0;
   font-weight: 400;
   margin-bottom: 10px;
-  color: var(--gray-dark);
   font-size: 36px;
   text-align: left;
 }
@@ -75,7 +74,6 @@
 /* ПОДЗАГОЛОВОК ИЛИ ПОДСКАЗКА */
 /* ============================================================================ */
 .subtitle {
-  color: var(--gray-medium);
   font-size: 18px;
   margin: 0;
 }

@@ -18,9 +18,6 @@
   align-items: center;
   justify-content: center;
 
-  /*  инвертирую кнопку (получается dark mode ) */
-  filter: invert(1);
-
   /* делаю фон кнопки прозрачной, чтобы не было черного фона на карточке */
   background-color: transparent;
 
@@ -45,5 +42,11 @@
   .home-btn {
     margin-top: -60px; /* Компенсируем padding-top карточки */
     margin-left: -20px; /* Компенсируем padding-left карточки */
+  }
+}
+
+@media (prefers-color-scheme: dark) {
+  .home-btn {
+    filter: invert(1);
   }
 }

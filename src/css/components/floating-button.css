@@ -16,7 +16,7 @@
 /* МЕНЮ КНОПОК */
 /* ============================================================================ */
 .btns-menu {
-  background-color: var(--gray-dark); /* Цвет фона */
+  background-color: var(--bg-sidebar); /* Цвет фона */
   display: flex; /* гибкие элементы */
   flex-direction: row; /* элементы горизонтально */
   gap: 10px; /* расстояние между соседями */
@@ -35,7 +35,6 @@
 
   /* белая инвертированная кнопочка = черная кнопочка*/
   background-color: var(--white);
-  filter: invert(1);
 
   cursor: pointer;
   border-radius: 50%; /* Делает кнопку круглой */
@@ -70,12 +69,10 @@
   height: 50px; /* Высота  */
 
   /* белая инвертированная кнопочка = черная кнопочка*/
-  background-color: var(--white);
-  filter: invert(1);
+  background-color: var(--card-btn-color);
 
   border-radius: 50%; /* Делает кнопку круглой */
   border: none; /* рамка удалена */
-  background-color: var(--gray-light); /* Цвет фона */
   cursor: pointer;
   display: flex;
   align-items: center;
@@ -93,4 +90,13 @@
 
 .card-circle-btn:active {
   transform: scale(0.95);
+}
+
+@media (prefers-color-scheme: dark) {
+  .circle-btn {
+    filter: invert(1);
+  }
+  .card-circle-btn {
+    filter: invert(1);
+  }
 }

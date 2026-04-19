@@ -8,7 +8,7 @@
   /* скругление углов */
   border-radius: var(--radius-lg);
   padding: 16px; /* Внутренние отступы */
-  background: var(--white);
+  background: var(--bg-surface-hover);
   box-shadow: var(--shadow-md);
   display: flex; /* гибкие элементы */
   flex-direction: row; /* элементы горизонтально */
@@ -21,12 +21,12 @@
 
 .incident-card:hover {
   transform: perspective(800px) rotateX(360deg) scale(1.1);
-  border-color: var(--primary-color);
+  border-color: var(--brand-primary);
 }
 
 .incident-card:active {
   transform: scale(1.1);
-  border-color: var(--primary-color);
+  border-color: var(--brand-primary);
 }
 
 .incident-card-first {
@@ -44,7 +44,7 @@
   flex: 0 0 100px 0;
 }
 .badge.active {
-  color: var(--danger-color);
+  color: var(--status-danger-bg);
 } /* Стиль для активного статуса */
 .card-title {
   margin: 8px 0;

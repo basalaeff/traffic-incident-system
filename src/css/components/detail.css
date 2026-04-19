@@ -27,7 +27,7 @@
 .edit-input {
   border: 1px solid #ddd; /* рамочка */
   padding: 12px 15px; /* внутренний отступ */
-  border-radius: var(--radius-md); /* скругление углов*/
+  border-radius: var(--radius-sm); /* скругление углов*/
 }
 
 /* ============================================================================ */
@@ -36,7 +36,7 @@
 /* ============================================================================ */
 /* Эффект при клике на поле */
 .edit-input:focus {
-  border-color: var(--primary-color);
+  border-color: var(--brand-primary);
   outline: none;
 }
 

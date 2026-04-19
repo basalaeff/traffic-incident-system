@@ -17,7 +17,7 @@ createRoot(document.getElementById('root')).render(
       rtl={false} // Не трогай, если не араб!
       pauseOnFocusLoss={false} //переключение на другую вкладку
       draggable={true} //Смахнуть разрешаю
-      theme="auto" //еще есть light, dark, auto, colored (используется)
+      theme="dark" //еще есть light, dark, auto, colored (используется)
     />
   </StrictMode>
 );

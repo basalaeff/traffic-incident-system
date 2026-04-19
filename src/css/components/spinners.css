@@ -26,7 +26,7 @@
   align-items: center;
   /* высоту нужно установить на весь экран */
   /* вот добавим из переменных */
-  background-color: var(--gray-dark);
+  background-color: var( --bg-surface);
   padding: 10px;
   border-radius: var(--radius-spinner);
 }
@@ -44,7 +44,7 @@
   animation: spin 1s linear infinite;
   /* нужно добавить цвета  */
   border: 5px solid #e0e0e0; /* Толстая серая рамка (фон круга) */
-  border-top: 5px solid var(--primary-color); /* Верхняя часть рамки синяя (это будет "бегунок") */
+  border-top: 5px solid var(--brand-primary); /* Верхняя часть рамки синяя (это будет "бегунок") */
 }
 
 /* маленький спиннер */
@@ -71,7 +71,7 @@
   animation: spin 1s linear infinite;
   /* нужно добавить цвета  */
   border: 1px solid #e0e0e0; /* Толстая серая рамка (фон круга) */
-  border-top: 1px solid var(--primary-color); /* Верхняя часть рамки синяя (это будет "бегунок") */
+  border-top: 1px solid var(--brand-primary); /* Верхняя часть рамки синяя (это будет "бегунок") */
 }
 
 /* нужна анимация */
