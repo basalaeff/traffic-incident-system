@@ -496,7 +496,10 @@ function Home() {
           >
             {/* Подгрузка плиточек карты */}
             {/* Используем OpenStreetMap */}
-            <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
+            <TileLayer
+              className="dark-tiles"
+              url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+            />
             <RecenterAutomatically location={userLocation} />
             {/* Отрисовка маркеров */}
             {incidents.map((incident) => {
