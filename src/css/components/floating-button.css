@@ -10,7 +10,6 @@
   z-index: 1500; /* Чтобы быть выше карты (Leaflet использует z-index до 1000) */
   display: flex;
   gap: 10px; /* расстояние между соседями */
-
 }
 
 /* ============================================================================ */
@@ -24,7 +23,6 @@
   border-radius: var(--radius-lg);
   padding: 5px;
   box-shadow: var(--shadow-md); /* Тень для объема */
-
 }
 /* ============================================================================ */
 /* КРУГЛАЯ КНОПКА */
@@ -35,10 +33,13 @@
   width: 50px; /* Ширина */
   height: 50px; /* Высота  */
 
+  /* белая инвертированная кнопочка = черная кнопочка*/
+  background-color: var(--white);
+  filter: invert(1);
+
+  cursor: pointer;
   border-radius: 50%; /* Делает кнопку круглой */
   border: 1px solid #ddd;
-  background-color: var(--white); /* Цвет фона */
-  cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -67,6 +68,10 @@
 
   width: 50px; /* Ширина */
   height: 50px; /* Высота  */
+
+  /* белая инвертированная кнопочка = черная кнопочка*/
+  background-color: var(--white);
+  filter: invert(1);
 
   border-radius: 50%; /* Делает кнопку круглой */
   border: none; /* рамка удалена */
