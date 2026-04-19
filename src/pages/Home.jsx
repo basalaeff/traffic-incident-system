@@ -414,64 +414,67 @@ function Home() {
       {!displayMap && (
         <div className="main-card">
           <h1>Сервис мониторинга дорожных инцидентов</h1>
-          {incidents.map((incident) => {
-            return (
-              // Использую article
-              // каждый инцидент самостоятельная единица данных
-              <article className="incident-card" key={incident?.id}>
-                <div className="incident-card-first">
-                  <header className="incident-card-header">
-                    <span className={`badge ${incident?.status}`}>{incident?.status}</span>
-                  </header>
-                  {/* incident-card-header */}
-                  <h2 className="incident-card-title">{incident?.title}</h2>
-                  {/* incident-card-title */}
-                  <span className="incident-card-type">{incident?.type}</span>
-                  {/* incident-card-type */}
-                  <p className="incident-card-description">{incident?.description}</p>
-                  {/* incident-card-description */}
-                  <time className="incident-card-time">{incident?.time}</time>
-                  {/* incident-card-time */}
-                  <footer className="incident-card-footer">
-                    <span className="coords">
-                      {incident?.lat}, {incident?.lng}
-                    </span>
-                    {/* coords */}
-                  </footer>
-                  {/* incident-card-footer */}
-                </div>
-                {/* incident-card-first  */}
-                <div className="incident-card-second">
-                  <div className="ud-btn">
-                    {/* Кнопка посмотреть на карте */}
-                    <button
-                      className="card-circle-btn"
-                      title="Посмотреть на карте"
-                      onClick={() => {
-                        setUserLocation([incident?.lat, incident?.lng]);
-                        setDisplayMap(true);
-                        setCurrentZoom(18);
-                      }}
-                    >
-                      <img src="https://s.kontur.ru/common-v2/icons-ui/black/location-pin/location-pin-32-Regular.svg" />
-                    </button>
-
-                    {/* Кнопка на страницу детализации */}
-                    <button
-                      className="card-circle-btn"
-                      title="Подробнее"
-                      onClick={() => navigate(`/incident/${incident.id}`)}
-                    >
-                      <img src="https://s.kontur.ru/common-v2/icons-ui/black/arrow-ui-corner-out-up-right/arrow-ui-corner-out-up-right-32-Regular.svg" />
-                    </button>
+          <div className="incidents-list">
+            {incidents.map((incident) => {
+              return (
+                // Использую article
+                // каждый инцидент самостоятельная единица данных
+                <article className="incident-card" key={incident?.id}>
+                  <div className="incident-card-first">
+                    <header className="incident-card-header">
+                      <span className={`badge ${incident?.status}`}>{incident?.status}</span>
+                    </header>
+                    {/* incident-card-header */}
+                    <h2 className="incident-card-title">{incident?.title}</h2>
+                    {/* incident-card-title */}
+                    <span className="incident-card-type">{incident?.type}</span>
+                    {/* incident-card-type */}
+                    <p className="incident-card-description">{incident?.description}</p>
+                    {/* incident-card-description */}
+                    <time className="incident-card-time">{incident?.time}</time>
+                    {/* incident-card-time */}
+                    <footer className="incident-card-footer">
+                      <span className="coords">
+                        {incident?.lat}, {incident?.lng}
+                      </span>
+                      {/* coords */}
+                    </footer>
+                    {/* incident-card-footer */}
                   </div>
-                  {/* ud-btn */}
-                </div>
-                {/* incident-card-second */}
-              </article>
-              // incident-card
-            );
-          })}
+                  {/* incident-card-first  */}
+                  <div className="incident-card-second">
+                    <div className="ud-btn">
+                      {/* Кнопка посмотреть на карте */}
+                      <button
+                        className="card-circle-btn"
+                        title="Посмотреть на карте"
+                        onClick={() => {
+                          setUserLocation([incident?.lat, incident?.lng]);
+                          setDisplayMap(true);
+                          setCurrentZoom(18);
+                        }}
+                      >
+                        <img src="https://s.kontur.ru/common-v2/icons-ui/black/location-pin/location-pin-32-Regular.svg" />
+                      </button>
+
+                      {/* Кнопка на страницу детализации */}
+                      <button
+                        className="card-circle-btn"
+                        title="Подробнее"
+                        onClick={() => navigate(`/incident/${incident.id}`)}
+                      >
+                        <img src="https://s.kontur.ru/common-v2/icons-ui/black/arrow-ui-corner-out-up-right/arrow-ui-corner-out-up-right-32-Regular.svg" />
+                      </button>
+                    </div>
+                    {/* ud-btn */}
+                  </div>
+                  {/* incident-card-second */}
+                </article>
+                // incident-card
+              );
+            })}
+          </div>
+          {/* incidents-list */}
         </div>
         // main-card
       )}
