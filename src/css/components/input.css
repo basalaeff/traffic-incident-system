@@ -3,7 +3,19 @@
 /* ============================================================================ */
 .input {
   width: 100%; /* растягивание по ширине */
-  padding:  12px 15px; /* внутренний отступ */
+  padding: 12px 15px; /* внутренний отступ */
+  border: 1px solid var(--black); /* рамочка */
+  border-radius: var(--radius-md); /* скругление углов*/
+  font-size: 18px;
+  font-family: inherit;
+  margin-bottom: 8px; /* это отступ */
+  background: var(--bg-input);
+  color: var(--text-primary);
+}
+.input-description {
+  width: 100%; /* растягивание по ширине */
+  padding: 12px 15px; /* внутренний отступ */
+  padding-bottom: 100px;
   border: 1px solid var(--black); /* рамочка */
   border-radius: var(--radius-md); /* скругление углов*/
   font-size: 18px;
@@ -21,4 +33,19 @@
 .input:focus {
   border-color: var(--brand-primary);
   outline: none;
+}
+.input-description:focus {
+  border-color: var(--brand-primary);
+  outline: none;
+}
+
+/* ============================================================================ */
+/* СЧЕТЧИК СИМВОЛОВ */
+/* ============================================================================ */
+.char-counter {
+  text-align: right;
+  font-size: 0.75rem;
+  color: var(--text-secondary, #666);
+  margin-bottom: 12px;
+  transition: color 0.2s ease;
 }

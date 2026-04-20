@@ -3,7 +3,7 @@ import { useState, useEffect } from 'react';
 // ссылки и навигация
 // убрал Link (не использую ссылки в этом компоненте)
 // добавил useLocation (нужно получать координаты с хома)
-import { useLocation, useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate, useParams } from 'react-router-dom';
 // всплывающие уведомления тоже могут пригодиться
 import { toast } from 'react-toastify';
 // запросы
@@ -13,8 +13,10 @@ import axios from 'axios';
 import { getCurrentUser } from '../auth';
 
 function IncidentForm() {
+  const { id } = useParams();
   const navigate = useNavigate(); //хук для переброса на авторизацию
   const location = useLocation(); // хук для координат с хома
+  const user = getCurrentUser();
 
   // ============================================================================
   // ПЕРЕМЕННЫЕ СОСТОЯНИЙ
@@ -30,9 +32,11 @@ function IncidentForm() {
   //     "userId": 1,
   //     "time": "21.03.2026",
   //   },
+  const [incident, setIncident] = useState(null);
   const [type, setType] = useState('');
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
+  const [status, setStatus] = useState('');
   const [lat, setLat] = useState('');
   const [lng, setLng] = useState('');
   const [userId, setUserId] = useState('');
@@ -41,6 +45,20 @@ function IncidentForm() {
   // true - загрузка есть, кнопка не активна
   const [isLoading, setIsLoading] = useState(false);
 
+  // ФЛАГ ДЛЯ РЕЖИМА РЕДАКТИРОВАНИЯ
+  const [isEditMode, setIsEditMode] = useState(false);
+
+  // добавлю возможность отмену сохранения данных при редактировании (новая фича)
+  // СОСТОЯНИЕ ДЛЯ ХРАНЕНИЯ ИСХОДНЫХ ДАННЫХ
+  const [originalIncident, setOriginalIncident] = useState(null);
+
+  // добавлю лимит символов для полей ввода (новая фича)
+  const FIELD_LIMITS = {
+    // объект с конфигурацией ограничений полей
+    title: { max: 150, min: 3 }, // заголовок: от 3 до 150 символов
+    description: { max: 1000, min: 10 }, // описание: от 10 до 1000 символов
+  };
+
   // на данную страницу можно попасть через адресную строку (я так и сюда и зашел)
   // но это означает, что пользователь может сломать мне карту (ранее я указал 0, 0 в таких случаях)
   // но это решение лишь ставит маркер в море рядом в Африкой, а там вообще не дорог
@@ -48,21 +66,57 @@ function IncidentForm() {
 
   useEffect(() => {
     // проверка
-    const hasCoords = location.state && 'lat' in location.state && 'lng' in location.state;
-    if (!hasCoords) {
-      toast.warn('Координаты не выбраны. ');
-      navigate('/');
-      return;
+    if (!id) {
+      const hasCoords = location.state && 'lat' in location.state && 'lng' in location.state;
+      if (!hasCoords) {
+        toast.warn('Координаты не выбраны. ');
+        navigate('/');
+        return;
+      }
+      setLat(location.state.lat);
+      setLng(location.state.lng);
+    } else {
+      const fetchIncidentEdit = async () => {
+        setIsLoading(true);
+        try {
+          // ============================================================================
+          // GET-ЗАПРОС НА СЕРВЕР http://localhost:3001/incidents
+          // ============================================================================
+          const responseIncident = await axios.get(`http://localhost:3001/incidents/${id}`);
+          setIncident(responseIncident.data);
+          setOriginalIncident(responseIncident.data);
+
+          // Нужно, чтобы при редактировании в полях был текст
+          setTitle(responseIncident.data?.title || '');
+          setDescription(responseIncident.data?.description || '');
+          setStatus(responseIncident.data?.status || '');
+          setType(responseIncident.data?.type || '');
+
+          // переключаем флаг на редактирование
+          setIsEditMode(true);
+
+          if (responseIncident.data?.userId != user?.id) {
+            toast.warn('У вас недостаточно прав для выполнения этого действия!');
+            navigate('/');
+          }
+          setIsLoading(false);
+        } catch (err) {
+          console.error(`Ошибка загрузки инцидента:`, err.response?.data?.message);
+          toast.error(`Ошибка загрузки инцидента: ${err.response?.data?.message}`);
+          if (err.response?.status === 404) navigate('/');
+        } finally {
+          setIsLoading(false);
+        }
+      };
+
+      fetchIncidentEdit();
     }
-    setLat(location.state.lat);
-    setLng(location.state.lng);
-  }, []);
+    // добавил условия для перезапуска
+  }, [id, location.state, navigate]);
 
   useEffect(() => {
-    const user = getCurrentUser();
     if (user) {
       setUserId(user.id);
-      console.info('Current user: ', user);
     } else {
       console.warn('Пользователь не авторизован');
       toast.warn('Форма добавления инцидентов доступна только авторизированным пользователям!');
@@ -78,12 +132,22 @@ function IncidentForm() {
     setType(e.target.value);
   };
   // ============================================================================
+  // ФУНКЦИЯ ОБРАБОТКИ ИЗМЕНЕНИЯ В ПОЛЕ STATUS
+  // ============================================================================
+  // Вызывается каждый раз, когда происходит изменение в поле
+  const handleStatusChange = (e) => {
+    // Берем текущий текст из поля с помощью e.target.value
+    setStatus(e.target.value);
+  };
+  // ============================================================================
   // ФУНКЦИЯ ОБРАБОТКИ ИЗМЕНЕНИЯ В ПОЛЕ TITLE
   // ============================================================================
   // Вызывается каждый раз, когда происходит изменение в поле
   const handleTitleChange = (e) => {
     // Берем текущий текст из поля с помощью e.target.value
-    setTitle(e.target.value);
+    // Добавил лимит
+    const value = e.target.value.slice(0, FIELD_LIMITS.title.max);
+    setTitle(value);
   };
   // ============================================================================
   // ФУНКЦИЯ ОБРАБОТКИ ИЗМЕНЕНИЯ В ПОЛЕ DESCRIPTION
@@ -91,15 +155,26 @@ function IncidentForm() {
   // Вызывается каждый раз, когда происходит изменение в поле
   const handleDescriptionChange = (e) => {
     // Берем текущий текст из поля с помощью e.target.value
-    setDescription(e.target.value);
+    // Добавил лимит
+    const value = e.target.value.slice(0, FIELD_LIMITS.description.max);
+    setDescription(value);
   };
   // ============================================================================
   // ФУНКЦИЯ СБРОСА ПОЛЕЙ
   // ============================================================================
   const handleReset = () => {
-    setType('');
-    setDescription('');
-    setTitle('');
+    // добавил сброс к оригинальным значениям
+    if (isEditMode && originalIncident) {
+      setType(originalIncident.type || '');
+      setStatus(originalIncident.status || '');
+      setTitle(originalIncident.title || '');
+      setDescription(originalIncident.description || '');
+      toast.info('Изменения отменены');
+    } else {
+      setType('');
+      setDescription('');
+      setTitle('');
+    }
     setIsLoading(false);
   };
   // ============================================================================
@@ -112,34 +187,76 @@ function IncidentForm() {
     // Пока нет ответа. Новый запрос не будет отправлен
     setIsLoading(true);
     try {
+      // Добавил валидация полей перед отправкой с лимитом
+      if (title.length < FIELD_LIMITS.title.min) {
+        throw new Error(`Заголовок должен содержать не менее ${FIELD_LIMITS.title.min} символов`); // [НОВОЕ] выброс ошибки
+      }
+      if (description.length < FIELD_LIMITS.description.min) {
+        throw new Error(
+          `Описание должно содержать не менее ${FIELD_LIMITS.description.min} символов`
+        );
+      }
       const now = new Date().toLocaleString('ru-RU');
       // буду генерировать id cам (безопасность, не нужен GET-запрос, чтобы достать id,
       // которое придумает json-server для переброса на детализацию
-      const uuid = crypto.randomUUID();
-      // ============================================================================
-      // POST-ЗАПРОС НА СЕРВЕР http://localhost:3001/incidents
-      // ============================================================================
-      await axios.post('http://localhost:3001/incidents', {
-        id: uuid,
-        type,
-        title,
-        description,
-        status: 'active',
-        // оставим (Африка лучше, чем сломанная карта)
-        lat: lat ? parseFloat(lat) : 0, // Преобразуем в число (чтобы карта не ломалась)
-        lng: lng ? parseFloat(lng) : 0, // Преобразуем в число
-        time: now,
-        userId,
-      });
+      // добавил условия сохранения текущего uuid при редактировании
+      const uuid = isEditMode ? id : crypto.randomUUID();
+      if (isEditMode) {
+        // put меняет все поля целиком, поэтому словив несколько ошибок при отображении
+        // координат, я вспомнил про patch (частичное обновление)
+        // ============================================================================
+        // PATCH-ЗАПРОС НА СЕРВЕР http://localhost:3001/incidents
+        // ============================================================================
+        await axios.patch(`http://localhost:3001/incidents/${id}`, {
+          title: title,
+          description: description,
+          type: type,
+          status: status,
+        });
 
-      toast.success(`Инцидент добавлен!`);
-      // нужна задержка, чтобы пользователь посмотрел уведомление (3000)
-      // поставим 4000
-      setTimeout(() => {
-        // не нужно направлять пользователя на главную (это вообще не user friendly)
-        // надо стразу на детализацию инцидента
-        navigate(`/incident/${uuid}`);
-      }, 4000);
+        // копируем старые свойства в новый объект
+        setIncident((prev) => ({
+          ...prev,
+          title: title,
+          description: description,
+          type: type,
+          status: status,
+        }));
+
+        toast.success('Инцидент успешно обновлён!');
+        setTimeout(() => {
+          // не нужно направлять пользователя на главную (это вообще не user friendly)
+          // надо стразу на детализацию инцидента
+          navigate(`/incident/${uuid}`);
+          setIsEditMode(false);
+        }, 4000);
+      } else {
+        // ============================================================================
+        // POST-ЗАПРОС НА СЕРВЕР http://localhost:3001/incidents
+        // ============================================================================
+        await axios.post('http://localhost:3001/incidents', {
+          id: uuid,
+          type,
+          title,
+          description,
+          status: 'active',
+          // оставим (Африка лучше, чем сломанная карта)
+          lat: lat ? parseFloat(lat) : 0, // Преобразуем в число (чтобы карта не ломалась)
+          lng: lng ? parseFloat(lng) : 0, // Преобразуем в число
+          time: now,
+          userId,
+        });
+
+        toast.success(`Инцидент добавлен!`);
+        // нужна задержка, чтобы пользователь посмотрел уведомление (3000)
+        // поставим 4000
+        setTimeout(() => {
+          // не нужно направлять пользователя на главную (это вообще не user friendly)
+          // надо стразу на детализацию инцидента
+          navigate(`/incident/${uuid}`);
+        }, 4000);
+      }
+
       // try
     } catch (err) {
       // Будем выводить ошибки в консоль
@@ -155,6 +272,7 @@ function IncidentForm() {
       }, 1000);
     }
   };
+
   // Пишем интерфейс на JSX
   return (
     <div className="page">
@@ -170,20 +288,29 @@ function IncidentForm() {
             <img src="https://s.kontur.ru/common-v2/icons-ui/black/building-home/building-home-32-Regular.svg" />
           </button>
           {/* home-btn */}
-          <h2>Форма</h2>
-          <div className='subtitle'>Добавьте новый инцидент</div>
+          <h2>{isEditMode ? 'Редактирование' : 'Форма'}</h2>
+          <div className="subtitle">
+            {isEditMode ? 'Обновите информацию об инциденте' : 'Добавьте новый инцидент'}
+          </div>
           {/* subtitle */}
         </div>
         {/* first-block */}
         <div className="second-block">
           <form onSubmit={handleSubmit}>
             <select className="input" value={type} onChange={handleTypeChange} required>
-              <option value="" disabled></option>
+              <option value="">Тип инцидента</option>
               <option value="accident">ДТП</option>
               <option value="hazard">Опасный участок</option>
               <option value="other">Другое</option>
             </select>
-            <input
+            {isEditMode && (
+              <select className="input" value={status} onChange={handleStatusChange} required>
+                <option value="">Статус</option>
+                <option value="active">Активный</option>
+                <option value="inactive">Неактивный</option>
+              </select>
+            )}
+            <textarea
               className="input"
               type="text"
               value={title}
@@ -192,9 +319,16 @@ function IncidentForm() {
               // Добавлю подсказку (исчезнет при вводе)
               placeholder="Заголовок"
               required //Обязательно для заполнения
+              // добавил ограничение максимального и минимального количества символов
+              maxLength={FIELD_LIMITS.title.max}
+              minLength={FIELD_LIMITS.title.min}
+              title={`От ${FIELD_LIMITS.title.min} до ${FIELD_LIMITS.title.max} символов`}
             />
-            <input
-              className="input"
+            <div className="char-counter">
+              {title.length} / {FIELD_LIMITS.title.max}
+            </div>
+            <textarea
+              className="input-description"
               type="text"
               value={description}
               // Надо зафиксировать изменения
@@ -202,16 +336,25 @@ function IncidentForm() {
               // Добавлю подсказку (исчезнет при вводе)
               placeholder="Описание"
               required //Обязательно для заполнения
+              // добавил ограничение максимального и минимального количества символов
+              maxLength={FIELD_LIMITS.description.max}
+              minLength={FIELD_LIMITS.description.min}
+              title={`От ${FIELD_LIMITS.description.min} до ${FIELD_LIMITS.description.max} символов`}
             />
+            <div className="char-counter">
+              {description.length} / {FIELD_LIMITS.description.max}
+            </div>
             <div className="group-btn">
               <button type="button" className="btn" onClick={handleReset}>
-                Очистить
+                {isEditMode ? 'Отмена' : 'Очистить'}
               </button>
               <button type="submit" className="btn" disabled={isLoading}>
                 {isLoading ? (
                   <div className="loading-button">
                     <div className="spinner-mini"></div>
                   </div>
+                ) : isEditMode ? (
+                  'Обновить'
                 ) : (
                   'Сохранить'
                 )}
