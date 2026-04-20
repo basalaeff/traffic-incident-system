@@ -12,6 +12,8 @@ import axios from 'axios';
 // получаем текущего пользователя
 import { getCurrentUser } from '../auth';
 
+import Swal from 'sweetalert2';
+
 function IncidentForm() {
   const { id } = useParams();
   const navigate = useNavigate(); //хук для переброса на авторизацию
@@ -177,6 +179,31 @@ function IncidentForm() {
     }
     setIsLoading(false);
   };
+
+  const showSuccess = async () => {
+    const result = await Swal.fire({
+      icon: 'success',
+      title: 'Успешно',
+      showCancelButton: true,
+      confirmButtonText: 'На главную',
+      cancelButtonText: 'Вернуться к инциденту',
+      confirmButtonColor: 'var(--status-normal)',
+      cancelButtonColor: 'var(--status-danger)',
+      allowOutsideClick: false, // Закрыть можно только кнопкой
+      backdrop: 'rgba(0,0,0,0.4)', // Затемнение фона
+      background: 'var(--bg-app)',
+      reverseButtons: true,
+    });
+
+    if (result.isConfirmed) {
+      navigate('/');
+      setIsEditMode(false);
+    } else if (result.dismiss === Swal.DismissReason.cancel) {
+      navigate(`/incident/${id}`);
+      setIsEditMode(false);
+    }
+  };
+
   // ============================================================================
   // ФУНКЦИЯ ОТПРАВКИ ФОРМЫ
   // ============================================================================
@@ -224,12 +251,7 @@ function IncidentForm() {
         }));
 
         toast.success('Инцидент успешно обновлён!');
-        setTimeout(() => {
-          // не нужно направлять пользователя на главную (это вообще не user friendly)
-          // надо стразу на детализацию инцидента
-          navigate(`/incident/${uuid}`);
-          setIsEditMode(false);
-        }, 4000);
+        showSuccess();
       } else {
         // ============================================================================
         // POST-ЗАПРОС НА СЕРВЕР http://localhost:3001/incidents
@@ -248,13 +270,7 @@ function IncidentForm() {
         });
 
         toast.success(`Инцидент добавлен!`);
-        // нужна задержка, чтобы пользователь посмотрел уведомление (3000)
-        // поставим 4000
-        setTimeout(() => {
-          // не нужно направлять пользователя на главную (это вообще не user friendly)
-          // надо стразу на детализацию инцидента
-          navigate(`/incident/${uuid}`);
-        }, 4000);
+        showSuccess();
       }
 
       // try
