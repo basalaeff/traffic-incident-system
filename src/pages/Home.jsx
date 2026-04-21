@@ -1,5 +1,5 @@
 // для того чтобы получить ссылку на DOM-элемент нужен useRef
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, useCallback } from 'react';
 
 // Добавлю компоненты карты
 // Контейнер карты, улицы, маркеры, всплывающее окно
@@ -108,6 +108,10 @@ function MapClickHandler({ setTempMarker, isAddingMode }) {
 
 function Home() {
   // Напишем массивы для хранения данных с использованием деструкционализации
+
+  // Создадим массив для хранения инцидентов (карточки)
+  const [incidentCards, setIncidentCards] = useState([]);
+
   // Создадим массив для хранения инцидентов
   const [incidents, setIncidents] = useState([]);
   // для хранения координат
@@ -130,6 +134,21 @@ function Home() {
 
   // переменная для управления масштабом карты
   const [currentZoom, setCurrentZoom] = useState(13);
+
+  // ============================================================================
+  // СОСТОЯНИЯ ДЛЯ ДИНАМИЧЕСКОЙ ЗАГРУЗКИ КАРТОЧЕК
+  // ============================================================================
+  // Текущая страница для нумерации областей с карточками (начинаем с 1)
+  const [page, setPage] = useState(1);
+  // Количество карточек на странице (лимит)
+  const [limit] = useState(3);
+  // Флаг: есть ли ещё данные для загрузки
+  const [hasMore, setHasMore] = useState(true);
+  // Флаг загрузки следующей порции данных (чтобы не дублировать запросы)
+  const [loadingMore, setLoadingMore] = useState(false);
+  // Ref для Intersection Observer — элемент-«страж» внизу списка
+  const observerTarget = useRef(null);
+  const fetchIncidentsRef = useRef(null);
 
   // ============================================================================
   // ПОЛУЧЕНИЕ ГЕОЛОКАЦИИ
@@ -215,16 +234,109 @@ function Home() {
   }, []);
 
   // ============================================================================
+  // РЕФЫ (всегда актуальные значения)
+  // ============================================================================
+  const pageRef = useRef(1); // текущая страница для API
+  const hasMoreRef = useRef(true); // есть ли ещё данные
+  const loadingRef = useRef(false); // идет ли загрузка
+
+  // Синхронизируем рефы со стейтом
+  useEffect(() => {
+    pageRef.current = page;
+  }, [page]);
+  useEffect(() => {
+    hasMoreRef.current = hasMore;
+  }, [hasMore]);
+  useEffect(() => {
+    loadingRef.current = loadingMore;
+  }, [loadingMore]);
+
+  // ============================================================================
+  // ЗАГРУЗКА КАРТОЧЕК ИНЦИДЕНТОВ
+  // ============================================================================
+  const fetchIncidentCards = useCallback(
+    // isInitial - первоначальная загрузка
+    // append - добавление данных
+    async (isInitial = false, append = false) => {
+      // последующая загрузка
+      if (!isInitial) {
+        // данных нет или идет загрузка
+        if (!hasMoreRef.current || loadingRef.current) return;
+        loadingRef.current = true;
+        setLoadingMore(true);
+        pageRef.current += 1;
+      }
+
+      try {
+        const requestPage = isInitial ? 1 : pageRef.current;
+
+        const responseIncidents = await axios.get('http://localhost:3001/incidents', {
+          params: {
+            _page: requestPage,
+            _limit: limit,
+          },
+        });
+
+        const newIncidents = responseIncidents.data;
+
+        // Если пришло меньше лимита, то данных больше нет
+        if (newIncidents.length < limit) {
+          setHasMore(false);
+          hasMoreRef.current = false;
+        }
+
+        // Обновляем список карточек
+        if (isInitial || !append) {
+          setIncidentCards(newIncidents);
+          if (isInitial) {
+            setPage(1);
+            pageRef.current = 1;
+          }
+        } else {
+          setIncidentCards((prev) => {
+            const uniqueNew = newIncidents.filter(
+              (newItem) => !prev.some((oldItem) => oldItem.id === newItem.id)
+            );
+            return [...prev, ...uniqueNew];
+          });
+        }
+
+        setPage(pageRef.current);
+      } catch (err) {
+        console.error('Ошибка загрузки:', err);
+        toast.error(err.message || 'Ошибка загрузки инцидентов');
+        // При ошибке откатываем страницу назад
+        if (!isInitial) pageRef.current -= 1;
+      } finally {
+        if (!isInitial) {
+          loadingRef.current = false;
+          setLoadingMore(false);
+        }
+      }
+    },
+    [limit]
+  );
+
+  // ============================================================================
+  // ПЕРВИЧНАЯ ЗАГРУЗКА
+  // ============================================================================
+  useEffect(() => {
+    fetchIncidentCards(true, false);
+  }, []);
+
+  // ============================================================================
   // СКРОЛЛ
   // ============================================================================
   const listRef = useRef(null);
+
   const handleScroll = (e) => {
     const el = e.currentTarget;
     const distanceToBottom = el.scrollHeight - el.scrollTop - el.clientHeight;
 
-    if (distanceToBottom < 150) {
-      console.log('Можно загружать...');
-      // loadMoreIncidents();
+    // Грузим, если: близко к низу + не грузим сейчас + есть ещё данные
+    if (distanceToBottom < 100 && !loadingRef.current && hasMoreRef.current) {
+      console.log('Загружаю страницу', pageRef.current + 1);
+      fetchIncidentCards(false, true);
     }
   };
 
@@ -234,7 +346,7 @@ function Home() {
 
     el.addEventListener('scroll', handleScroll, { passive: true });
     return () => el.removeEventListener('scroll', handleScroll);
-  }, []);
+  }, [handleScroll]);
 
   // ============================================================================
   // ДЛЯ АВТОРИЗАЦИИ/ВЫХОДА ПОЛЬЗОВАТЕЛЯ
@@ -438,27 +550,29 @@ function Home() {
         <div className="main-card">
           <h1>Сервис мониторинга дорожных инцидентов</h1>
           <div className="incidents-list" ref={listRef}>
-            {incidents.map((incident) => {
+            {incidentCards.map((incidentCard) => {
               return (
                 // Использую article
                 // каждый инцидент самостоятельная единица данных
-                <article className="incident-card" key={incident?.id}>
+                <article className="incident-card" key={incidentCard?.id}>
                   <div className="incident-card-first">
                     <header className="incident-card-header">
-                      <span className={`badge ${incident?.status}`}>{incident?.status}</span>
+                      <span className={`badge ${incidentCard?.status}`}>
+                        {incidentCard?.status}
+                      </span>
                     </header>
                     {/* incident-card-header */}
-                    <h2 className="incident-card-title">{incident?.title}</h2>
+                    <h2 className="incident-card-title">{incidentCard?.title}</h2>
                     {/* incident-card-title */}
-                    <span className="incident-card-type">{incident?.type}</span>
+                    <span className="incident-card-type">{incidentCard?.type}</span>
                     {/* incident-card-type */}
-                    <p className="incident-card-description">{incident?.description}</p>
+                    <p className="incident-card-description">{incidentCard?.description}</p>
                     {/* incident-card-description */}
-                    <time className="incident-card-time">{incident?.time}</time>
+                    <time className="incident-card-time">{incidentCard?.time}</time>
                     {/* incident-card-time */}
                     <footer className="incident-card-footer">
                       <span className="coords">
-                        {incident?.lat}, {incident?.lng}
+                        {incidentCard?.lat}, {incidentCard?.lng}
                       </span>
                       {/* coords */}
                     </footer>
@@ -472,7 +586,7 @@ function Home() {
                         className="card-circle-btn"
                         title="Посмотреть на карте"
                         onClick={() => {
-                          setUserLocation([incident?.lat, incident?.lng]);
+                          setUserLocation([incidentCard?.lat, incidentCard?.lng]);
                           setDisplayMap(true);
                           setCurrentZoom(18);
                         }}
@@ -484,7 +598,7 @@ function Home() {
                       <button
                         className="card-circle-btn"
                         title="Подробнее"
-                        onClick={() => navigate(`/incident/${incident.id}`)}
+                        onClick={() => navigate(`/incident/${incidentCard?.id}`)}
                       >
                         <img src="https://s.kontur.ru/common-v2/icons-ui/black/arrow-ui-corner-out-up-right/arrow-ui-corner-out-up-right-32-Regular.svg" />
                       </button>

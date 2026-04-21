@@ -10,6 +10,9 @@
   flex-direction: column;
   gap: 24px; /* Отступ между карточками */
   overscroll-behavior: contain; /* Чтобы скролл не убегал на страницу */
+  height: 100%;
+  width: 100%;
+
 }
 
 .incident-card {
