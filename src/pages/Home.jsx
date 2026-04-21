@@ -1,4 +1,5 @@
-import { useState, useEffect } from 'react';
+// для того чтобы получить ссылку на DOM-элемент нужен useRef
+import { useState, useEffect, useRef } from 'react';
 
 // Добавлю компоненты карты
 // Контейнер карты, улицы, маркеры, всплывающее окно
@@ -214,6 +215,28 @@ function Home() {
   }, []);
 
   // ============================================================================
+  // СКРОЛЛ
+  // ============================================================================
+  const listRef = useRef(null);
+  const handleScroll = (e) => {
+    const el = e.currentTarget;
+    const distanceToBottom = el.scrollHeight - el.scrollTop - el.clientHeight;
+
+    if (distanceToBottom < 150) {
+      console.log('Можно загружать...');
+      // loadMoreIncidents();
+    }
+  };
+
+  useEffect(() => {
+    const el = listRef.current;
+    if (!el) return;
+
+    el.addEventListener('scroll', handleScroll, { passive: true });
+    return () => el.removeEventListener('scroll', handleScroll);
+  }, []);
+
+  // ============================================================================
   // ДЛЯ АВТОРИЗАЦИИ/ВЫХОДА ПОЛЬЗОВАТЕЛЯ
   // ============================================================================
   const user = getCurrentUser();
@@ -414,7 +437,7 @@ function Home() {
       {!displayMap && (
         <div className="main-card">
           <h1>Сервис мониторинга дорожных инцидентов</h1>
-          <div className="incidents-list">
+          <div className="incidents-list" ref={listRef}>
             {incidents.map((incident) => {
               return (
                 // Использую article
