@@ -1,8 +1,10 @@
-html, body {
+html,
+body {
   margin: 0;
   padding: 0;
   width: 100%;
   height: 100%;
+  background-color: var(--bg-app); /* Фон из переменных */
 }
 /* ============================================================================ */
 /* КОНТЕЙНЕР ДЛЯ СТРАНИЦЫ  */
@@ -10,9 +12,10 @@ html, body {
 /* обычно при авторизации по центру есть фигура с закругленными рамками */
 /* ============================================================================ */
 .page {
-  font-family: var(--font-main);
-  display: flex; /* Включаем гибкую верстку */
+  background-color: var(--bg-app); /* Фон из переменных */
+  font-family: var(--text-primary);
 
+  display: flex; /* Включаем гибкую верстку */
   padding: 20px; /* Отступы от краев на мобильных */
 
   align-items: center; /* Центрируем по вертикали */
@@ -21,20 +24,22 @@ html, body {
   flex-direction: column;
   height: 100vh; /* Минимальная высота - весь экран */
   width: 100%;
-
-  background-color: var(--gray-light); /* Фон из переменных */
 }
 
 /* ============================================================================ */
 /* КОНТЕЙНЕР ДЛЯ ГЛАВНОЙ СТРАНИЦЫ */
 /* ============================================================================ */
 .page-home {
+  font-family: var(--text-primary);
+  background-color: var(--bg-app); /* Фон из переменных */
+
   display: flex; /* Включаем гибкую верстку */
+
   /* 100% экрана */
   height: 100vh !important;
   width: 100vw !important;
-  font-family: 'Roboto', Arial, sans-serif;
 
+  justify-content: center; /* Центрируем по горизонтали */
   /* запрещаем прокрутку и выход за экран */
   overflow: hidden !important;
 }
@@ -43,15 +48,15 @@ html, body {
 /* КОНТЕЙНЕР ДЛЯ СТРАНИЦЫ ДЕТАЛИЗАЦИИ */
 /* ============================================================================ */
 .page-detail {
-  font-family: var(--font-main);
+  font-family: var(--text-primary);
+  background-color: var(--bg-app); /* Фон из переменных */
+
   display: flex; /* Включаем гибкую верстку */
+  padding: 20px; /* Отступы от краев на мобильных */
+
   align-items: center; /* Центрируем по вертикали */
   flex-direction: column;
+
   min-height: 100vh; /* Минимальная высота - весь экран */
-  padding: 20px; /* Отступы от краев на мобильных */
-  background-color: var(--gray-light); /* Фон из переменных */
   width: 100%;
 }
-
-
-

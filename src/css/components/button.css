@@ -14,12 +14,12 @@
   font-weight: bold;
   width: 100%;
   padding: 12px;
-  background-color: var(--primary-color);
-  color: var(--white);
+  background-color: var(--brand-primary);
+  color: var(--text-primary);
   font-size: 18px;
-  border-radius: var(--radius-md);
+  border-radius: var(--radius-sm);
   margin-top: 10px; /* отступ сверху */
-  box-shadow: var(--shadow-md); /* Тень для объема */
+  box-shadow: var(--shadow-sm); /* Тень для объема */
 
   text-align: center;
   /* зададим время для анимации */
@@ -33,8 +33,8 @@
 /* ============================================================================ */
 .btn:hover {
   /* делаем кнопку немного темнее */
-  background-color: var(--primary-hover);
-  transform: scale(1.05);
+  background-color: var(--brand-primary-hover);
+  transform: scale(1.01);
 }
 
 .btn:active {

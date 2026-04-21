@@ -1,15 +1,25 @@
 /* ============================================================================ */
 /* ПОПАП (ВСПЛЫВАЮЩЕЕ ОКНО) */
 /* ============================================================================ */
+.leaflet-popup-content-wrapper {
+  background-color: var(--bg-surface); /* Ваш цвет фона */
+  border-radius: var(--radius-md); /* Скругление углов */
+}
+
+/* "Хвостик" попапа */
+.leaflet-popup-tip {
+  background-color: var(--bg-surface);
+}
 .popup-content {
   min-width: 200px;
+  color: var(--text-primary);
 }
 
 .popup-content h3 {
   /* сверху справа снизу слева */
   margin: 0 0 5px 0;
   font-size: 18px;
-  color: var(--gray-dark);
+  color: var(--text-primary);
 }
 
 .popup-content .meta-info {
@@ -25,8 +35,8 @@
   margin-top: 8px;
   cursor: pointer;
   padding: 6px 12px;
-  background-color: var(--primary-color);
-  color: var(--white);
+  background-color: var(--brand-primary);
+  color: var(--text-primary);
   border: none;
   border-radius: var(--radius-md);
   font-size: 14px;
@@ -39,7 +49,7 @@
 /* ============================================================================ */
 .popup-btn:hover {
   /* делаем кнопку немного темнее */
-  background-color: var(--primary-hover);
+  background-color: var(--brand-primary-hover);
   transform: scale(1.05);
 }
 

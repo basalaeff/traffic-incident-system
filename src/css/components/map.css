@@ -14,3 +14,16 @@
 .leaflet-control-attribution {
   display: none !important;
 }
+
+/* Инвертирует цвета, сохраняя оттенки синего и красного читаемыми */
+@media (prefers-color-scheme: dark) {
+  .dark-tiles {
+    filter: brightness(0.6) invert(1) contrast(3) hue-rotate(200deg) saturate(0.3) brightness(0.7);
+    isolation: isolate;
+  }
+}
+
+/* Фон контейнера, чтобы при зуме не моргал белый цвет */
+.leaflet-container {
+  background: #303030 !important;
+}

@@ -1,0 +1,80 @@
+/* Стили для карточек инцидентов */
+/* ============================================================================ */
+/*  Стиль карточки */
+/* ============================================================================ */
+.incidents-list {
+  flex: 1; /* Занимает всё место между заголовком и низом */
+  overflow-y: auto; /* Включает скролл ТОЛЬКО здесь */
+  padding: 12px 48px;
+  display: flex;
+  flex-direction: column;
+  gap: 24px; /* Отступ между карточками */
+  overscroll-behavior: contain; /* Чтобы скролл не убегал на страницу */
+}
+
+.incident-card {
+  flex-shrink: 0;
+  box-sizing: border-box;
+  /* рамка */
+  border: 1px solid #ddd;
+  /* скругление углов */
+  border-radius: var(--radius-lg);
+  padding: 16px; /* Внутренние отступы */
+  background: var(--bg-surface-hover);
+  box-shadow: var(--shadow-md);
+  display: flex; /* гибкие элементы */
+  flex-direction: row; /* элементы горизонтально */
+  gap: 16px; /* расстояние между элементами  */
+
+  /* Анимация */
+  transition: transform 0.5s ease;
+  transform-origin: center center; /* точка вращения */
+}
+
+.incident-card:hover {
+  transform: perspective(800px) rotateX(5deg) scale(1.05);
+  border-color: var(--brand-primary);
+}
+
+.incident-card:active {
+  transform: scale(0.95);
+  border-color: var(--brand-primary);
+}
+
+.incident-card-first {
+  flex: 1; /* занимает доступное пространство */
+  position: relative;
+  text-align: left;
+  margin-bottom: 20px;
+}
+
+.incident-card-second {
+  display: flex;
+  flex-direction: column;
+  gap: 20px; /* отступы между группами полей */
+  /* сверху справа снизу слева */
+  flex: 0 0 100px 0;
+}
+.badge.active {
+  color: var(--status-danger-bg);
+} /* Стиль для активного статуса */
+.card-title {
+  margin: 8px 0;
+  font-size: 1.1rem;
+} /* Отступы и размер заголовка */
+.card-desc {
+  margin: 0 0 10px;
+  color: #555;
+  font-size: 0.9rem;
+} /* Цвет и размер описания */
+.card-time {
+  display: block;
+  font-size: 0.8rem;
+  color: #888;
+} /* Стили времени */
+.coords {
+  font-family: monospace;
+  font-size: 0.85rem;
+  color: #444;
+} /* Моноширинный шрифт координат */
+

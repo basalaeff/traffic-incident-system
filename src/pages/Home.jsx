@@ -3,7 +3,7 @@ import { useState, useEffect } from 'react';
 // Добавлю компоненты карты
 // Контейнер карты, улицы, маркеры, всплывающее окно
 // useMapEvents добавил для того чтобы ставить метку на карту
-import { MapContainer, TileLayer, Marker, Popup, useMapEvents } from 'react-leaflet';
+import { MapContainer, TileLayer, Marker, Popup, useMapEvents, useMap } from 'react-leaflet';
 
 // Нужен хук для роутинга
 import { useNavigate } from 'react-router-dom';
@@ -19,6 +19,23 @@ import Avatar from 'react-avatar';
 import { toast } from 'react-toastify';
 
 import { getCurrentUser, logoutUser } from '../auth';
+
+// ============================================================================
+// ЦЕНТРИРОВАНИЕ КАРТЫ ПО КООРДИНАТАМ ПОЛЬЗОВАТЕЛЯ
+// ============================================================================
+const RecenterAutomatically = ({ location }) => {
+  const map = useMap();
+
+  useEffect(() => {
+    if (location) {
+      // Перемещает камеру к новым координатам
+      map.flyTo(location, map.getZoom());
+      // Или map.flyTo(location, 13) для плавной анимации
+    }
+  }, [location, map]);
+
+  return null;
+};
 
 // ============================================================================
 // НАСТРОЙКА МАРКЕРОВ
@@ -78,6 +95,7 @@ function MapClickHandler({ setTempMarker, isAddingMode }) {
     // обработчик клика
     click: (e) => {
       if (isAddingMode) {
+        toast.dismiss();
         // e.latlng - объект, содержит координаты
         // передаем в функцию
         setTempMarker([e.latlng.lat, e.latlng.lng]);
@@ -105,12 +123,19 @@ function Home() {
 
   const [displayLogout, setDisplayLogout] = useState(false);
 
+  const [displayMap, setDisplayMap] = useState(false);
+
+  const [displayFloatingBtn, setDisplayFloatingBtn] = useState(false);
+
+  // переменная для управления масштабом карты
+  const [currentZoom, setCurrentZoom] = useState(13);
+
   // ============================================================================
   // ПОЛУЧЕНИЕ ГЕОЛОКАЦИИ
   // ============================================================================
   // Пишем useEffect() - это хук, который выполняет код после того как компонент
   // отобразится на экране
-  useEffect(() => {
+  const getLocation = () => {
     // буду использовать объект navigator
     // Он встроен в браузер и дает доступ к функциям устройства
     // geolocation это его свойство. Я буду использовать его для определения местоположения
@@ -148,7 +173,12 @@ function Home() {
         );
       }
     );
-  }, []); //Работает только при старте
+  }; //Работает только при старте
+
+  // Вызываем один раз при старте
+  useEffect(() => {
+    getLocation();
+  }, []);
 
   // ============================================================================
   // ЗАГРУЗКА ДАННЫХ С СЕРВЕРА (API)
@@ -182,6 +212,7 @@ function Home() {
     // Нужно запустить функцию
     fetchIncidents();
   }, []);
+
   // ============================================================================
   // ДЛЯ АВТОРИЗАЦИИ/ВЫХОДА ПОЛЬЗОВАТЕЛЯ
   // ============================================================================
@@ -230,6 +261,7 @@ function Home() {
           closeButton: false,
           // выведу снизу справа (по приколу)
           position: 'bottom-right',
+          theme: 'dark',
         }
       );
     } else {
@@ -243,12 +275,23 @@ function Home() {
   const handleCreateIncident = () => {
     // разрешили добавление
     setIsAddingMode(true);
-    toast.info('Кликните по карте, чтобы установить маркер');
+    toast.info('Кликните по карте, чтобы установить маркер', {
+      // закрытие по таймеру выключено
+      autoClose: false,
+      // по клику закрыть нельзя
+      closeOnClick: false,
+      // и перетаскиванием тоже
+      draggable: false,
+      // крестик убрал тоже
+      closeButton: false,
+      theme: 'dark',
+    });
   };
   // ============================================================================
   // ДЛЯ ОБРАБОТКИ СОЗДАНИЯ ИНЦИДЕНТА ПОСЛЕ ВЫБОРА КООРДИНАТ
   // ============================================================================
   const handleConfirmCreateIncident = () => {
+    toast.dismiss();
     // защита от ошибок при вызове координат
     if (!tempMarker) return;
     navigate('/create-incident', {
@@ -266,6 +309,7 @@ function Home() {
   // ДЛЯ ОТМЕНЫ ДОБАВЛЕНИЯ ИНЦИДЕНТА
   // ============================================================================
   const handleCancelCreateIncident = () => {
+    toast.dismiss();
     // убираем временный маркер
     setTempMarker(null);
     setIsAddingMode(false);
@@ -278,7 +322,10 @@ function Home() {
   if (loading || !userLocation) {
     return (
       <div className="loading-screen">
-        <div className="spinner-large"></div>
+        <div className="loading-card">
+          <div className="spinner-large"></div>
+        </div>
+        {/* loading-card */}
       </div>
     );
   }
@@ -290,70 +337,228 @@ function Home() {
     // Внешний контейнер для всей страницы
     <div className="page-home">
       <div className="floating-btns">
-        {isAddingMode && !displayLogout && (
-          <button
-            className="circle-btn"
-            onClick={handleCancelCreateIncident}
-            title="Отмена"
-            style={{ backgroundColor: 'var(--danger-color)' }}
-          >
-            <img src="https://s.kontur.ru/common-v2/icons-ui/black/x-circle/x-circle-32-Regular.svg" />
-          </button>
-        )}
-        {user && !isAddingMode && !displayLogout && (
-          <button
-            className="circle-btn"
-            onClick={handleCreateIncident}
-            title="Добавить инцидент"
-          >
-            <img src="https://s.kontur.ru/common-v2/icons-ui/black/plus-circle/plus-circle-32-Regular.png" />
-          </button>
-        )}
-        {!displayLogout && (
-          <button
-            className="circle-btn"
-            onClick={handleAuthClick}
-            title={user ? 'Выйти' : 'Войти'}
-          >
-            {user ? (
-              <Avatar name={user?.login} size="46" round={true} />
-            ) : (
-              <img src="https://s.kontur.ru/common-v2/icons-ui/black/arrow-ui-auth-login/arrow-ui-auth-login-32-Regular.svg" />
-            )}
-          </button>
-        )}
+        <div className="btns-menu">
+          {/* Кнопка ОТМЕНА */}
+          {displayFloatingBtn && isAddingMode && !displayLogout && (
+            <button
+              className="circle-btn"
+              onClick={handleCancelCreateIncident}
+              title="Отмена"
+              style={{ backgroundColor: 'var(--danger-color)' }}
+            >
+              <img src="https://s.kontur.ru/common-v2/icons-ui/black/x-circle/x-circle-32-Regular.svg" />
+            </button>
+          )}
+          {/* Кнопка ДОБАВЛЕНИЕ */}
+          {displayFloatingBtn && user && displayMap && !isAddingMode && !displayLogout && (
+            <button className="circle-btn" onClick={handleCreateIncident} title="Добавить инцидент">
+              <img src="https://s.kontur.ru/common-v2/icons-ui/black/plus-circle/plus-circle-32-Regular.png" />
+            </button>
+          )}
+          {/* Кнопка ЦЕНТИРОВАТЬ ПО ГЕОЛОКАЦИИ */}
+          {displayFloatingBtn && !displayLogout && displayMap && (
+            <button className="circle-btn" onClick={getLocation} title="Вернуться в координаты">
+              <img src="https://s.kontur.ru/common-v2/icons-ui/black/location-pin/location-pin-32-Regular.svg" />
+            </button>
+          )}
+          {/* Кнопка КАРТЫ */}
+          {displayFloatingBtn && !displayLogout && (
+            <button
+              className="circle-btn"
+              onClick={() => {
+                displayMap ? setDisplayMap(false) : setDisplayMap(true);
+              }}
+              title={displayMap ? 'Скрыть карту' : 'Показать карту'}
+            >
+              {displayMap ? (
+                <img src="https://s.kontur.ru/common-v2/icons-ui/black/building-home/building-home-32-Regular.svg" />
+              ) : (
+                <img src="https://s.kontur.ru/common-v2/icons-ui/black/location-map/location-map-32-Regular.svg" />
+              )}
+            </button>
+          )}
+          {/* Кнопка ВХОДА */}
+          {displayFloatingBtn && !displayLogout && (
+            <button
+              className="circle-btn"
+              onClick={handleAuthClick}
+              title={user ? 'Выйти' : 'Войти'}
+            >
+              {user ? (
+                <Avatar name={user?.login} size="46" round={true} />
+              ) : (
+                <img src="https://s.kontur.ru/common-v2/icons-ui/black/arrow-ui-auth-login/arrow-ui-auth-login-32-Regular.svg" />
+              )}
+            </button>
+          )}
+          {/* Кнопка МЕНЮ */}
+          {!displayLogout && (
+            <button
+              className="circle-btn"
+              onClick={() => {
+                displayFloatingBtn ? setDisplayFloatingBtn(false) : setDisplayFloatingBtn(true);
+              }}
+              title={user ? 'Скрыть' : 'Показать'}
+            >
+              {displayFloatingBtn ? (
+                <img src="https://s.kontur.ru/common-v2/icons-ui/black/arrow-shape-a-right/arrow-shape-a-right-32-Regular.svg" />
+              ) : (
+                <img src="https://s.kontur.ru/common-v2/icons-ui/black/ui-menu-bars-3-h/ui-menu-bars-3-h-32-Regular.svg" />
+              )}
+            </button>
+          )}
+        </div>
+        {/* btns-menu */}
       </div>
       {/* floating-btns */}
-      <main className="map-container">
-        {/* Нужно настроить отрисовку пустой карты */}
-        {/* Это компонент карты от библиотеки react-leaflet. */}
-        <MapContainer
-          // Здесь настроим центрирование карты (на Москве или на пользователе)
-          center={userLocation}
-          // Установим масштаб. Доступно от 1 до 19.
-          // 1 - Планета, 19 - Крыша дома
-          // Поставим пока 13
-          zoom={13}
-          // Крч планета это слишком много
-          // Мне пока лень делать кластеризацию, поэтому просто ограничу масштаб
-          maxZoom={18}
-          minZoom={12}
-          // Нужно указать стиль карты
-          // Ширина (настроили по всей области)
-          // 867px на глазок
-          style={{ height: '100%', width: '100%' }}
-        >
-          {/* Подгрузка плиточек карты */}
-          {/* Используем OpenStreetMap */}
-          <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
-          {/* Отрисовка маркеров */}
-          {incidents.map((incident) => {
-            return (
+      {!displayMap && (
+        <div className="main-card">
+          <h1>Сервис мониторинга дорожных инцидентов</h1>
+          <div className="incidents-list">
+            {incidents.map((incident) => {
+              return (
+                // Использую article
+                // каждый инцидент самостоятельная единица данных
+                <article className="incident-card" key={incident?.id}>
+                  <div className="incident-card-first">
+                    <header className="incident-card-header">
+                      <span className={`badge ${incident?.status}`}>{incident?.status}</span>
+                    </header>
+                    {/* incident-card-header */}
+                    <h2 className="incident-card-title">{incident?.title}</h2>
+                    {/* incident-card-title */}
+                    <span className="incident-card-type">{incident?.type}</span>
+                    {/* incident-card-type */}
+                    <p className="incident-card-description">{incident?.description}</p>
+                    {/* incident-card-description */}
+                    <time className="incident-card-time">{incident?.time}</time>
+                    {/* incident-card-time */}
+                    <footer className="incident-card-footer">
+                      <span className="coords">
+                        {incident?.lat}, {incident?.lng}
+                      </span>
+                      {/* coords */}
+                    </footer>
+                    {/* incident-card-footer */}
+                  </div>
+                  {/* incident-card-first  */}
+                  <div className="incident-card-second">
+                    <div className="ud-btn">
+                      {/* Кнопка посмотреть на карте */}
+                      <button
+                        className="card-circle-btn"
+                        title="Посмотреть на карте"
+                        onClick={() => {
+                          setUserLocation([incident?.lat, incident?.lng]);
+                          setDisplayMap(true);
+                          setCurrentZoom(18);
+                        }}
+                      >
+                        <img src="https://s.kontur.ru/common-v2/icons-ui/black/location-pin/location-pin-32-Regular.svg" />
+                      </button>
+
+                      {/* Кнопка на страницу детализации */}
+                      <button
+                        className="card-circle-btn"
+                        title="Подробнее"
+                        onClick={() => navigate(`/incident/${incident.id}`)}
+                      >
+                        <img src="https://s.kontur.ru/common-v2/icons-ui/black/arrow-ui-corner-out-up-right/arrow-ui-corner-out-up-right-32-Regular.svg" />
+                      </button>
+                    </div>
+                    {/* ud-btn */}
+                  </div>
+                  {/* incident-card-second */}
+                </article>
+                // incident-card
+              );
+            })}
+          </div>
+          {/* incidents-list */}
+        </div>
+        // main-card
+      )}
+
+      {displayMap && (
+        <main className="map-container">
+          {/* Нужно настроить отрисовку пустой карты */}
+          {/* Это компонент карты от библиотеки react-leaflet. */}
+          <MapContainer
+            // Здесь настроим центрирование карты (на Москве или на пользователе)
+            center={userLocation}
+            // Установим масштаб. Доступно от 1 до 19.
+            // 1 - Планета, 19 - Крыша дома
+            // Поставим пока 13
+            zoom={currentZoom}
+            // Крч планета это слишком много
+            // Мне пока лень делать кластеризацию, поэтому просто ограничу масштаб
+            maxZoom={18}
+            minZoom={12}
+            // скрыл кнопки
+            zoomControl={false}
+            // Нужно указать стиль карты
+            // Ширина (настроили по всей области)
+            // 867px на глазок
+            style={{ height: '100%', width: '100%' }}
+          >
+            {/* Подгрузка плиточек карты */}
+            {/* Используем OpenStreetMap */}
+            <TileLayer
+              className="dark-tiles"
+              url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+            />
+            <RecenterAutomatically location={userLocation} />
+            {/* Отрисовка маркеров */}
+            {incidents.map((incident) => {
+              return (
+                <Marker
+                  key={incident?.id}
+                  position={[incident?.lat, incident?.lng]}
+                  icon={getCustomIcon(incident?.type, incident?.status)}
+                  // хочу реализовать, чтобы открывался при наведении
+                  eventHandlers={{
+                    mouseover: (e) => {
+                      e.target.openPopup();
+                    },
+                    mouseout: (e) => {
+                      // решил проблему с быстрым закрыванием
+                      setTimeout(() => {
+                        e.target.closePopup();
+                      }, 2000);
+                    },
+                  }}
+                >
+                  <Popup>
+                    <div className="popup-content">
+                      <h3>{incident?.title}</h3>
+                      <p>{incident?.description}</p>
+                      Тип: <b>{incident?.type}</b> | Статус: <b>{incident?.status}</b>
+                      <p></p>
+                      {/* юзеров много в этот раз. поэтому буду использовать find */}
+                      {/* работает как фильтр: пробегает по массиву и находит подходящего юзера */}
+                      Пользователь:
+                      <b>{users?.find((users) => users.id === incident?.userId)?.login || ''}</b>
+                      <p></p>
+                      <button
+                        className="popup-btn"
+                        onClick={() => navigate(`/incident/${incident.id}`)}
+                      >
+                        Подробнее
+                      </button>
+                      {/* popup-btn */}
+                    </div>
+                    {/* popup-content */}
+                  </Popup>
+                </Marker>
+              );
+            })}
+            {/* Компонент для обработки кликов по карте */}
+            <MapClickHandler setTempMarker={setTempMarker} isAddingMode={isAddingMode} />
+            {/* Добавление инцидента */}
+            {tempMarker && (
               <Marker
-                key={incident?.id}
-                position={[incident?.lat, incident?.lng]}
-                icon={getCustomIcon(incident?.type, incident?.status)}
-                // хочу реализовать, чтобы открывался при наведении
+                position={tempMarker}
+                icon={getCustomIcon('new', 'active')}
                 eventHandlers={{
                   mouseover: (e) => {
                     e.target.openPopup();
@@ -366,68 +571,26 @@ function Home() {
                   },
                 }}
               >
+                {/* у Popup пока нет css, написал только функциональность */}
                 <Popup>
                   <div className="popup-content">
-                    <h3>{incident?.title}</h3>
-                    <p>{incident?.description}</p>
-                    Тип: <b>{incident?.type}</b> | Статус: <b>{incident?.status}</b>
-                    <p></p>
-                    {/* юзеров много в этот раз. поэтому буду использовать find */}
-                    {/* работает как фильтр: пробегает по массиву и находит подходящего юзера */}
-                    Пользователь:
-                    <b>{users?.find((users) => users.id === incident?.userId)?.login || ''}</b>
-                    <p></p>
-                    <button
-                      className="popup-btn"
-                      onClick={() => navigate(`/incident/${incident.id}`)}
-                    >
-                      Подробнее
+                    <h3>Новый инцидент</h3>
+                    <p>
+                      Координаты: {tempMarker[0]}, {tempMarker[1]}
+                    </p>
+                    <button className="popup-btn" onClick={handleConfirmCreateIncident}>
+                      Создать
                     </button>
                     {/* popup-btn */}
                   </div>
                   {/* popup-content */}
                 </Popup>
               </Marker>
-            );
-          })}
-          {/* Компонент для обработки кликов по карте */}
-          <MapClickHandler setTempMarker={setTempMarker} isAddingMode={isAddingMode} />
-          {/* Добавление инцидента */}
-          {tempMarker && (
-            <Marker
-              position={tempMarker}
-              icon={getCustomIcon('new', 'active')}
-              eventHandlers={{
-                mouseover: (e) => {
-                  e.target.openPopup();
-                },
-                mouseout: (e) => {
-                  // решил проблему с быстрым закрыванием
-                  setTimeout(() => {
-                    e.target.closePopup();
-                  }, 2000);
-                },
-              }}
-            >
-              {/* у Popup пока нет css, написал только функциональность */}
-              <Popup>
-                <div className="popup-content">
-                  <h3>Новый инцидент</h3>
-                  <p>
-                    Координаты: {tempMarker[0]}, {tempMarker[1]}
-                  </p>
-                  <button className="popup-btn" onClick={handleConfirmCreateIncident}>
-                    Создать
-                  </button>
-                  {/* popup-btn */}
-                </div>
-                {/* popup-content */}
-              </Popup>
-            </Marker>
-          )}
-        </MapContainer>
-      </main>
-      {/* map-container */}
+            )}
+          </MapContainer>
+        </main>
+        // map-container
+      )}
     </div>
     // page-home
   );

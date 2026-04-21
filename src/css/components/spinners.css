@@ -14,7 +14,21 @@
   /* высоту нужно установить на весь экран */
   height: 100vh;
   /* вот добавим из переменных */
-  background-color: var(--gray-light);
+  background-color: transparent;
+}
+
+.loading-card {
+  /* нужен флексбокс для центрирования*/
+  display: flex;
+  /* нужно установить центр по горизонтали... */
+  justify-content: center;
+  /*...и по вертикали  */
+  align-items: center;
+  /* высоту нужно установить на весь экран */
+  /* вот добавим из переменных */
+  background-color: var( --bg-surface);
+  padding: 10px;
+  border-radius: var(--radius-spinner);
 }
 
 /* сделаем большой вращающийся круг */
@@ -30,7 +44,7 @@
   animation: spin 1s linear infinite;
   /* нужно добавить цвета  */
   border: 5px solid #e0e0e0; /* Толстая серая рамка (фон круга) */
-  border-top: 5px solid var(--primary-color); /* Верхняя часть рамки синяя (это будет "бегунок") */
+  border-top: 5px solid var(--brand-primary); /* Верхняя часть рамки синяя (это будет "бегунок") */
 }
 
 /* маленький спиннер */
@@ -57,11 +71,15 @@
   animation: spin 1s linear infinite;
   /* нужно добавить цвета  */
   border: 1px solid #e0e0e0; /* Толстая серая рамка (фон круга) */
-  border-top: 1px solid var(--primary-color); /* Верхняя часть рамки синяя (это будет "бегунок") */
+  border-top: 1px solid var(--brand-primary); /* Верхняя часть рамки синяя (это будет "бегунок") */
 }
 
 /* нужна анимация */
 @keyframes spin {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
 }

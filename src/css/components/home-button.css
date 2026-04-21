@@ -13,11 +13,13 @@
 
   border-radius: 50%; /* Делает кнопку круглой */
   border: none; /* рамка удалена */
-  background-color: var(--white); /* Цвет фона */
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
+
+  /* делаю фон кнопки прозрачной, чтобы не было черного фона на карточке */
+  background-color: transparent;
 
   /* зададим время для анимации */
   transition:
@@ -40,5 +42,11 @@
   .home-btn {
     margin-top: -60px; /* Компенсируем padding-top карточки */
     margin-left: -20px; /* Компенсируем padding-left карточки */
+  }
+}
+
+@media (prefers-color-scheme: dark) {
+  .home-btn {
+    filter: invert(1);
   }
 }

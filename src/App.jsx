@@ -56,6 +56,8 @@ const App = () => {
         {/* page C */}
         {/* Если http://localhost:5173/create-incident тогда отобразится IncidentForm(); */}
         <Route path="/create-incident" element={<IncidentForm />} />
+        {/* Если http://localhost:5173/editing-incident/:id тогда отобразится IncidentForm(); */}
+        <Route path="/editing-incident/:id" element={<IncidentForm />} />
         {/* page D */}
         {/* Если http://localhost:5173/login тогда отобразится Login(); */}
         <Route path="/login" element={<Login />} />
