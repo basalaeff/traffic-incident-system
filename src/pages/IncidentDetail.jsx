@@ -88,6 +88,7 @@ function IncidentDetail() {
             className="toast-btn toast-btn-delete"
             onClick={async () => {
               try {
+                toast.dismiss();
                 setIsLoading(true);
                 // ============================================================================
                 // DELETE-ЗАПРОС НА СЕРВЕР http://localhost:3001/incidents
@@ -97,13 +98,11 @@ function IncidentDetail() {
                 toast.success('Инцидент успешно удален!', {
                   onClose: () => navigate('/'),
                 });
-                setIsEditing(false);
               } catch (err) {
                 toast.error(`Не удалось удалить инцидент: ${err.response?.data?.message}`);
               } finally {
                 setIsLoading(false);
                 setShowDelete(false);
-                toast.dismiss();
               }
             }}
           >

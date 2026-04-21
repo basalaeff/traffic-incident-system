@@ -35,6 +35,7 @@ function IncidentForm() {
   //     "time": "21.03.2026",
   //   },
   const [incident, setIncident] = useState(null);
+  const [incidentId, setIncidentId] = useState('');
   const [type, setType] = useState('');
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
@@ -199,7 +200,7 @@ function IncidentForm() {
       navigate('/');
       setIsEditMode(false);
     } else if (result.dismiss === Swal.DismissReason.cancel) {
-      navigate(`/incident/${id}`);
+      navigate(`/incident/${incidentId ? incidentId : id }`);
       setIsEditMode(false);
     }
   };
@@ -228,6 +229,7 @@ function IncidentForm() {
       // которое придумает json-server для переброса на детализацию
       // добавил условия сохранения текущего uuid при редактировании
       const uuid = isEditMode ? id : crypto.randomUUID();
+      setIncidentId(uuid);
       if (isEditMode) {
         // put меняет все поля целиком, поэтому словив несколько ошибок при отображении
         // координат, я вспомнил про patch (частичное обновление)
