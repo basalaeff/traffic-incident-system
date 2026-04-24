@@ -2,6 +2,8 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
 
 import { Progress, ProgressLabel, ProgressValue } from '@/components/ui/progress';
+import styled, { keyframes } from 'styled-components';
+import { fadeInUp } from 'react-animations';
 
 // Добавлю компоненты карты
 // Контейнер карты, улицы, маркеры, всплывающее окно
@@ -151,6 +153,8 @@ function Home() {
   // Ref для Intersection Observer — элемент-«страж» внизу списка
   const observerTarget = useRef(null);
   const fetchIncidentsRef = useRef(null);
+
+  const [showProgressForIncidentCards, setShowProgressForIncidentCards] = useState(false);
 
   // ============================================================================
   // ПОЛУЧЕНИЕ ГЕОЛОКАЦИИ
@@ -339,6 +343,7 @@ function Home() {
     if (distanceToBottom < 100 && !loadingRef.current && hasMoreRef.current) {
       console.log('Загружаю страницу', pageRef.current + 1);
       fetchIncidentCards(false, true);
+      setShowProgressForIncidentCards(true);
     }
   };
 
@@ -452,6 +457,29 @@ function Home() {
     setIsAddingMode(false);
     toast.info('Создание инцидента отменено');
   };
+
+  // ============================================================================
+  // ДЛЯ УПРАВЛЕНИЯ ОТОБРАЖЕНИЕМ ПРОГРЕСС БАРА
+  // ============================================================================
+  useEffect(() => {
+    // Проверяем: если загрузка завершена (и данных больше 0)
+    if (incidents.length > 0) {
+      const timer = setTimeout(() => {
+        setShowProgressForIncidentCards(false);
+      }, 3000);
+
+      return () => clearTimeout(timer); // Очистка таймера
+    }
+  }, [incidentCards.length, incidents.length]); // Срабатывает при изменении массивов
+
+  // ============================================================================
+  // АНИМАЦИЯ ПОЯВЛЕНИЯ ПРОГРЕСС БАРА
+  // ============================================================================
+  const fadeInUpKey = keyframes`${fadeInUp}`;
+  const animationFadeInUp = styled.div`
+    animation: 0.5s ${fadeInUpKey} ease-out forwards;
+    animation-fill-mode: forwards;
+  `;
 
   // ============================================================================
   // РЕНДЕРИНГ
@@ -614,17 +642,23 @@ function Home() {
             })}
           </div>
           {/* incidents-list */}
-          <Progress
-            value={incidents.length > 0 ? (incidentCards.length / incidents.length) * 100 : 0}
-            className="w-full"
-          >
-            <ProgressLabel>
-              Загрузка инцидентов: {incidentCards.length}/{incidents.length}
-            </ProgressLabel>
-            <ProgressValue />
-          </Progress>
         </div>
         // main-card
+      )}
+      {showProgressForIncidentCards && (
+        <div className="progress-bar">
+          <animationFadeInUp>
+            <Progress
+              value={incidents.length > 0 ? (incidentCards.length / incidents.length) * 100 : 0}
+              className="w-full"
+            >
+              <ProgressLabel>
+                Загрузка инцидентов: {incidentCards.length}/{incidents.length}
+              </ProgressLabel>
+              <ProgressValue />
+            </Progress>
+          </animationFadeInUp>
+        </div>
       )}
 
       {displayMap && (
