@@ -10,10 +10,10 @@
   display: flex;
   justify-content: center; /* Центрируем по горизонтали */
   align-items: center; /* Центрируем по вертикали */
+  overflow: hidden !important;
 }
 .progress-bar {
   background-color: var(--bg-sidebar); /* Цвет фона */
   padding: 10px;
   border-radius: var(--radius-lg);
-  box-shadow: var(--shadow-md); /* Тень для объема */
 }
