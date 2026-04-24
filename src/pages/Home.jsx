@@ -2,12 +2,13 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
 
 import { Progress, ProgressLabel, ProgressValue } from '@/components/ui/progress';
+import { Badge } from '@/components/ui/badge';
+import { AlertTriangle, Flame, CheckCircle2, XCircle } from 'lucide-react';
 
 // Добавлю компоненты карты
 // Контейнер карты, улицы, маркеры, всплывающее окно
 // useMapEvents добавил для того чтобы ставить метку на карту
 import { MapContainer, TileLayer, Marker, Popup, useMapEvents, useMap } from 'react-leaflet';
-
 // Нужен хук для роутинга
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
@@ -472,6 +473,44 @@ function Home() {
   }, [incidentCards.length, incidents.length]); // Срабатывает при изменении массивов
 
   // ============================================================================
+  // БЕЙДЖИ
+  // ============================================================================
+  const badgeConfig = {
+    accident: {
+      icon: AlertTriangle,
+      colors: 'bg-red-50 text-red-700 dark:bg-red-950 dark:text-red-300',
+      label: 'ДТП',
+    },
+    hazard: {
+      icon: Flame,
+      colors: 'bg-amber-50 text-amber-700 dark:bg-amber-950 dark:text-amber-300',
+      label: 'Опасный участок',
+    },
+    active: {
+      icon: CheckCircle2,
+      colors: 'bg-emerald-50 text-emerald-700 dark:bg-emerald-950 dark:text-emerald-300',
+      label: 'Активный',
+    },
+    inactive: {
+      icon: XCircle,
+      colors: 'bg-gray-50 text-gray-700 dark:bg-gray-950 dark:text-gray-300',
+      label: 'Неактивный',
+    },
+  };
+
+  const renderBadge = (key) => {
+    const cfg = badgeConfig[key];
+    if (!cfg) return null;
+    const Icon = cfg.icon;
+    return (
+      <Badge className={`gap-1.5 font-medium ${cfg.colors}`}>
+        <Icon className="h-3.5 w-3.5" />
+        {cfg.label}
+      </Badge>
+    );
+  };
+
+  // ============================================================================
   // РЕНДЕРИНГ
   // ============================================================================
   if (loading || !userLocation) {
@@ -578,24 +617,21 @@ function Home() {
                   <article className="incident-card" key={incidentCard?.id}>
                     <div className="incident-card-first">
                       <header className="incident-card-header">
-                        <span className={`badge ${incidentCard?.status}`}>
-                          {incidentCard?.status}
-                        </span>
+                        {renderBadge(incidentCard?.type)}
+                        {renderBadge(incidentCard?.status)}
                       </header>
                       {/* incident-card-header */}
                       <h2 className="incident-card-title">{incidentCard?.title}</h2>
                       {/* incident-card-title */}
-                      <span className="incident-card-type">{incidentCard?.type}</span>
-                      {/* incident-card-type */}
                       <p className="incident-card-description">{incidentCard?.description}</p>
                       {/* incident-card-description */}
                       <time className="incident-card-time">{incidentCard?.time}</time>
                       {/* incident-card-time */}
                       <footer className="incident-card-footer">
-                        <span className="coords">
+                        <span className="incident-card-coords">
                           {incidentCard?.lat}, {incidentCard?.lng}
                         </span>
-                        {/* coords */}
+                        {/* incident-card-coords */}
                       </footer>
                       {/* incident-card-footer */}
                     </div>
