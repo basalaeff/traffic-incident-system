@@ -161,6 +161,7 @@
 @import './components/detail-table.css';
 @import './components/detail.css';
 @import './components/incident-card.css';
+@import './components/progressbar.css';
 @import 'tw-animate-css';
 @import 'shadcn/tailwind.css';
 @import '@fontsource-variable/inter';
