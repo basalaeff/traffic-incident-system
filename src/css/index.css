@@ -1,58 +1,178 @@
-@import 'base/variables.css';
-@import 'components/spinners.css';
-@import 'components/button.css';
-@import 'layout/page.css';
-@import 'components/card.css';
-@import 'components/floating-button.css';
-@import 'components/map.css';
-@import 'components/popup.css';
-@import 'components/toast.css';
-@import 'components/input.css';
-@import 'components/footer.css';
-@import 'components/home-button.css';
-@import 'components/detail-table.css';
-@import 'components/detail.css';
-@import 'components/incident-card.css';
+@import 'tailwindcss';
 
-/* ============================================================================ */
-/* НАСТРОЙКА БАЗОВЫХ СТИЛЕЙ */
-/* ============================================================================ */
-* {
-  box-sizing: border-box; /* Чтобы padding не увеличивал ширину элементов */
-  margin: 0; /* Убираем стандартные отступы браузера */
-  padding: 0;
+/* 1. Ваши дизайн-токены (не трогаем ./base/variables.css) */
+@import './base/variables.css';
+
+/* 2. АДАПТЕР: Ваши токены -> Стандартные имена shadcn/ui & Tailwind */
+:root {
+  /* Фоны и текст */
+  --background: var(--bg-app);
+  --foreground: var(--text-primary);
+  --card: var(--bg-surface);
+  --card-foreground: var(--text-primary);
+  --popover: var(--bg-surface);
+  --popover-foreground: var(--text-primary);
+
+  /* Основные и второстепенные */
+  --primary: var(--brand-primary);
+  --primary-foreground: var(--white);
+  --secondary: var(--bg-surface-hover);
+  --secondary-foreground: var(--text-primary);
+
+  /* Приглушённые */
+  --muted: #f8fafc; /* Светло-серый для bg-muted */
+  --muted-foreground: var(--text-secondary);
+  --accent: var(--bg-surface-hover);
+  --accent-foreground: var(--text-primary);
+
+  /* Ошибки, границы, фокус */
+  --destructive: var(--status-danger);
+  --destructive-foreground: var(--white);
+  --border: var(--border-base);
+  --input: var(--border-base);
+  --ring: var(--brand-primary);
+
+  /* Графики */
+  --chart-1: var(--status-info);
+  --chart-2: var(--status-warning);
+  --chart-3: var(--status-danger);
+  --chart-4: var(--status-normal);
+  --chart-5: var(--brand-secondary);
+
+  /* Сайдбар */
+  --sidebar: var(--bg-sidebar);
+  --sidebar-foreground: var(--text-sidebar);
+  --sidebar-primary: var(--brand-primary);
+  --sidebar-primary-foreground: var(--card-btn-color);
+  --sidebar-accent: var(--border-sidebar);
+  --sidebar-accent-foreground: var(--text-sidebar);
+  --sidebar-border: var(--border-sidebar);
+  --sidebar-ring: var(--brand-primary);
+
+  /* Радиус */
+  --radius: var(--radius-md);
 }
 
-body {
-  font-family: var(--font-sans); /* Используем наш шрифт */
-  background-color: var(--bg-app); /* Светлый фон страницы */
-  color: var(--main-text); /*  текст по умолчанию */
-  line-height: 1.6; /* Удобное расстояние между строками текста */
-  transition:
-    background-color 0.3s ease,
-    color 0.3s ease,
-    border-color 0.3s ease;
-  margin: 0;
-  min-height: 100vh;
+/* Тёмная тема: авто (по ОС) + ручная (через класс .dark) */
+@media (prefers-color-scheme: dark) {
+  :root,
+  .dark {
+    --background: var(--bg-app);
+    --foreground: var(--text-primary);
+    --card: var(--bg-surface);
+    --card-foreground: var(--text-primary);
+    --popover: var(--bg-surface);
+    --popover-foreground: var(--text-primary);
+    --primary: var(--brand-primary);
+    --primary-foreground: var(--card-btn-color);
+    --secondary: var(--bg-surface-hover);
+    --secondary-foreground: var(--text-primary);
+    --muted: #334155;
+    --muted-foreground: var(--text-secondary);
+    --accent: var(--bg-surface-hover);
+    --accent-foreground: var(--text-primary);
+    --destructive: var(--status-danger);
+    --destructive-foreground: var(--card-btn-color);
+    --border: var(--border-base);
+    --input: var(--border-base);
+    --ring: var(--brand-primary);
+    --chart-1: var(--status-info);
+    --chart-2: var(--status-warning);
+    --chart-3: var(--status-danger);
+    --chart-4: var(--status-normal);
+    --chart-5: var(--brand-secondary);
+    --sidebar: var(--bg-sidebar);
+    --sidebar-foreground: var(--text-sidebar);
+    --sidebar-primary: var(--brand-primary);
+    --sidebar-primary-foreground: var(--card-btn-color);
+    --sidebar-accent: var(--border-sidebar);
+    --sidebar-accent-foreground: var(--text-sidebar);
+    --sidebar-border: var(--border-sidebar);
+    --sidebar-ring: var(--brand-primary);
+    --radius: var(--radius-md);
+  }
 }
 
-/* Стили для ссылок по умолчанию */
-a {
-  text-decoration: none; /* Убираем подчеркивание */
-  color: var(--brand-primary);
-  transition: color 0.2s; /* Плавное изменение цвета */
+/* 3. Маппинг для генерации утилит Tailwind v4 */
+@theme inline {
+  --font-heading: var(--font-sans);
+  --font-sans: 'Inter Variable', sans-serif;
+
+  /* Цвета */
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --color-chart-1: var(--chart-1);
+  --color-chart-2: var(--chart-2);
+  --color-chart-3: var(--chart-3);
+  --color-chart-4: var(--chart-4);
+  --color-chart-5: var(--chart-5);
+
+  /* Sidebar */
+  --color-sidebar: var(--sidebar);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-ring: var(--sidebar-ring);
+
+  /* Радиусы */
+  --radius-sm: calc(var(--radius) * 0.6);
+  --radius-md: calc(var(--radius) * 0.8);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) * 1.4);
+  --radius-2xl: calc(var(--radius) * 1.8);
+  --radius-3xl: calc(var(--radius) * 2.2);
+  --radius-4xl: calc(var(--radius) * 2.6);
 }
 
-a:hover {
-  color: var(--brand-primary-hover); /* Цвет при наведении */
-}
+@custom-variant dark (&:is(.dark *));
 
-/* ============================================================================ */
-/* КНОПОЧКИ ПО УМОЛЧАНИЮ */
-/* ============================================================================ */
-button {
-  font-family: var(--font-sans);
-  cursor: pointer;
-  border: none;
-  outline: none;
+/* 4. Остальные компоненты и шрифты */
+@import './components/spinners.css';
+@import './components/button.css';
+@import './layout/page.css';
+@import './components/card.css';
+@import './components/floating-button.css';
+@import './components/map.css';
+@import './components/popup.css';
+@import './components/toast.css';
+@import './components/input.css';
+@import './components/footer.css';
+@import './components/home-button.css';
+@import './components/detail-table.css';
+@import './components/detail.css';
+@import './components/incident-card.css';
+@import 'tw-animate-css';
+@import 'shadcn/tailwind.css';
+@import '@fontsource-variable/inter';
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
+  html {
+    @apply font-sans;
+  }
 }
