@@ -1,6 +1,8 @@
 // для того чтобы получить ссылку на DOM-элемент нужен useRef
 import { useState, useEffect, useRef, useCallback } from 'react';
 
+import { Progress, ProgressLabel, ProgressValue } from '@/components/ui/progress';
+
 // Добавлю компоненты карты
 // Контейнер карты, улицы, маркеры, всплывающее окно
 // useMapEvents добавил для того чтобы ставить метку на карту
@@ -612,6 +614,15 @@ function Home() {
             })}
           </div>
           {/* incidents-list */}
+          <Progress
+            value={incidents.length > 0 ? (incidentCards.length / incidents.length) * 100 : 0}
+            className="w-full"
+          >
+            <ProgressLabel>
+              Загрузка инцидентов: {incidentCards.length}/{incidents.length}
+            </ProgressLabel>
+            <ProgressValue />
+          </Progress>
         </div>
         // main-card
       )}
