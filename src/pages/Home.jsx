@@ -8,7 +8,7 @@ import { AlertTriangle, Flame, CheckCircle2, XCircle } from 'lucide-react';
 // Добавлю компоненты карты
 // Контейнер карты, улицы, маркеры, всплывающее окно
 // useMapEvents добавил для того чтобы ставить метку на карту
-import { MapContainer, TileLayer, Marker, Popup, useMapEvents} from 'react-leaflet';
+import { MapContainer, TileLayer, Marker, Popup} from 'react-leaflet';
 // Нужен хук для роутинга
 import { useNavigate } from 'react-router-dom';
 import '../css/components/map.css';
@@ -23,27 +23,8 @@ import { getCurrentUser, logoutUser } from '../features/authentication/model/aut
 import { loadIncidents, loadIncidentCards, loadUsers } from '@/features/home/api/homeAPI';
 import { RecenterAutomatically } from '@/features/home/model/RecenterAutomatically';
 import { getCustomMarker } from '@/features/home/model/getCustomMarker';
+import { MapClickHandler } from '@/features/home/model/MapClickHandler';
 import { AnimationFadeInUp } from '../shared/ui/animation';
-
-//  Нужно придумать как ловить клики по карте
-// ============================================================================
-// КОМПОНЕНТ ДЛЯ ОБРАБОТКИ КЛИКОВ ПО КАРТЕ
-// ============================================================================
-function MapClickHandler({ setTempMarker, isAddingMode }) {
-  // нужен хук useMapEvents для доступа к объекту карты
-  useMapEvents({
-    // обработчик клика
-    click: (e) => {
-      if (isAddingMode) {
-        toast.dismiss();
-        // e.latlng - объект, содержит координаты
-        // передаем в функцию
-        setTempMarker([e.latlng.lat, e.latlng.lng]);
-      }
-    },
-  });
-  return null;
-}
 
 function Home() {
   // Напишем массивы для хранения данных с использованием деструкционализации
