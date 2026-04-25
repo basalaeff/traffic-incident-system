@@ -23,7 +23,7 @@ import Avatar from 'react-avatar';
 import { toast } from 'react-toastify';
 
 import { getCurrentUser, logoutUser } from '../auth';
-import { AnimationFadeInUp } from '../animation';
+import { AnimationFadeInUp } from '../shared/ui/animation';
 
 // ============================================================================
 // ЦЕНТРИРОВАНИЕ КАРТЫ ПО КООРДИНАТАМ ПОЛЬЗОВАТЕЛЯ
