@@ -8,7 +8,7 @@ import { toast } from 'react-toastify';
 import axios from 'axios';
 // доступно только авторизированным пользователям
 // получаем текущего пользователя
-import { getCurrentUser } from '../auth';
+import { getCurrentUser } from '../features/authentication/model/auth';
 import bcrypt from 'bcryptjs';
 
 function Registration() {

@@ -4,7 +4,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import axios from 'axios';
 // нужно подключить метод для сохранения данных пользователя
-import { loginUser, getCurrentUser } from '../auth';
+import { loginUser, getCurrentUser } from '../features/authentication/model/auth';
 import bcrypt from 'bcryptjs';
 
 // ============================================================================

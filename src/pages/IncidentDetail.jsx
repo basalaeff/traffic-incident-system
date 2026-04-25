@@ -6,7 +6,7 @@ import { toast } from 'react-toastify';
 // запросы
 import axios from 'axios';
 // нужен текущий юзер в системе
-import { getCurrentUser } from '../auth';
+import { getCurrentUser } from '../features/authentication/model/auth';
 
 function IncidentDetail() {
   // Достаем id c помощью хука

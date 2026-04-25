@@ -10,7 +10,7 @@ import { toast } from 'react-toastify';
 import axios from 'axios';
 // доступно только авторизированным пользователям
 // получаем текущего пользователя
-import { getCurrentUser } from '../auth';
+import { getCurrentUser } from '../features/authentication/model/auth';
 
 import Swal from 'sweetalert2';
 
@@ -200,7 +200,7 @@ function IncidentForm() {
       navigate('/');
       setIsEditMode(false);
     } else if (result.dismiss === Swal.DismissReason.cancel) {
-      navigate(`/incident/${incidentId ? incidentId : id }`);
+      navigate(`/incident/${incidentId ? incidentId : id}`);
       setIsEditMode(false);
     }
   };

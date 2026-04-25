@@ -22,7 +22,7 @@ import Avatar from 'react-avatar';
 // всплывающие уведомления тоже могут пригодиться
 import { toast } from 'react-toastify';
 
-import { getCurrentUser, logoutUser } from '../auth';
+import { getCurrentUser, logoutUser } from '../features/authentication/model/auth';
 import { AnimationFadeInUp } from '../shared/ui/animation';
 
 // ============================================================================
