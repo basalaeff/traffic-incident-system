@@ -2,7 +2,6 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
 
 import { Progress, ProgressLabel, ProgressValue } from '@/shared/ui/progress';
-import { Badge } from '@/shared/ui/badge';
 
 // Добавлю компоненты карты
 // Контейнер карты, улицы, маркеры, всплывающее окно
@@ -24,7 +23,7 @@ import { RecenterAutomatically } from '@/features/home/model/RecenterAutomatical
 import { getCustomMarker } from '@/features/home/model/getCustomMarker';
 import { MapClickHandler } from '@/features/home/model/MapClickHandler';
 import { AnimationFadeInUp } from '../shared/ui/animation';
-import { badgeConfig } from '@/features/home/model/badgeConfig';
+import { renderBadge } from '@/features/home/ui/renderBadge';
 
 function Home() {
   // Напишем массивы для хранения данных с использованием деструкционализации
@@ -381,18 +380,6 @@ function Home() {
       return () => clearTimeout(timer); // Очистка таймера
     }
   }, [incidentCards.length, incidents.length]); // Срабатывает при изменении массивов
-
-  const renderBadge = (key) => {
-    const cfg = badgeConfig[key];
-    if (!cfg) return null;
-    const Icon = cfg.icon;
-    return (
-      <Badge className={`gap-1.5 font-medium ${cfg.colors}`}>
-        <Icon className="h-3.5 w-3.5" />
-        {cfg.label}
-      </Badge>
-    );
-  };
 
   // ============================================================================
   // РЕНДЕРИНГ
