@@ -1,8 +1,8 @@
 // для того чтобы получить ссылку на DOM-элемент нужен useRef
 import { useState, useEffect, useRef, useCallback } from 'react';
 
-import { Progress, ProgressLabel, ProgressValue } from '@/components/ui/progress';
-import { Badge } from '@/components/ui/badge';
+import { Progress, ProgressLabel, ProgressValue } from '@/shared/ui/progress';
+import { Badge } from '@/shared/ui/badge';
 import { AlertTriangle, Flame, CheckCircle2, XCircle } from 'lucide-react';
 
 // Добавлю компоненты карты
