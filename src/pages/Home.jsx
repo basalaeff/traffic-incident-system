@@ -3,7 +3,6 @@ import { useState, useEffect, useRef, useCallback } from 'react';
 
 import { Progress, ProgressLabel, ProgressValue } from '@/shared/ui/progress';
 import { Badge } from '@/shared/ui/badge';
-import { AlertTriangle, Flame, CheckCircle2, XCircle } from 'lucide-react';
 
 // Добавлю компоненты карты
 // Контейнер карты, улицы, маркеры, всплывающее окно
@@ -25,6 +24,7 @@ import { RecenterAutomatically } from '@/features/home/model/RecenterAutomatical
 import { getCustomMarker } from '@/features/home/model/getCustomMarker';
 import { MapClickHandler } from '@/features/home/model/MapClickHandler';
 import { AnimationFadeInUp } from '../shared/ui/animation';
+import { badgeConfig } from '@/features/home/model/badgeConfig';
 
 function Home() {
   // Напишем массивы для хранения данных с использованием деструкционализации
@@ -381,32 +381,6 @@ function Home() {
       return () => clearTimeout(timer); // Очистка таймера
     }
   }, [incidentCards.length, incidents.length]); // Срабатывает при изменении массивов
-
-  // ============================================================================
-  // БЕЙДЖИ
-  // ============================================================================
-  const badgeConfig = {
-    accident: {
-      icon: AlertTriangle,
-      colors: 'bg-red-50 text-red-700 dark:bg-red-950 dark:text-red-300',
-      label: 'ДТП',
-    },
-    hazard: {
-      icon: Flame,
-      colors: 'bg-amber-50 text-amber-700 dark:bg-amber-950 dark:text-amber-300',
-      label: 'Опасный участок',
-    },
-    active: {
-      icon: CheckCircle2,
-      colors: 'bg-emerald-50 text-emerald-700 dark:bg-emerald-950 dark:text-emerald-300',
-      label: 'Активный',
-    },
-    inactive: {
-      icon: XCircle,
-      colors: 'bg-gray-50 text-gray-700 dark:bg-gray-950 dark:text-gray-300',
-      label: 'Неактивный',
-    },
-  };
 
   const renderBadge = (key) => {
     const cfg = badgeConfig[key];
