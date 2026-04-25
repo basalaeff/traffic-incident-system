@@ -9,6 +9,7 @@ import axios from 'axios';
 // доступно только авторизированным пользователям
 // получаем текущего пользователя
 import { getCurrentUser } from '../features/authentication/model/auth';
+import { findUserByLogin, registerUser } from '../features/authentication/api/authAPI';
 import bcrypt from 'bcryptjs';
 
 function Registration() {
@@ -100,7 +101,7 @@ function Registration() {
       // делаем максимально просто
       // запрашиваем введенный логин у сервера из db.json
       // если получили данные, значит логин уже существует, тогда выводим ошибку
-      const checkResponse = await axios.get(`http://localhost:3001/users?login=${login}`);
+      const checkResponse = await findUserByLogin(login);
       // если длина > 0, тогда данные есть
       if (checkResponse.data.length > 0) {
         throw new Error('Этот пользователь уже зарегистрирован!');
@@ -126,10 +127,10 @@ function Registration() {
       // ============================================================================
       // POST-ЗАПРОС НА СЕРВЕР http://localhost:3001/users
       // ============================================================================
-      await axios.post('http://localhost:3001/users', {
+      await registerUser({
         id: uuid,
         login,
-        password: hashedPassword,
+        password: hashedPassword
       });
 
       toast.success(`Пользователь зарегистрирован!`);

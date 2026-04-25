@@ -23,6 +23,7 @@ import Avatar from 'react-avatar';
 import { toast } from 'react-toastify';
 
 import { getCurrentUser, logoutUser } from '../features/authentication/model/auth';
+import { loadIncidents, loadIncidentCards, loadUsers } from '@/features/home/api/homeAPI';
 import { AnimationFadeInUp } from '../shared/ui/animation';
 
 // ============================================================================
@@ -217,13 +218,14 @@ function Home() {
     const fetchIncidents = async () => {
       // так при запросе серверу все может упасть. нужна обработка ошибок
       try {
-        const responseIncidents = await axios.get('http://localhost:3001/incidents');
+        // GET-ЗАПРОС НА СЕРВЕР http://localhost:3001/incidents
+        const responseIncidents = await loadIncidents();
         // Теперь нужно добавить данные в массив для хранения инцидентов
         setIncidents(responseIncidents.data);
         // ============================================================================
         // GET-ЗАПРОС НА СЕРВЕР http://localhost:3001/user
         // ============================================================================
-        const responseUsers = await axios.get(`http://localhost:3001/users/`);
+        const responseUsers = await loadUsers();
         setUsers(responseUsers.data);
       } catch (err) {
         // Выводим ошибку в консоль разработчика
@@ -275,14 +277,7 @@ function Home() {
 
       try {
         const requestPage = isInitial ? 1 : pageRef.current;
-
-        const responseIncidents = await axios.get('http://localhost:3001/incidents', {
-          params: {
-            _page: requestPage,
-            _limit: limit,
-          },
-        });
-
+        const responseIncidents = await loadIncidentCards(requestPage, limit);
         const newIncidents = responseIncidents.data;
 
         // Если пришло меньше лимита, то данных больше нет

@@ -2,9 +2,9 @@
 import { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
-import axios from 'axios';
 // нужно подключить метод для сохранения данных пользователя
 import { loginUser, getCurrentUser } from '@/features/authentication/model/auth';
+import { findUserByLogin } from '@/features/authentication/api/authAPI';
 import bcrypt from 'bcryptjs';
 
 // ============================================================================
@@ -64,10 +64,7 @@ function Authentication({}) {
     try {
       // Пользователь ввел логин
       // Нужно найти данные пользователя на сервере
-      // ============================================================================
-      // GET-ЗАПРОС НА СЕРВЕР http://localhost:3001/users
-      // ============================================================================
-      const response = await axios.get(`http://localhost:3001/users?login=${login}`);
+      const response = await findUserByLogin(login);
       // ============================================================================
       // ПРОВЕРКА ЛОГИНА И ПАРОЛЯ
       // ============================================================================

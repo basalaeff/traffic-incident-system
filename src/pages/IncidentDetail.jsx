@@ -6,7 +6,12 @@ import { toast } from 'react-toastify';
 // запросы
 import axios from 'axios';
 // нужен текущий юзер в системе
-import { getCurrentUser } from '../features/authentication/model/auth';
+import { getCurrentUser } from '@/features/authentication/model/auth';
+import {
+  loadIncidentById,
+  loadUserById,
+  deleteIncidentById,
+} from '@/features/incident-detail/api/incidentDetailAPI';
 
 function IncidentDetail() {
   // Достаем id c помощью хука
@@ -32,7 +37,7 @@ function IncidentDetail() {
         // ============================================================================
         // GET-ЗАПРОС НА СЕРВЕР http://localhost:3001/incidents
         // ============================================================================
-        const responseIncidents = await axios.get(`http://localhost:3001/incidents/${id}`);
+        const responseIncidents = await loadIncidentById(id);
         setIncident(responseIncidents.data);
 
         // проверка перед запросом
@@ -40,9 +45,7 @@ function IncidentDetail() {
           // ============================================================================
           // GET-ЗАПРОС НА СЕРВЕР http://localhost:3001/user
           // ============================================================================
-          const responseOwner = await axios.get(
-            `http://localhost:3001/users/${responseIncidents.data.userId}`
-          );
+          const responseOwner = await loadUserById(responseIncidents.data.userId);
           setOwner(responseOwner.data);
         } else {
           toast.error(`Ошибка загрузки пользователя: ${error.message}`);
@@ -93,7 +96,7 @@ function IncidentDetail() {
                 // ============================================================================
                 // DELETE-ЗАПРОС НА СЕРВЕР http://localhost:3001/incidents
                 // ============================================================================
-                await axios.delete(`http://localhost:3001/incidents/${id}`);
+                await deleteIncidentById(id);
 
                 toast.success('Инцидент успешно удален!', {
                   onClose: () => navigate('/'),

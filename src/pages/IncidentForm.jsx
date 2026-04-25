@@ -6,11 +6,14 @@ import { useState, useEffect } from 'react';
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
 // всплывающие уведомления тоже могут пригодиться
 import { toast } from 'react-toastify';
-// запросы
-import axios from 'axios';
 // доступно только авторизированным пользователям
 // получаем текущего пользователя
 import { getCurrentUser } from '../features/authentication/model/auth';
+import {
+  loadIncidentById,
+  editIncidentById,
+  pushIncident,
+} from '../features/incident-form/api/incidentFormAPI';
 
 import Swal from 'sweetalert2';
 
@@ -85,7 +88,7 @@ function IncidentForm() {
           // ============================================================================
           // GET-ЗАПРОС НА СЕРВЕР http://localhost:3001/incidents
           // ============================================================================
-          const responseIncident = await axios.get(`http://localhost:3001/incidents/${id}`);
+          const responseIncident = await loadIncidentById(id);
           setIncident(responseIncident.data);
           setOriginalIncident(responseIncident.data);
 
@@ -236,13 +239,7 @@ function IncidentForm() {
         // ============================================================================
         // PATCH-ЗАПРОС НА СЕРВЕР http://localhost:3001/incidents
         // ============================================================================
-        await axios.patch(`http://localhost:3001/incidents/${id}`, {
-          title: title,
-          description: description,
-          type: type,
-          status: status,
-        });
-
+        await editIncidentById(id, { title, description, type, status });
         // копируем старые свойства в новый объект
         setIncident((prev) => ({
           ...prev,
@@ -258,23 +255,10 @@ function IncidentForm() {
         // ============================================================================
         // POST-ЗАПРОС НА СЕРВЕР http://localhost:3001/incidents
         // ============================================================================
-        await axios.post('http://localhost:3001/incidents', {
-          id: uuid,
-          type,
-          title,
-          description,
-          status: 'active',
-          // оставим (Африка лучше, чем сломанная карта)
-          lat: lat ? parseFloat(lat) : 0, // Преобразуем в число (чтобы карта не ломалась)
-          lng: lng ? parseFloat(lng) : 0, // Преобразуем в число
-          time: now,
-          userId,
-        });
-
+        await pushIncident({ id: uuid, type, title, description, lat, lng, time: now, userId });
         toast.success(`Инцидент добавлен!`);
         showSuccess();
       }
-
       // try
     } catch (err) {
       // Будем выводить ошибки в консоль
