@@ -24,6 +24,7 @@ import { getCustomMarker } from '@/features/home/model/getCustomMarker';
 import { MapClickHandler } from '@/features/home/model/MapClickHandler';
 import { AnimationFadeInUp } from '../shared/ui/animation';
 import { renderBadge } from '@/features/home/ui/renderBadge';
+import Spinner from '@/widgets/spinner';
 
 function Home() {
   // Напишем массивы для хранения данных с использованием деструкционализации
@@ -385,14 +386,7 @@ function Home() {
   // РЕНДЕРИНГ
   // ============================================================================
   if (loading || !userLocation) {
-    return (
-      <div className="loading-screen">
-        <div className="loading-card">
-          <div className="spinner-large"></div>
-        </div>
-        {/* loading-card */}
-      </div>
-    );
+    return <Spinner />;
   }
 
   // ============================================================================

@@ -12,6 +12,7 @@ import {
   loadUserById,
   deleteIncidentById,
 } from '@/features/incident-detail/api/incidentDetailAPI';
+import Spinner from '@/widgets/spinner';
 
 function IncidentDetail() {
   // Достаем id c помощью хука
@@ -135,11 +136,7 @@ function IncidentDetail() {
   // РЕНДЕРИНГ
   // ============================================================================
   if (isLoading) {
-    return (
-      <div className="loading-screen">
-        <div className="spinner-large"></div>
-      </div>
-    );
+    return <Spinner />;
   }
   const incidentLabels = {
     accident: 'ДТП',
