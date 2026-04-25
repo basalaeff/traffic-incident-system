@@ -15,3 +15,4 @@ export const renderBadge = (key) => {
     </Badge>
   );
 };
+export default renderBadge;
