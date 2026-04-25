@@ -8,10 +8,9 @@ import { AlertTriangle, Flame, CheckCircle2, XCircle } from 'lucide-react';
 // Добавлю компоненты карты
 // Контейнер карты, улицы, маркеры, всплывающее окно
 // useMapEvents добавил для того чтобы ставить метку на карту
-import { MapContainer, TileLayer, Marker, Popup, useMapEvents, useMap } from 'react-leaflet';
+import { MapContainer, TileLayer, Marker, Popup, useMapEvents} from 'react-leaflet';
 // Нужен хук для роутинга
 import { useNavigate } from 'react-router-dom';
-import axios from 'axios';
 import '../css/components/map.css';
 import 'leaflet/dist/leaflet.css';
 
@@ -24,24 +23,8 @@ import { toast } from 'react-toastify';
 
 import { getCurrentUser, logoutUser } from '../features/authentication/model/auth';
 import { loadIncidents, loadIncidentCards, loadUsers } from '@/features/home/api/homeAPI';
+import { RecenterAutomatically } from '@/features/home/model/RecenterAutomatically';
 import { AnimationFadeInUp } from '../shared/ui/animation';
-
-// ============================================================================
-// ЦЕНТРИРОВАНИЕ КАРТЫ ПО КООРДИНАТАМ ПОЛЬЗОВАТЕЛЯ
-// ============================================================================
-const RecenterAutomatically = ({ location }) => {
-  const map = useMap();
-
-  useEffect(() => {
-    if (location) {
-      // Перемещает камеру к новым координатам
-      map.flyTo(location, map.getZoom());
-      // Или map.flyTo(location, 13) для плавной анимации
-    }
-  }, [location, map]);
-
-  return null;
-};
 
 // ============================================================================
 // НАСТРОЙКА МАРКЕРОВ
