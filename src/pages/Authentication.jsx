@@ -4,14 +4,14 @@ import { Link, useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import axios from 'axios';
 // нужно подключить метод для сохранения данных пользователя
-import { loginUser, getCurrentUser } from '../features/authentication/model/auth';
+import { loginUser, getCurrentUser } from '@/features/authentication/model/auth';
 import bcrypt from 'bcryptjs';
 
 // ============================================================================
 // ФУНКЦИЯ ДЛЯ ЛОГИНА
 // ============================================================================
 // ({JS})
-function Login({}) {
+function Authentication({}) {
   const navigate = useNavigate(); //хук для переброса на главную
   // ============================================================================
   // ПЕРЕМЕННЫЕ СОСТОЯНИЙ
@@ -178,4 +178,4 @@ function Login({}) {
     // page
   );
 }
-export default Login;
+export default Authentication;
