@@ -6,7 +6,7 @@ import { Progress, ProgressLabel, ProgressValue } from '@/shared/ui/progress';
 // Добавлю компоненты карты
 // Контейнер карты, улицы, маркеры, всплывающее окно
 // useMapEvents добавил для того чтобы ставить метку на карту
-import { MapContainer, TileLayer, Marker, Popup} from 'react-leaflet';
+import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
 // Нужен хук для роутинга
 import { useNavigate } from 'react-router-dom';
 import '../css/components/map.css';
@@ -24,7 +24,8 @@ import { getCustomMarker } from '@/features/home/model/getCustomMarker';
 import { MapClickHandler } from '@/features/home/model/MapClickHandler';
 import { AnimationFadeInUp } from '../shared/ui/animation';
 import { renderBadge } from '@/features/home/ui/renderBadge';
-import Spinner from '@/widgets/spinner';
+import { Spinner } from '@/widgets/spinner';
+import { useIncidentsAndUsers } from '@/features/home/model/fetchData';
 
 function Home() {
   // Напишем массивы для хранения данных с использованием деструкционализации
@@ -32,8 +33,6 @@ function Home() {
   // Создадим массив для хранения инцидентов (карточки)
   const [incidentCards, setIncidentCards] = useState([]);
 
-  // Создадим массив для хранения инцидентов
-  const [incidents, setIncidents] = useState([]);
   // для хранения координат
   const [userLocation, setUserLocation] = useState(null);
   // для хранения флага загрузки
@@ -44,7 +43,6 @@ function Home() {
   const [tempMarker, setTempMarker] = useState(null);
   // для переключения между страницами
   const navigate = useNavigate();
-  const [users, setUsers] = useState(null);
 
   const [displayLogout, setDisplayLogout] = useState(false);
 
@@ -71,6 +69,8 @@ function Home() {
   const fetchIncidentsRef = useRef(null);
 
   const [showProgressForIncidentCards, setShowProgressForIncidentCards] = useState(false);
+
+  const { incidents, users } = useIncidentsAndUsers();
 
   // ============================================================================
   // ПОЛУЧЕНИЕ ГЕОЛОКАЦИИ
@@ -120,40 +120,6 @@ function Home() {
   // Вызываем один раз при старте
   useEffect(() => {
     getLocation();
-  }, []);
-
-  // ============================================================================
-  // ЗАГРУЗКА ДАННЫХ С СЕРВЕРА (API)
-  // ============================================================================
-  // Нужен хук useEffect()
-  useEffect(() => {
-    // Нужно написать асинхронную функцию для запроса данных с сервера
-    // Данные могут приходить с задержкой.\
-    //Буду использовать ключевое слово async, из него буду брать await (для ожидания)
-    const fetchIncidents = async () => {
-      // так при запросе серверу все может упасть. нужна обработка ошибок
-      try {
-        // GET-ЗАПРОС НА СЕРВЕР http://localhost:3001/incidents
-        const responseIncidents = await loadIncidents();
-        // Теперь нужно добавить данные в массив для хранения инцидентов
-        setIncidents(responseIncidents.data);
-        // ============================================================================
-        // GET-ЗАПРОС НА СЕРВЕР http://localhost:3001/user
-        // ============================================================================
-        const responseUsers = await loadUsers();
-        setUsers(responseUsers.data);
-      } catch (err) {
-        // Выводим ошибку в консоль разработчика
-        // Будем выводить ошибки в консоль
-        // Первый параметр это префикс. Так удобнее
-        console.error('Ошибка загрузки инцидентов: ', err);
-        // Выведем уведомление (3000)
-        // Если что-то не так, то выведет второе (дефолтное)
-        toast.error(err.message || 'Ошибка загрузки инцидентов');
-      }
-    };
-    // Нужно запустить функцию
-    fetchIncidents();
   }, []);
 
   // ============================================================================
