@@ -73,3 +73,4 @@ const IncidentCard = ({ incidentCard, onViewOnMap, onViewDetails }) => {
     // incident-card
   );
 };
+export default IncidentsList;

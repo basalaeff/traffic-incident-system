@@ -22,3 +22,4 @@ export const ProgressBar = ({ incidents, incidentCards }) => {
     // progress-position
   );
 };
+export default ProgressBar;

@@ -87,3 +87,4 @@ export const FloatingActions = ({
     //  floating-btns
   );
 };
+export default FloatingActions;

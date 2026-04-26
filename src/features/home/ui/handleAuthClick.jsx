@@ -65,3 +65,4 @@ export const useHandleAuthClick = () => {
   };
   return { handleAuthClick, displayLogout, user};
 };
+export default useHandleAuthClick;
