@@ -1,8 +1,6 @@
 // для того чтобы получить ссылку на DOM-элемент нужен useRef
 import { useState, useEffect, useRef } from 'react';
 
-import { Progress, ProgressLabel, ProgressValue } from '@/shared/ui/progress';
-
 // Добавлю компоненты карты
 // Контейнер карты, улицы, маркеры, всплывающее окно
 // useMapEvents добавил для того чтобы ставить метку на карту
@@ -15,7 +13,6 @@ import 'leaflet/dist/leaflet.css';
 import { RecenterAutomatically } from '@/features/home/model/RecenterAutomatically';
 import { getCustomMarker } from '@/features/home/model/getCustomMarker';
 import { MapClickHandler } from '@/features/home/model/MapClickHandler';
-import { AnimationFadeInUp } from '../shared/ui/animation';
 import { Spinner } from '@/widgets/spinner';
 import { useIncidentsAndUsers } from '@/features/home/model/fetchData';
 import { useHandleAuthClick } from '@/features/home/ui/handleAuthClick';
@@ -25,6 +22,7 @@ import { useIncidentCards } from '@/features/home/model/fetchIncidentCards';
 import { useScroll } from '@/features/home/model/handleScroll';
 import { FloatingActions } from '@/features/home/ui/floatingActions';
 import { IncidentsList } from '@/features/home/ui/incidentsList';
+import { ProgressBar } from '@/features/home/ui/progressBar';
 
 function Home() {
   // Напишем массивы для хранения данных с использованием деструкционализации
@@ -207,24 +205,9 @@ function Home() {
         </div>
         // main-card
       )}
+
       {showProgressForIncidentCards && (
-        <div className="progress-position">
-          <AnimationFadeInUp>
-            <div className="progress-bar">
-              <Progress
-                value={incidents.length > 0 ? (incidentCards.length / incidents.length) * 100 : 0}
-                className="w-full"
-              >
-                <ProgressLabel>
-                  Загрузка инцидентов: {incidentCards.length}/{incidents.length}
-                </ProgressLabel>
-                <ProgressValue />
-              </Progress>
-            </div>
-            {/* progress-bar */}
-          </AnimationFadeInUp>
-        </div>
-        // progress-position
+        <ProgressBar incidents={incidents} incidentCards={incidentCards} />
       )}
 
       {displayMap && (
