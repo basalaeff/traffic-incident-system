@@ -17,7 +17,6 @@ import Avatar from 'react-avatar';
 // всплывающие уведомления тоже могут пригодиться
 import { toast } from 'react-toastify';
 
-import { getCurrentUser, logoutUser } from '../features/authentication/model/auth';
 import { loadIncidents, loadIncidentCards, loadUsers } from '@/features/home/api/homeAPI';
 import { RecenterAutomatically } from '@/features/home/model/RecenterAutomatically';
 import { getCustomMarker } from '@/features/home/model/getCustomMarker';
@@ -26,6 +25,7 @@ import { AnimationFadeInUp } from '../shared/ui/animation';
 import { renderBadge } from '@/features/home/ui/renderBadge';
 import { Spinner } from '@/widgets/spinner';
 import { useIncidentsAndUsers } from '@/features/home/model/fetchData';
+import { useHandleAuthClick } from '@/features/home/ui/handleAuthClick';
 
 function Home() {
   // Напишем массивы для хранения данных с использованием деструкционализации
@@ -43,8 +43,6 @@ function Home() {
   const [tempMarker, setTempMarker] = useState(null);
   // для переключения между страницами
   const navigate = useNavigate();
-
-  const [displayLogout, setDisplayLogout] = useState(false);
 
   const [displayMap, setDisplayMap] = useState(false);
 
@@ -71,6 +69,7 @@ function Home() {
   const [showProgressForIncidentCards, setShowProgressForIncidentCards] = useState(false);
 
   const { incidents, users } = useIncidentsAndUsers();
+  const { handleAuthClick, displayLogout, user } = useHandleAuthClick();
 
   // ============================================================================
   // ПОЛУЧЕНИЕ ГЕОЛОКАЦИИ
@@ -230,62 +229,6 @@ function Home() {
     el.addEventListener('scroll', handleScroll, { passive: true });
     return () => el.removeEventListener('scroll', handleScroll);
   }, [handleScroll]);
-
-  // ============================================================================
-  // ДЛЯ АВТОРИЗАЦИИ/ВЫХОДА ПОЛЬЗОВАТЕЛЯ
-  // ============================================================================
-  const user = getCurrentUser();
-  const handleAuthClick = () => {
-    if (user) {
-      setDisplayLogout(true);
-      toast(
-        <div className="toast-notification">
-          <p>Вы уверены, что хотите выйти?</p>
-          <div className="home-toast-action">
-            <button
-              className="toast-btn toast-btn-cancel"
-              // при нажатии отмены нужно просто закрыть уведомление
-              // toast.dismiss() без аргументов закрывает последнее/активное уведомление
-              onClick={() => {
-                toast.dismiss();
-                setDisplayLogout(false);
-              }}
-            >
-              Отмена
-            </button>
-            <button
-              className="toast-btn toast-btn-logout"
-              onClick={() => {
-                logoutUser();
-                setDisplayLogout(false);
-                window.location.reload();
-              }}
-            >
-              Выйти
-            </button>
-          </div>
-          {/* toast-action */}
-        </div>, // дальше второй аргумент
-        // toast-notification
-        // Далее нужно настроить настройки поведения уведомления
-        {
-          // закрытие по таймеру выключено
-          autoClose: false,
-          // по клику закрыть нельзя
-          closeOnClick: false,
-          // и перетаскиванием тоже
-          draggable: false,
-          // крестик убрал тоже
-          closeButton: false,
-          // выведу снизу справа (по приколу)
-          position: 'bottom-right',
-          theme: 'dark',
-        }
-      );
-    } else {
-      navigate('/login'); // Если не вошел идем на логин
-    }
-  };
 
   // ============================================================================
   // ДЛЯ СОЗДАНИЯ ИНЦИДЕНТА
