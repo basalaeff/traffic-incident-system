@@ -12,8 +12,6 @@ import { useNavigate } from 'react-router-dom';
 import '../css/components/map.css';
 import 'leaflet/dist/leaflet.css';
 
-import Avatar from 'react-avatar';
-
 import { RecenterAutomatically } from '@/features/home/model/RecenterAutomatically';
 import { getCustomMarker } from '@/features/home/model/getCustomMarker';
 import { MapClickHandler } from '@/features/home/model/MapClickHandler';
