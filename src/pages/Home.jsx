@@ -17,7 +17,7 @@ import Avatar from 'react-avatar';
 // всплывающие уведомления тоже могут пригодиться
 import { toast } from 'react-toastify';
 
-import { loadIncidents, loadIncidentCards, loadUsers } from '@/features/home/api/homeAPI';
+import { loadIncidentCards } from '@/features/home/api/homeAPI';
 import { RecenterAutomatically } from '@/features/home/model/RecenterAutomatically';
 import { getCustomMarker } from '@/features/home/model/getCustomMarker';
 import { MapClickHandler } from '@/features/home/model/MapClickHandler';
@@ -26,6 +26,7 @@ import { renderBadge } from '@/features/home/ui/renderBadge';
 import { Spinner } from '@/widgets/spinner';
 import { useIncidentsAndUsers } from '@/features/home/model/fetchData';
 import { useHandleAuthClick } from '@/features/home/ui/handleAuthClick';
+import { useCreateIncident } from '@/features/home/model/handleCreateIncident';
 
 function Home() {
   // Напишем массивы для хранения данных с использованием деструкционализации
@@ -37,10 +38,7 @@ function Home() {
   const [userLocation, setUserLocation] = useState(null);
   // для хранения флага загрузки
   const [loading, setLoading] = useState(true);
-  // для хранения состояния кнопки добавления инцидента
-  const [isAddingMode, setIsAddingMode] = useState(false);
-  // временный маркер для отображения на карте
-  const [tempMarker, setTempMarker] = useState(null);
+
   // для переключения между страницами
   const navigate = useNavigate();
 
@@ -62,14 +60,24 @@ function Home() {
   const [hasMore, setHasMore] = useState(true);
   // Флаг загрузки следующей порции данных (чтобы не дублировать запросы)
   const [loadingMore, setLoadingMore] = useState(false);
-  // Ref для Intersection Observer — элемент-«страж» внизу списка
-  const observerTarget = useRef(null);
-  const fetchIncidentsRef = useRef(null);
 
   const [showProgressForIncidentCards, setShowProgressForIncidentCards] = useState(false);
 
   const { incidents, users } = useIncidentsAndUsers();
   const { handleAuthClick, displayLogout, user } = useHandleAuthClick();
+
+  // для хранения состояния кнопки добавления инцидента
+  const [isAddingMode, setIsAddingMode] = useState(false);
+
+  // временный маркер для отображения на карте
+  const [tempMarker, setTempMarker] = useState(null);
+
+  const { handleCreateIncident, handleConfirmCreateIncident, handleCancelCreateIncident } = useCreateIncident(
+    isAddingMode,
+    setIsAddingMode,
+    tempMarker,
+    setTempMarker
+  );
 
   // ============================================================================
   // ПОЛУЧЕНИЕ ГЕОЛОКАЦИИ
@@ -229,53 +237,6 @@ function Home() {
     el.addEventListener('scroll', handleScroll, { passive: true });
     return () => el.removeEventListener('scroll', handleScroll);
   }, [handleScroll]);
-
-  // ============================================================================
-  // ДЛЯ СОЗДАНИЯ ИНЦИДЕНТА
-  // ============================================================================
-  const handleCreateIncident = () => {
-    // разрешили добавление
-    setIsAddingMode(true);
-    toast.info('Кликните по карте, чтобы установить маркер', {
-      // закрытие по таймеру выключено
-      autoClose: false,
-      // по клику закрыть нельзя
-      closeOnClick: false,
-      // и перетаскиванием тоже
-      draggable: false,
-      // крестик убрал тоже
-      closeButton: false,
-      theme: 'dark',
-    });
-  };
-  // ============================================================================
-  // ДЛЯ ОБРАБОТКИ СОЗДАНИЯ ИНЦИДЕНТА ПОСЛЕ ВЫБОРА КООРДИНАТ
-  // ============================================================================
-  const handleConfirmCreateIncident = () => {
-    toast.dismiss();
-    // защита от ошибок при вызове координат
-    if (!tempMarker) return;
-    navigate('/create-incident', {
-      // для переброса координат на страницу формы буду использовать state
-      // самое приятное, что он передает данные в скрытом режиме,
-      // не отображая их в адресной строке.
-      state: { lat: tempMarker[0], lng: tempMarker[1] },
-    });
-    // сбрасываем маркер
-    setTempMarker(null);
-    // выключаем добавление
-    setIsAddingMode(false);
-  };
-  // ============================================================================
-  // ДЛЯ ОТМЕНЫ ДОБАВЛЕНИЯ ИНЦИДЕНТА
-  // ============================================================================
-  const handleCancelCreateIncident = () => {
-    toast.dismiss();
-    // убираем временный маркер
-    setTempMarker(null);
-    setIsAddingMode(false);
-    toast.info('Создание инцидента отменено');
-  };
 
   // ============================================================================
   // ДЛЯ УПРАВЛЕНИЯ ОТОБРАЖЕНИЕМ ПРОГРЕСС БАРА
