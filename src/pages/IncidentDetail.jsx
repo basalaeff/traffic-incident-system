@@ -3,15 +3,10 @@ import { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 // добавлю любимые всплывающие уведомления
 import { toast } from 'react-toastify';
-// запросы
-import axios from 'axios';
 // нужен текущий юзер в системе
 import { getCurrentUser } from '@/features/authentication/model/auth';
-import {
-  loadIncidentById,
-  loadUserById,
-  deleteIncidentById,
-} from '@/features/incident-detail/api/incidentDetailAPI';
+import { deleteIncidentById } from '@/features/incident-detail/api/incidentDetailAPI';
+import { useData } from '@/features/incident-detail/model/fetchData';
 import Spinner from '@/widgets/spinner';
 
 function IncidentDetail() {
@@ -25,43 +20,15 @@ function IncidentDetail() {
   // храним юзера-владельца
   // только этому юзеру можно редактировать
   const [owner, setOwner] = useState(null);
-
   // загрузка
   const [isLoading, setIsLoading] = useState(false);
   // состояние для подтверждения удаления
   const [showDelete, setShowDelete] = useState(false);
 
+  const { fetchData } = useData(id, setIncident, setOwner, setIsLoading);
+
   useEffect(() => {
-    const fetchIncidents = async () => {
-      setIsLoading(true);
-      try {
-        // ============================================================================
-        // GET-ЗАПРОС НА СЕРВЕР http://localhost:3001/incidents
-        // ============================================================================
-        const responseIncidents = await loadIncidentById(id);
-        setIncident(responseIncidents.data);
-
-        // проверка перед запросом
-        if (responseIncidents.data?.userId) {
-          // ============================================================================
-          // GET-ЗАПРОС НА СЕРВЕР http://localhost:3001/user
-          // ============================================================================
-          const responseOwner = await loadUserById(responseIncidents.data.userId);
-          setOwner(responseOwner.data);
-        } else {
-          toast.error(`Ошибка загрузки пользователя: ${error.message}`);
-        }
-        setIsLoading(false);
-      } catch (err) {
-        console.error(`Ошибка загрузки инцидента:`, err.response?.data?.message);
-        toast.error(`Ошибка загрузки инцидента: ${err.response?.data?.message}`);
-        if (err.response?.status === 404) navigate('/');
-      } finally {
-        setIsLoading(false);
-      }
-    };
-
-    fetchIncidents();
+    fetchData();
   }, [id]);
   // перезапускается при изменении id
 
