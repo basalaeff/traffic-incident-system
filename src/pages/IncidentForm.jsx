@@ -14,8 +14,10 @@ import {
   editIncidentById,
   pushIncident,
 } from '../features/incident-form/api/incidentFormAPI';
+import { HomeBtn } from '@/shared/ui/HomeBtn';
 
 import Swal from 'sweetalert2';
+import { Home } from 'lucide-react';
 
 function IncidentForm() {
   const { id } = useParams();
@@ -280,16 +282,7 @@ function IncidentForm() {
     <div className="page">
       <div className="card">
         <div className="first-block">
-          <button
-            className="home-btn"
-            onClick={() => {
-              navigate('/');
-            }}
-            title="Главная"
-          >
-            <img src="https://s.kontur.ru/common-v2/icons-ui/black/building-home/building-home-32-Regular.svg" />
-          </button>
-          {/* home-btn */}
+          <HomeBtn />
           <h2>{isEditMode ? 'Редактирование' : 'Форма'}</h2>
           <div className="subtitle">
             {isEditMode ? 'Обновите информацию об инциденте' : 'Добавьте новый инцидент'}

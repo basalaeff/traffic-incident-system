@@ -6,6 +6,7 @@ import { toast } from 'react-toastify';
 import { loginUser, getCurrentUser } from '@/features/authentication/model/auth';
 import { findUserByLogin } from '@/features/authentication/api/authAPI';
 import bcrypt from 'bcryptjs';
+import HomeBtn from '@/shared/ui/HomeBtn';
 
 // ============================================================================
 // ФУНКЦИЯ ДЛЯ ЛОГИНА
@@ -113,16 +114,7 @@ function Authentication({}) {
     <div className="page">
       <div className="card">
         <div className="first-block">
-          <button
-            className="home-btn"
-            onClick={() => {
-              navigate('/');
-            }}
-            title="Главная"
-          >
-            <img src="https://s.kontur.ru/common-v2/icons-ui/black/building-home/building-home-32-Regular.svg" />
-          </button>
-          {/* home-btn */}
+          <HomeBtn />
           <h2>🔐 Вход </h2>
           <p className="subtitle">Используйте ваш аккаунт</p>
         </div>

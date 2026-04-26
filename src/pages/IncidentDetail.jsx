@@ -7,6 +7,7 @@ import { useData } from '@/features/incident-detail/model/fetchData';
 import { useDelete } from '@/features/incident-detail/ui/handleDelete';
 import Spinner from '@/widgets/spinner';
 import { DetailTable } from '@/features/incident-detail/ui/DetailTable';
+import HomeBtn from '@/shared/ui/HomeBtn';
 
 function IncidentDetail() {
   // Достаем id c помощью хука
@@ -44,16 +45,7 @@ function IncidentDetail() {
     <div className="page-detail">
       <div className="card">
         <div className="first-block-detail">
-          <button
-            className="home-btn"
-            onClick={() => {
-              navigate('/');
-            }}
-            title="Главная"
-          >
-            <img src="https://s.kontur.ru/common-v2/icons-ui/black/building-home/building-home-32-Regular.svg" />
-          </button>
-          {/* home-btn */}
+          <HomeBtn />
           <h2>Детали инцидента </h2>
           <div className="ud-btn">
             {/* Кнопка редактировать */}

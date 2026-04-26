@@ -11,6 +11,7 @@ import axios from 'axios';
 import { getCurrentUser } from '../features/authentication/model/auth';
 import { findUserByLogin, registerUser } from '../features/authentication/api/authAPI';
 import bcrypt from 'bcryptjs';
+import HomeBtn from '@/shared/ui/HomeBtn';
 
 function Registration() {
   const navigate = useNavigate(); //хук для переброса на авторизацию
@@ -160,16 +161,7 @@ function Registration() {
     <div className="page">
       <div className="card">
         <div className="first-block">
-          <button
-            className="home-btn"
-            onClick={() => {
-              navigate('/');
-            }}
-            title="Главная"
-          >
-            <img src="https://s.kontur.ru/common-v2/icons-ui/black/building-home/building-home-32-Regular.svg" />
-          </button>
-          {/* home-btn */}
+          <HomeBtn />
           <h2>Регистрация</h2>
           <div className="subtitle ">Зарегистрируйте ваш новый аккаунт</div>
           {/* subtitle  */}
