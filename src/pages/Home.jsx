@@ -27,17 +27,13 @@ import { Spinner } from '@/widgets/spinner';
 import { useIncidentsAndUsers } from '@/features/home/model/fetchData';
 import { useHandleAuthClick } from '@/features/home/ui/handleAuthClick';
 import { useCreateIncident } from '@/features/home/model/handleCreateIncident';
+import { useLocation } from '@/features/home/model/getLocation';
 
 function Home() {
   // Напишем массивы для хранения данных с использованием деструкционализации
 
   // Создадим массив для хранения инцидентов (карточки)
   const [incidentCards, setIncidentCards] = useState([]);
-
-  // для хранения координат
-  const [userLocation, setUserLocation] = useState(null);
-  // для хранения флага загрузки
-  const [loading, setLoading] = useState(true);
 
   // для переключения между страницами
   const navigate = useNavigate();
@@ -63,6 +59,14 @@ function Home() {
 
   const [showProgressForIncidentCards, setShowProgressForIncidentCards] = useState(false);
 
+  // для хранения координат
+  const [userLocation, setUserLocation] = useState(null);
+
+  // для хранения флага загрузки
+  const [loading, setLoading] = useState(true);
+
+  const { getLocation } = useLocation({ setLoading, setUserLocation });
+
   const { incidents, users } = useIncidentsAndUsers();
   const { handleAuthClick, displayLogout, user } = useHandleAuthClick();
 
@@ -72,57 +76,8 @@ function Home() {
   // временный маркер для отображения на карте
   const [tempMarker, setTempMarker] = useState(null);
 
-  const { handleCreateIncident, handleConfirmCreateIncident, handleCancelCreateIncident } = useCreateIncident(
-    isAddingMode,
-    setIsAddingMode,
-    tempMarker,
-    setTempMarker
-  );
-
-  // ============================================================================
-  // ПОЛУЧЕНИЕ ГЕОЛОКАЦИИ
-  // ============================================================================
-  // Пишем useEffect() - это хук, который выполняет код после того как компонент
-  // отобразится на экране
-  const getLocation = () => {
-    // буду использовать объект navigator
-    // Он встроен в браузер и дает доступ к функциям устройства
-    // geolocation это его свойство. Я буду использовать его для определения местоположения
-    // Некоторые браузеры могут не поддерживать эту функцию (либо старый браузер, либо чел параноик)
-    // Если не поддерживает геолокацию?
-    if (!navigator.geolocation) {
-      toast.info('Ваш браузер не поддерживает геолокацию');
-      // Это флаг загрузки. Позиция false указывает, что загрузка завершена успешно.
-      setLoading(false);
-      return;
-    }
-
-    // Нужна функция, которая будет запрашивать местоположение у пользователя
-    // К счастью она уже встроена в браузер и считывает GPS или Wi-Fi устройства
-
-    navigator.geolocation.getCurrentPosition(
-      (position) => {
-        // Вызывается если успешно
-        // Используем объект position.coords (есть долгота, широта, высота, и другое всякое)
-        // Нужны только углы
-        // Получим значения и положим в массив
-        // Если геолокация обновляется, то Home перезапускается
-        setUserLocation([position.coords.latitude, position.coords.longitude]);
-        setLoading(false);
-      },
-      // А если не получится? Тогда просто будем устанавливать исходную точку
-      // Делаем приложение, которое будет использоваться внутри страны
-      // Пусть это будет центр Москвы (55.751244, 37.618423). Так в самокате (украл идейку)
-      () => {
-        setUserLocation([55.751244, 37.618423]); // Москва
-        setLoading(false);
-        // Закинем в консоль разработчика
-        console.warn(
-          'Пользователь запретил доступ к геолокации или произошла ошибка. Использованы координаты по умолчанию.'
-        );
-      }
-    );
-  }; //Работает только при старте
+  const { handleCreateIncident, handleConfirmCreateIncident, handleCancelCreateIncident } =
+    useCreateIncident(isAddingMode, setIsAddingMode, tempMarker, setTempMarker);
 
   // Вызываем один раз при старте
   useEffect(() => {
@@ -286,7 +241,11 @@ function Home() {
           )}
           {/* Кнопка ЦЕНТИРОВАТЬ ПО ГЕОЛОКАЦИИ */}
           {displayFloatingBtn && !displayLogout && displayMap && (
-            <button className="circle-btn" onClick={getLocation} title="Вернуться в координаты">
+            <button
+              className="circle-btn"
+              onClick={getLocation}
+              title="Вернуться в координаты"
+            >
               <img src="https://s.kontur.ru/common-v2/icons-ui/black/location-pin/location-pin-32-Regular.svg" />
             </button>
           )}
