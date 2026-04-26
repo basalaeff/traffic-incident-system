@@ -8,6 +8,7 @@ import { useDelete } from '@/features/incident-detail/ui/handleDelete';
 import Spinner from '@/widgets/spinner';
 import { DetailTable } from '@/features/incident-detail/ui/DetailTable';
 import HomeBtn from '@/shared/ui/HomeBtn';
+import { FloatingActions } from '@/features/incident-detail/ui/floatingActions';
 
 function IncidentDetail() {
   // Достаем id c помощью хука
@@ -47,28 +48,7 @@ function IncidentDetail() {
         <div className="first-block-detail">
           <HomeBtn />
           <h2>Детали инцидента </h2>
-          <div className="ud-btn">
-            {/* Кнопка редактировать */}
-            {user?.id === incident?.userId && !showDelete && (
-              <button
-                className="circle-btn"
-                title="Редактировать"
-                onClick={() => {
-                  navigate(`/editing-incident/${id}`);
-                }}
-              >
-                <img src="https://s.kontur.ru/common-v2/icons-ui/black/tool-pencil-line/tool-pencil-line-32-Regular.svg" />
-              </button>
-            )}
-
-            {/* Кнопка удалить */}
-            {user?.id === incident?.userId && !showDelete && (
-              <button className="circle-btn" title="Удалить" onClick={handleDelete}>
-                <img src="https://s.kontur.ru/common-v2/icons-ui/black/trash-can/trash-can-32-Regular.svg" />
-              </button>
-            )}
-          </div>
-          {/* ud-btn */}
+          <FloatingActions id={id} user={user} incident={incident} showDelete={showDelete} handleDelete={handleDelete} />
         </div>
         {/* first-block-detail */}
         <div className="second-block">
