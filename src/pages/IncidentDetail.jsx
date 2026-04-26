@@ -6,7 +6,7 @@ import { getCurrentUser } from '@/features/authentication/model/auth';
 import { useData } from '@/features/incident-detail/model/fetchData';
 import { useDelete } from '@/features/incident-detail/ui/handleDelete';
 import Spinner from '@/widgets/spinner';
-import { incidentLabels } from '@/features/incident-detail/model/incidentLabels';
+import { DetailTable } from '@/features/incident-detail/ui/DetailTable';
 
 function IncidentDetail() {
   // Достаем id c помощью хука
@@ -84,42 +84,7 @@ function IncidentDetail() {
           {/* detail-title */}
           <div className="detail-description">{incident?.description}</div>
           {/* detail-description */}
-          <table className="detail-table">
-            <tbody>
-              <tr>
-                <td>Тип инцидента</td>
-                <td>
-                  <span>{incidentLabels[incident?.type] || 'Другое'}</span>
-                </td>
-              </tr>
-              <tr>
-                <td>Широта</td>
-                <td>{incident?.lat}</td>
-              </tr>
-              <tr>
-                <td>Долгота</td>
-                <td>{incident?.lng}</td>
-              </tr>
-              <tr>
-                <td>Пользователь</td>
-                <td>{owner?.login}</td>
-              </tr>
-              <tr>
-                <td>Время</td>
-                <td>
-                  {incident?.time}
-                  {/* detail-time */}
-                </td>
-              </tr>
-              <tr>
-                <td>Статус</td>
-                <td>
-                  <span>{incident?.status === 'active' ? 'Активный' : 'Неактивный'}</span>
-                </td>
-              </tr>
-            </tbody>
-          </table>
-          {/* detail-table */}
+          <DetailTable incident={incident} owner={owner} />
         </div>
         {/* second-block */}
       </div>
