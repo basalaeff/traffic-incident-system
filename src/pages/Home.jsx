@@ -1,5 +1,5 @@
 // для того чтобы получить ссылку на DOM-элемент нужен useRef
-import { useState, useEffect, useRef, useCallback } from 'react';
+import { useState, useEffect, useRef } from 'react';
 
 import { Progress, ProgressLabel, ProgressValue } from '@/shared/ui/progress';
 
@@ -16,7 +16,6 @@ import { RecenterAutomatically } from '@/features/home/model/RecenterAutomatical
 import { getCustomMarker } from '@/features/home/model/getCustomMarker';
 import { MapClickHandler } from '@/features/home/model/MapClickHandler';
 import { AnimationFadeInUp } from '../shared/ui/animation';
-import { renderBadge } from '@/features/home/ui/renderBadge';
 import { Spinner } from '@/widgets/spinner';
 import { useIncidentsAndUsers } from '@/features/home/model/fetchData';
 import { useHandleAuthClick } from '@/features/home/ui/handleAuthClick';
@@ -25,6 +24,7 @@ import { useLocation } from '@/features/home/model/getLocation';
 import { useIncidentCards } from '@/features/home/model/fetchIncidentCards';
 import { useScroll } from '@/features/home/model/handleScroll';
 import { FloatingActions } from '@/features/home/ui/floatingActions';
+import { IncidentsList } from '@/features/home/ui/incidentsList';
 
 function Home() {
   // Напишем массивы для хранения данных с использованием деструкционализации
@@ -161,6 +161,21 @@ function Home() {
   }
 
   // ============================================================================
+  // ЦЕНТРИРУЕТ КАРТУ ПО КООРДИНАТАМ ИНЦИДЕНТА
+  // ============================================================================
+  const handleViewOnMap = (incident) => {
+    setUserLocation([incident.lat, incident.lng]);
+    setDisplayMap(true);
+    setCurrentZoom(18);
+  };
+
+  // ============================================================================
+  // ДЕТАЛИЗАЦИЯ ИНЦИДЕНТА
+  // ============================================================================
+
+  const handleViewDetails = (id) => navigate(`/incident/${id}`);
+
+  // ============================================================================
   // ОСНОВНОЙ ИНТЕРФЕЙС
   // ============================================================================
   return (
@@ -183,68 +198,12 @@ function Home() {
       {!displayMap && (
         <div className="main-card">
           <h1>Сервис мониторинга дорожных инцидентов</h1>
-          <div className="incidents-list" ref={listRef}>
-            {incidentCards.map((incidentCard) => {
-              return (
-                // Использую article
-                // каждый инцидент самостоятельная единица данных
-                <AnimationFadeInUp>
-                  <article className="incident-card" key={incidentCard?.id}>
-                    <div className="incident-card-first">
-                      <header className="incident-card-header">
-                        {renderBadge(incidentCard?.type)}
-                        {renderBadge(incidentCard?.status)}
-                      </header>
-                      {/* incident-card-header */}
-                      <h2 className="incident-card-title">{incidentCard?.title}</h2>
-                      {/* incident-card-title */}
-                      <p className="incident-card-description">{incidentCard?.description}</p>
-                      {/* incident-card-description */}
-                      <time className="incident-card-time">{incidentCard?.time}</time>
-                      {/* incident-card-time */}
-                      <footer className="incident-card-footer">
-                        <span className="incident-card-coords">
-                          {incidentCard?.lat}, {incidentCard?.lng}
-                        </span>
-                        {/* incident-card-coords */}
-                      </footer>
-                      {/* incident-card-footer */}
-                    </div>
-                    {/* incident-card-first  */}
-                    <div className="incident-card-second">
-                      <div className="ud-btn">
-                        {/* Кнопка посмотреть на карте */}
-                        <button
-                          className="card-circle-btn"
-                          title="Посмотреть на карте"
-                          onClick={() => {
-                            setUserLocation([incidentCard?.lat, incidentCard?.lng]);
-                            setDisplayMap(true);
-                            setCurrentZoom(18);
-                          }}
-                        >
-                          <img src="https://s.kontur.ru/common-v2/icons-ui/black/location-pin/location-pin-32-Regular.svg" />
-                        </button>
-
-                        {/* Кнопка на страницу детализации */}
-                        <button
-                          className="card-circle-btn"
-                          title="Подробнее"
-                          onClick={() => navigate(`/incident/${incidentCard?.id}`)}
-                        >
-                          <img src="https://s.kontur.ru/common-v2/icons-ui/black/arrow-ui-corner-out-up-right/arrow-ui-corner-out-up-right-32-Regular.svg" />
-                        </button>
-                      </div>
-                      {/* ud-btn */}
-                    </div>
-                    {/* incident-card-second */}
-                  </article>
-                  {/* incident-card */}
-                </AnimationFadeInUp>
-              );
-            })}
-          </div>
-          {/* incidents-list */}
+          <IncidentsList
+            listRef={listRef}
+            incidentCards={incidentCards}
+            onViewOnMap={handleViewOnMap}
+            onViewDetails={handleViewDetails}
+          />
         </div>
         // main-card
       )}
