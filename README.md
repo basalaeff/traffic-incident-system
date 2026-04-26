@@ -10,7 +10,7 @@ git clone git@github.com:basalaeff/traffic-incident-system.git
 
 **Установка зависимостей:**
 
-````bash
+```bash
 npm install react-leaflet leaflet react-router-dom axios react-avatar react-toastify bcryptjs react-animations styled-components && npm install -D json-server && npm install tailwindcss @tailwindcss/vite && npm install -D @types/node && npm i -D eslint-import-resolver-alias eslint-plugin-import
 ```
 
