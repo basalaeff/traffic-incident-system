@@ -62,7 +62,7 @@ function Home() {
   const hasMoreRef = useRef(true); // есть ли ещё данные
   const loadingRef = useRef(false); // идет ли загрузка
 
-  // Синхронизируем рефы со стейтом
+  // Синхронизируем рефы с состояниями
   useEffect(() => {
     pageRef.current = page;
   }, [page]);

@@ -33,7 +33,7 @@ export const FloatingActions = ({
             <img src="https://s.kontur.ru/common-v2/icons-ui/black/plus-circle/plus-circle-32-Regular.png" />
           </button>
         )}
-        {/* Кнопка ЦЕНТИРОВАТЬ ПО ГЕОЛОКАЦИИ */}
+        {/* Кнопка центрировать по геолокации */}
         {displayFloatingBtn && !displayLogout && displayMap && (
           <button className="circle-btn" onClick={getLocation} title="Вернуться в координаты">
             <img src="https://s.kontur.ru/common-v2/icons-ui/black/location-pin/location-pin-32-Regular.svg" />
