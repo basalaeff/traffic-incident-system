@@ -14,10 +14,6 @@ import 'leaflet/dist/leaflet.css';
 
 import Avatar from 'react-avatar';
 
-// всплывающие уведомления тоже могут пригодиться
-import { toast } from 'react-toastify';
-
-import { loadIncidentCards } from '@/features/home/api/homeAPI';
 import { RecenterAutomatically } from '@/features/home/model/RecenterAutomatically';
 import { getCustomMarker } from '@/features/home/model/getCustomMarker';
 import { MapClickHandler } from '@/features/home/model/MapClickHandler';
@@ -28,12 +24,10 @@ import { useIncidentsAndUsers } from '@/features/home/model/fetchData';
 import { useHandleAuthClick } from '@/features/home/ui/handleAuthClick';
 import { useCreateIncident } from '@/features/home/model/handleCreateIncident';
 import { useLocation } from '@/features/home/model/getLocation';
+import { useIncidentCards } from '@/features/home/model/fetchIncidentCards';
 
 function Home() {
   // Напишем массивы для хранения данных с использованием деструкционализации
-
-  // Создадим массив для хранения инцидентов (карточки)
-  const [incidentCards, setIncidentCards] = useState([]);
 
   // для переключения между страницами
   const navigate = useNavigate();
@@ -48,41 +42,20 @@ function Home() {
   // ============================================================================
   // СОСТОЯНИЯ ДЛЯ ДИНАМИЧЕСКОЙ ЗАГРУЗКИ КАРТОЧЕК
   // ============================================================================
+  // Создадим массив для хранения инцидентов (карточки)
+  const [incidentCards, setIncidentCards] = useState([]);
+
   // Текущая страница для нумерации областей с карточками (начинаем с 1)
   const [page, setPage] = useState(1);
+
   // Количество карточек на странице (лимит)
   const [limit] = useState(3);
+
   // Флаг: есть ли ещё данные для загрузки
   const [hasMore, setHasMore] = useState(true);
+
   // Флаг загрузки следующей порции данных (чтобы не дублировать запросы)
   const [loadingMore, setLoadingMore] = useState(false);
-
-  const [showProgressForIncidentCards, setShowProgressForIncidentCards] = useState(false);
-
-  // для хранения координат
-  const [userLocation, setUserLocation] = useState(null);
-
-  // для хранения флага загрузки
-  const [loading, setLoading] = useState(true);
-
-  const { getLocation } = useLocation({ setLoading, setUserLocation });
-
-  const { incidents, users } = useIncidentsAndUsers();
-  const { handleAuthClick, displayLogout, user } = useHandleAuthClick();
-
-  // для хранения состояния кнопки добавления инцидента
-  const [isAddingMode, setIsAddingMode] = useState(false);
-
-  // временный маркер для отображения на карте
-  const [tempMarker, setTempMarker] = useState(null);
-
-  const { handleCreateIncident, handleConfirmCreateIncident, handleCancelCreateIncident } =
-    useCreateIncident(isAddingMode, setIsAddingMode, tempMarker, setTempMarker);
-
-  // Вызываем один раз при старте
-  useEffect(() => {
-    getLocation();
-  }, []);
 
   // ============================================================================
   // РЕФЫ (всегда актуальные значения)
@@ -102,64 +75,40 @@ function Home() {
     loadingRef.current = loadingMore;
   }, [loadingMore]);
 
-  // ============================================================================
-  // ЗАГРУЗКА КАРТОЧЕК ИНЦИДЕНТОВ
-  // ============================================================================
-  const fetchIncidentCards = useCallback(
-    // isInitial - первоначальная загрузка
-    // append - добавление данных
-    async (isInitial = false, append = false) => {
-      // последующая загрузка
-      if (!isInitial) {
-        // данных нет или идет загрузка
-        if (!hasMoreRef.current || loadingRef.current) return;
-        loadingRef.current = true;
-        setLoadingMore(true);
-        pageRef.current += 1;
-      }
-
-      try {
-        const requestPage = isInitial ? 1 : pageRef.current;
-        const responseIncidents = await loadIncidentCards(requestPage, limit);
-        const newIncidents = responseIncidents.data;
-
-        // Если пришло меньше лимита, то данных больше нет
-        if (newIncidents.length < limit) {
-          setHasMore(false);
-          hasMoreRef.current = false;
-        }
-
-        // Обновляем список карточек
-        if (isInitial || !append) {
-          setIncidentCards(newIncidents);
-          if (isInitial) {
-            setPage(1);
-            pageRef.current = 1;
-          }
-        } else {
-          setIncidentCards((prev) => {
-            const uniqueNew = newIncidents.filter(
-              (newItem) => !prev.some((oldItem) => oldItem.id === newItem.id)
-            );
-            return [...prev, ...uniqueNew];
-          });
-        }
-
-        setPage(pageRef.current);
-      } catch (err) {
-        console.error('Ошибка загрузки:', err);
-        toast.error(err.message || 'Ошибка загрузки инцидентов');
-        // При ошибке откатываем страницу назад
-        if (!isInitial) pageRef.current -= 1;
-      } finally {
-        if (!isInitial) {
-          loadingRef.current = false;
-          setLoadingMore(false);
-        }
-      }
-    },
-    [limit]
+  const { fetchIncidentCards } = useIncidentCards(
+    limit,
+    pageRef,
+    hasMoreRef,
+    loadingRef,
+    setIncidentCards,
+    setPage,
+    setHasMore,
+    setLoadingMore
   );
+
+  const [showProgressForIncidentCards, setShowProgressForIncidentCards] = useState(false);
+
+  // для хранения координат
+  const [userLocation, setUserLocation] = useState(null);
+  // для хранения флага загрузки
+  const [loading, setLoading] = useState(true);
+  const { getLocation } = useLocation({ setLoading, setUserLocation });
+
+  const { incidents, users } = useIncidentsAndUsers();
+
+  const { handleAuthClick, displayLogout, user } = useHandleAuthClick();
+
+  // для хранения состояния кнопки добавления инцидента
+  const [isAddingMode, setIsAddingMode] = useState(false);
+  // временный маркер для отображения на карте
+  const [tempMarker, setTempMarker] = useState(null);
+  const { handleCreateIncident, handleConfirmCreateIncident, handleCancelCreateIncident } =
+    useCreateIncident(isAddingMode, setIsAddingMode, tempMarker, setTempMarker);
+
+  // Вызываем один раз при старте
+  useEffect(() => {
+    getLocation();
+  }, []);
 
   // ============================================================================
   // ПЕРВИЧНАЯ ЗАГРУЗКА
@@ -241,11 +190,7 @@ function Home() {
           )}
           {/* Кнопка ЦЕНТИРОВАТЬ ПО ГЕОЛОКАЦИИ */}
           {displayFloatingBtn && !displayLogout && displayMap && (
-            <button
-              className="circle-btn"
-              onClick={getLocation}
-              title="Вернуться в координаты"
-            >
+            <button className="circle-btn" onClick={getLocation} title="Вернуться в координаты">
               <img src="https://s.kontur.ru/common-v2/icons-ui/black/location-pin/location-pin-32-Regular.svg" />
             </button>
           )}
