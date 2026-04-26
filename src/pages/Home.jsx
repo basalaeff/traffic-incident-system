@@ -7,7 +7,6 @@ import { useState, useEffect, useRef } from 'react';
 import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
 // Нужен хук для роутинга
 import { useNavigate } from 'react-router-dom';
-import '../css/components/map.css';
 import 'leaflet/dist/leaflet.css';
 
 import { RecenterAutomatically } from '@/features/home/model/RecenterAutomatically';
