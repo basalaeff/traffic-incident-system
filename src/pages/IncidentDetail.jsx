@@ -6,6 +6,7 @@ import { getCurrentUser } from '@/features/authentication/model/auth';
 import { useData } from '@/features/incident-detail/model/fetchData';
 import { useDelete } from '@/features/incident-detail/ui/handleDelete';
 import Spinner from '@/widgets/spinner';
+import { incidentLabels } from '@/features/incident-detail/model/incidentLabels';
 
 function IncidentDetail() {
   // Достаем id c помощью хука
@@ -37,10 +38,6 @@ function IncidentDetail() {
   if (isLoading) {
     return <Spinner />;
   }
-  const incidentLabels = {
-    accident: 'ДТП',
-    hazard: 'Опасный участок',
-  };
 
   // Пишем интерфейс на JSX
   return (
