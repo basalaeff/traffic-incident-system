@@ -15,9 +15,9 @@ import {
   pushIncident,
 } from '../features/incident-form/api/incidentFormAPI';
 import { HomeBtn } from '@/shared/ui/HomeBtn';
+import { useIncidentEdit } from '@/features/incident-form/model/fetchIncidentEdit';
 
 import Swal from 'sweetalert2';
-import { Home } from 'lucide-react';
 
 function IncidentForm() {
   const { id } = useParams();
@@ -67,6 +67,19 @@ function IncidentForm() {
     description: { max: 1000, min: 10 }, // описание: от 10 до 1000 символов
   };
 
+  const { fetchIncidentEdit } = useIncidentEdit(
+    id,
+    setIsLoading,
+    setIsEditMode,
+    setIncident,
+    setOriginalIncident,
+    setTitle,
+    setDescription,
+    setStatus,
+    setType,
+    user
+  );
+
   // на данную страницу можно попасть через адресную строку (я так и сюда и зашел)
   // но это означает, что пользователь может сломать мне карту (ранее я указал 0, 0 в таких случаях)
   // но это решение лишь ставит маркер в море рядом в Африкой, а там вообще не дорог
@@ -84,39 +97,6 @@ function IncidentForm() {
       setLat(location.state.lat);
       setLng(location.state.lng);
     } else {
-      const fetchIncidentEdit = async () => {
-        setIsLoading(true);
-        try {
-          // ============================================================================
-          // GET-ЗАПРОС НА СЕРВЕР http://localhost:3001/incidents
-          // ============================================================================
-          const responseIncident = await loadIncidentById(id);
-          setIncident(responseIncident.data);
-          setOriginalIncident(responseIncident.data);
-
-          // Нужно, чтобы при редактировании в полях был текст
-          setTitle(responseIncident.data?.title || '');
-          setDescription(responseIncident.data?.description || '');
-          setStatus(responseIncident.data?.status || '');
-          setType(responseIncident.data?.type || '');
-
-          // переключаем флаг на редактирование
-          setIsEditMode(true);
-
-          if (responseIncident.data?.userId != user?.id) {
-            toast.warn('У вас недостаточно прав для выполнения этого действия!');
-            navigate('/');
-          }
-          setIsLoading(false);
-        } catch (err) {
-          console.error(`Ошибка загрузки инцидента:`, err.response?.data?.message);
-          toast.error(`Ошибка загрузки инцидента: ${err.response?.data?.message}`);
-          if (err.response?.status === 404) navigate('/');
-        } finally {
-          setIsLoading(false);
-        }
-      };
-
       fetchIncidentEdit();
     }
     // добавил условия для перезапуска
