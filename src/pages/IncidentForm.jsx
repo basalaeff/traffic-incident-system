@@ -10,12 +10,13 @@ import { toast } from 'react-toastify';
 // получаем текущего пользователя
 import { getCurrentUser } from '../features/authentication/model/auth';
 import {
-  loadIncidentById,
   editIncidentById,
   pushIncident,
 } from '../features/incident-form/api/incidentFormAPI';
 import { HomeBtn } from '@/shared/ui/HomeBtn';
 import { useIncidentEdit } from '@/features/incident-form/model/fetchIncidentEdit';
+import { useHandleChange } from '@/features/incident-form/model/handleChange';
+import { FIELD_LIMITS } from '@/features/incident-form/model/fieldLimits';
 
 import Swal from 'sweetalert2';
 
@@ -60,13 +61,6 @@ function IncidentForm() {
   // СОСТОЯНИЕ ДЛЯ ХРАНЕНИЯ ИСХОДНЫХ ДАННЫХ
   const [originalIncident, setOriginalIncident] = useState(null);
 
-  // добавлю лимит символов для полей ввода (новая фича)
-  const FIELD_LIMITS = {
-    // объект с конфигурацией ограничений полей
-    title: { max: 150, min: 3 }, // заголовок: от 3 до 150 символов
-    description: { max: 1000, min: 10 }, // описание: от 10 до 1000 символов
-  };
-
   const { fetchIncidentEdit } = useIncidentEdit(
     id,
     setIsLoading,
@@ -79,6 +73,13 @@ function IncidentForm() {
     setType,
     user
   );
+
+  const {
+    handleTypeChange,
+    handleStatusChange,
+    handleTitleChange,
+    handleDescriptionChange,
+  } = useHandleChange(setTitle, setDescription, setStatus, setType);
 
   // на данную страницу можно попасть через адресную строку (я так и сюда и зашел)
   // но это означает, что пользователь может сломать мне карту (ранее я указал 0, 0 в таких случаях)
@@ -111,42 +112,7 @@ function IncidentForm() {
       navigate('/login');
     }
   }, []);
-  // ============================================================================
-  // ФУНКЦИЯ ОБРАБОТКИ ИЗМЕНЕНИЯ В ПОЛЕ TYPE
-  // ============================================================================
-  // Вызывается каждый раз, когда происходит изменение в поле
-  const handleTypeChange = (e) => {
-    // Берем текущий текст из поля с помощью e.target.value
-    setType(e.target.value);
-  };
-  // ============================================================================
-  // ФУНКЦИЯ ОБРАБОТКИ ИЗМЕНЕНИЯ В ПОЛЕ STATUS
-  // ============================================================================
-  // Вызывается каждый раз, когда происходит изменение в поле
-  const handleStatusChange = (e) => {
-    // Берем текущий текст из поля с помощью e.target.value
-    setStatus(e.target.value);
-  };
-  // ============================================================================
-  // ФУНКЦИЯ ОБРАБОТКИ ИЗМЕНЕНИЯ В ПОЛЕ TITLE
-  // ============================================================================
-  // Вызывается каждый раз, когда происходит изменение в поле
-  const handleTitleChange = (e) => {
-    // Берем текущий текст из поля с помощью e.target.value
-    // Добавил лимит
-    const value = e.target.value.slice(0, FIELD_LIMITS.title.max);
-    setTitle(value);
-  };
-  // ============================================================================
-  // ФУНКЦИЯ ОБРАБОТКИ ИЗМЕНЕНИЯ В ПОЛЕ DESCRIPTION
-  // ============================================================================
-  // Вызывается каждый раз, когда происходит изменение в поле
-  const handleDescriptionChange = (e) => {
-    // Берем текущий текст из поля с помощью e.target.value
-    // Добавил лимит
-    const value = e.target.value.slice(0, FIELD_LIMITS.description.max);
-    setDescription(value);
-  };
+
   // ============================================================================
   // ФУНКЦИЯ СБРОСА ПОЛЕЙ
   // ============================================================================
