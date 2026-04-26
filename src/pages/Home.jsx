@@ -22,6 +22,7 @@ import { useScroll } from '@/features/home/model/handleScroll';
 import { FloatingActions } from '@/features/home/ui/floatingActions';
 import { IncidentsList } from '@/features/home/ui/incidentsList';
 import { ProgressBar } from '@/features/home/ui/progressBar';
+import { PopupMarker } from '@/features/home/ui/PopupMarker';
 
 function Home() {
   // Напишем массивы для хранения данных с использованием деструкционализации
@@ -258,27 +259,7 @@ function Home() {
                     },
                   }}
                 >
-                  <Popup>
-                    <div className="popup-content">
-                      <h3>{incident?.title}</h3>
-                      <p>{incident?.description}</p>
-                      Тип: <b>{incident?.type}</b> | Статус: <b>{incident?.status}</b>
-                      <p></p>
-                      {/* юзеров много в этот раз. поэтому буду использовать find */}
-                      {/* работает как фильтр: пробегает по массиву и находит подходящего юзера */}
-                      Пользователь:
-                      <b>{users?.find((users) => users.id === incident?.userId)?.login || ''}</b>
-                      <p></p>
-                      <button
-                        className="popup-btn"
-                        onClick={() => navigate(`/incident/${incident.id}`)}
-                      >
-                        Подробнее
-                      </button>
-                      {/* popup-btn */}
-                    </div>
-                    {/* popup-content */}
-                  </Popup>
+                  <PopupMarker incident={incident} users={users} />
                 </Marker>
               );
             })}
@@ -301,7 +282,6 @@ function Home() {
                   },
                 }}
               >
-                {/* у Popup пока нет css, написал только функциональность */}
                 <Popup>
                   <div className="popup-content">
                     <h3>Новый инцидент</h3>
