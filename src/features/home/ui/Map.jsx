@@ -8,6 +8,7 @@ import { RecenterAutomatically } from '@/features/home/model/RecenterAutomatical
 import { getCustomMarker } from '@/features/home/model/getCustomMarker';
 import { MapClickHandler } from '@/features/home/model/MapClickHandler';
 import { PopupMarker } from '@/features/home/ui/PopupMarker';
+import PopupTempMarker from './PopupTempMarker';
 
 export const Map = ({
   userLocation,
@@ -91,19 +92,7 @@ export const Map = ({
               },
             }}
           >
-            <Popup>
-              <div className="popup-content">
-                <h3>Новый инцидент</h3>
-                <p>
-                  Координаты: {tempMarker[0]}, {tempMarker[1]}
-                </p>
-                <button className="popup-btn" onClick={handleConfirmCreateIncident}>
-                  Создать
-                </button>
-                {/* popup-btn */}
-              </div>
-              {/* popup-content */}
-            </Popup>
+            <PopupTempMarker incident={tempMarker} users={users} />
           </Marker>
         )}
       </MapContainer>
