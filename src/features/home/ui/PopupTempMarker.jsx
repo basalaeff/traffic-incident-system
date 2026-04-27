@@ -1,22 +1,15 @@
 import { Popup } from 'react-leaflet';
-import { useNavigate } from 'react-router-dom';
 
-export const PopupTempMarker = ({ incident, users }) => {
-  const navigate = useNavigate();
+export const PopupTempMarker = ({ tempMarker, handleConfirmCreateIncident }) => {
   return (
     <Popup>
       <div className="popup-content">
-        <h3>{incident?.title}</h3>
-        <p>{incident?.description}</p>
-        Тип: <b>{incident?.type}</b> | Статус: <b>{incident?.status}</b>
-        <p></p>
-        {/* юзеров много в этот раз. поэтому буду использовать find */}
-        {/* работает как фильтр: пробегает по массиву и находит подходящего юзера */}
-        Пользователь:
-        <b>{users?.find((users) => users.id === incident?.userId)?.login || ''}</b>
-        <p></p>
-        <button className="popup-btn" onClick={() => navigate(`/incident/${incident.id}`)}>
-          Подробнее
+        <h3>Новый инцидент</h3>
+        <p>
+          Координаты: {tempMarker[0]}, {tempMarker[1]}
+        </p>
+        <button className="popup-btn" onClick={handleConfirmCreateIncident}>
+          Создать
         </button>
         {/* popup-btn */}
       </div>

@@ -8,7 +8,7 @@ import { RecenterAutomatically } from '@/features/home/model/RecenterAutomatical
 import { getCustomMarker } from '@/features/home/model/getCustomMarker';
 import { MapClickHandler } from '@/features/home/model/MapClickHandler';
 import { PopupMarker } from '@/features/home/ui/PopupMarker';
-import PopupTempMarker from './PopupTempMarker';
+import { PopupTempMarker } from '@/features/home/ui/PopupTempMarker';
 
 export const Map = ({
   userLocation,
@@ -92,7 +92,7 @@ export const Map = ({
               },
             }}
           >
-            <PopupTempMarker incident={tempMarker} users={users} />
+            <PopupTempMarker tempMarker={tempMarker} handleConfirmCreateIncident={handleConfirmCreateIncident} />
           </Marker>
         )}
       </MapContainer>
