@@ -6,7 +6,7 @@ import { toast } from 'react-toastify';
 import { loginUser, getCurrentUser } from '@/features/authentication/model/auth';
 import { findUserByLogin } from '@/features/authentication/api/authAPI';
 import bcrypt from 'bcryptjs';
-import HomeBtn from '@/shared/ui/HomeBtn';
+import { FirstBlock } from '@/features/authentication/ui/FirstBlock';
 
 // ============================================================================
 // ФУНКЦИЯ ДЛЯ ЛОГИНА
@@ -113,12 +113,7 @@ function Authentication({}) {
   return (
     <div className="page">
       <div className="card">
-        <div className="first-block">
-          <HomeBtn />
-          <h2>🔐 Вход </h2>
-          <p className="subtitle">Используйте ваш аккаунт</p>
-        </div>
-        {/* first-block */}
+        <FirstBlock />
         <div className="second-block">
           <form onSubmit={handleSubmit}>
             <input
