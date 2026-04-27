@@ -15,11 +15,10 @@ export const useHandleSubmit = (
   lng,
   userId,
   id,
-  incidentId,
   setIncidentId,
   setIncident
 ) => {
-  const { showSuccess } = useShowSuccess(id, incidentId, setIsEditMode);
+  const { showSuccess } = useShowSuccess(id, setIsEditMode);
   // ============================================================================
   // ФУНКЦИЯ ОТПРАВКИ ФОРМЫ
   // ============================================================================
@@ -69,7 +68,7 @@ export const useHandleSubmit = (
         // ============================================================================
         await pushIncident({ id: uuid, type, title, description, lat, lng, time: now, userId });
         toast.success(`Инцидент добавлен!`);
-        showSuccess();
+        showSuccess(uuid);
       }
       // try
     } catch (err) {

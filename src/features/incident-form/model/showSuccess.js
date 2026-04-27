@@ -1,10 +1,10 @@
 import Swal from 'sweetalert2';
 import { useNavigate } from 'react-router-dom';
 
-export const useShowSuccess = (id, incidentId, setIsEditMode) => {
+export const useShowSuccess = (id, setIsEditMode) => {
   const navigate = useNavigate();
 
-  const showSuccess = async () => {
+  const showSuccess = async (uuid) => {
     const result = await Swal.fire({
       icon: 'success',
       title: 'Успешно',
@@ -23,7 +23,7 @@ export const useShowSuccess = (id, incidentId, setIsEditMode) => {
       navigate('/');
       setIsEditMode(false);
     } else if (result.dismiss === Swal.DismissReason.cancel) {
-      navigate(`/incident/${incidentId ? incidentId : id}`);
+      navigate(`/incident/${uuid ? uuid : id}`);
       setIsEditMode(false);
     }
   };
