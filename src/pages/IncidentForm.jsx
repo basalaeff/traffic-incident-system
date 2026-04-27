@@ -17,8 +17,7 @@ import { HomeBtn } from '@/shared/ui/HomeBtn';
 import { useIncidentEdit } from '@/features/incident-form/model/fetchIncidentEdit';
 import { useHandleChange } from '@/features/incident-form/model/handleChange';
 import { FIELD_LIMITS } from '@/features/incident-form/model/fieldLimits';
-
-import Swal from 'sweetalert2';
+import { useShowSuccess } from '@/features/incident-form/model/showSuccess';
 
 function IncidentForm() {
   const { id } = useParams();
@@ -81,6 +80,8 @@ function IncidentForm() {
     handleDescriptionChange,
   } = useHandleChange(setTitle, setDescription, setStatus, setType);
 
+  const { showSuccess } = useShowSuccess(id, incidentId, setIsEditMode);
+
   // на данную страницу можно попасть через адресную строку (я так и сюда и зашел)
   // но это означает, что пользователь может сломать мне карту (ранее я указал 0, 0 в таких случаях)
   // но это решение лишь ставит маркер в море рядом в Африкой, а там вообще не дорог
@@ -130,30 +131,6 @@ function IncidentForm() {
       setTitle('');
     }
     setIsLoading(false);
-  };
-
-  const showSuccess = async () => {
-    const result = await Swal.fire({
-      icon: 'success',
-      title: 'Успешно',
-      showCancelButton: true,
-      confirmButtonText: 'На главную',
-      cancelButtonText: 'Вернуться к инциденту',
-      confirmButtonColor: 'var(--status-normal)',
-      cancelButtonColor: 'var(--status-danger)',
-      allowOutsideClick: false, // Закрыть можно только кнопкой
-      backdrop: 'rgba(0,0,0,0.4)', // Затемнение фона
-      background: 'var(--bg-app)',
-      reverseButtons: true,
-    });
-
-    if (result.isConfirmed) {
-      navigate('/');
-      setIsEditMode(false);
-    } else if (result.dismiss === Swal.DismissReason.cancel) {
-      navigate(`/incident/${incidentId ? incidentId : id}`);
-      setIsEditMode(false);
-    }
   };
 
   // ============================================================================
