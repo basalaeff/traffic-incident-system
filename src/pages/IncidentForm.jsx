@@ -9,15 +9,13 @@ import { toast } from 'react-toastify';
 // доступно только авторизированным пользователям
 // получаем текущего пользователя
 import { getCurrentUser } from '../features/authentication/model/auth';
-import {
-  editIncidentById,
-  pushIncident,
-} from '../features/incident-form/api/incidentFormAPI';
+import { editIncidentById, pushIncident } from '../features/incident-form/api/incidentFormAPI';
 import { HomeBtn } from '@/shared/ui/HomeBtn';
 import { useIncidentEdit } from '@/features/incident-form/model/fetchIncidentEdit';
 import { useHandleChange } from '@/features/incident-form/model/handleChange';
 import { FIELD_LIMITS } from '@/features/incident-form/model/fieldLimits';
 import { useShowSuccess } from '@/features/incident-form/model/showSuccess';
+import { useHandleReset } from '@/features/incident-form/model/handleReset';
 
 function IncidentForm() {
   const { id } = useParams();
@@ -73,14 +71,20 @@ function IncidentForm() {
     user
   );
 
-  const {
-    handleTypeChange,
-    handleStatusChange,
-    handleTitleChange,
-    handleDescriptionChange,
-  } = useHandleChange(setTitle, setDescription, setStatus, setType);
+  const { handleTypeChange, handleStatusChange, handleTitleChange, handleDescriptionChange } =
+    useHandleChange(setTitle, setDescription, setStatus, setType);
 
   const { showSuccess } = useShowSuccess(id, incidentId, setIsEditMode);
+
+  const { handleReset } = useHandleReset(
+    isEditMode,
+    originalIncident,
+    setType,
+    setStatus,
+    setTitle,
+    setDescription,
+    setIsLoading
+  );
 
   // на данную страницу можно попасть через адресную строку (я так и сюда и зашел)
   // но это означает, что пользователь может сломать мне карту (ранее я указал 0, 0 в таких случаях)
@@ -113,25 +117,6 @@ function IncidentForm() {
       navigate('/login');
     }
   }, []);
-
-  // ============================================================================
-  // ФУНКЦИЯ СБРОСА ПОЛЕЙ
-  // ============================================================================
-  const handleReset = () => {
-    // добавил сброс к оригинальным значениям
-    if (isEditMode && originalIncident) {
-      setType(originalIncident.type || '');
-      setStatus(originalIncident.status || '');
-      setTitle(originalIncident.title || '');
-      setDescription(originalIncident.description || '');
-      toast.info('Изменения отменены');
-    } else {
-      setType('');
-      setDescription('');
-      setTitle('');
-    }
-    setIsLoading(false);
-  };
 
   // ============================================================================
   // ФУНКЦИЯ ОТПРАВКИ ФОРМЫ
