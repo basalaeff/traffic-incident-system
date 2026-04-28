@@ -1,5 +1,5 @@
 import axios from 'axios';
-const API_URL = 'http://localhost:3001';
+const API_URL = '/api';
 // ============================================================================
 // GET-ЗАПРОС НА СЕРВЕР http://localhost:3001/users
 // ============================================================================
@@ -9,8 +9,9 @@ export const findUserByLogin = (login) => axios.get(`${API_URL}/users?login=${lo
 // ============================================================================
 // POST-ЗАПРОС НА СЕРВЕР http://localhost:3001/users
 // ============================================================================
-export const registerUser = ({ id, login, password }) => axios.post('http://localhost:3001/users', {
-  id,
-  login,
-  password
-});
+export const registerUser = ({ id, login, password }) =>
+  axios.post(`${API_URL}/users`, {
+    id,
+    login,
+    password,
+  });
