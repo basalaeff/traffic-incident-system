@@ -90,6 +90,9 @@
     flex-direction: column; /* Элементы перестраиваются в одну колонку */
     padding: 64px 24px;
   }
+  .main-card {
+    padding: 24px 12px;
+  }
   .first-block {
     flex: 0 0 0 0;
   }
