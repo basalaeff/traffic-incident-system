@@ -3,8 +3,6 @@ import Avatar from 'react-avatar';
 export const FloatingActions = ({
   displayFloatingBtn,
   setDisplayFloatingBtn,
-  displayMap,
-  setDisplayMap,
   isAddingMode,
   user,
   displayLogout,
@@ -28,33 +26,18 @@ export const FloatingActions = ({
           </button>
         )}
         {/* Кнопка ДОБАВЛЕНИЕ */}
-        {displayFloatingBtn && user && displayMap && !isAddingMode && !displayLogout && (
+        {displayFloatingBtn && user && !isAddingMode && !displayLogout && (
           <button className="circle-btn" onClick={handleCreateIncident} title="Добавить инцидент">
             <img src="https://s.kontur.ru/common-v2/icons-ui/black/plus-circle/plus-circle-32-Regular.png" />
           </button>
         )}
         {/* Кнопка центрировать по геолокации */}
-        {displayFloatingBtn && !displayLogout && displayMap && (
+        {displayFloatingBtn && !displayLogout && (
           <button className="circle-btn" onClick={getLocation} title="Вернуться в координаты">
             <img src="https://s.kontur.ru/common-v2/icons-ui/black/location-pin/location-pin-32-Regular.svg" />
           </button>
         )}
-        {/* Кнопка КАРТЫ */}
-        {displayFloatingBtn && !displayLogout && (
-          <button
-            className="circle-btn"
-            onClick={() => {
-              displayMap ? setDisplayMap(false) : setDisplayMap(true);
-            }}
-            title={displayMap ? 'Скрыть карту' : 'Показать карту'}
-          >
-            {displayMap ? (
-              <img src="https://s.kontur.ru/common-v2/icons-ui/black/building-home/building-home-32-Regular.svg" />
-            ) : (
-              <img src="https://s.kontur.ru/common-v2/icons-ui/black/location-map/location-map-32-Regular.svg" />
-            )}
-          </button>
-        )}
+
         {/* Кнопка ВХОДА */}
         {displayFloatingBtn && !displayLogout && (
           <button className="circle-btn" onClick={handleAuthClick} title={user ? 'Выйти' : 'Войти'}>
