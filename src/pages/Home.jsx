@@ -15,6 +15,7 @@ import { FloatingActions } from '@/features/home/ui/floatingActions';
 import { IncidentsList } from '@/features/home/ui/incidentsList';
 import { ProgressBar } from '@/features/home/ui/progressBar';
 import { Map } from '@/features/home/ui/Map';
+import { SheetIncidentsList } from '@/features/home/ui/SheetIncidentsList';
 
 function Home() {
   // Напишем массивы для хранения данных с использованием деструкционализации
@@ -22,9 +23,7 @@ function Home() {
   // для переключения между страницами
   const navigate = useNavigate();
 
-  const [displayMap, setDisplayMap] = useState(false);
-
-  const [displayFloatingBtn, setDisplayFloatingBtn] = useState(false);
+  const [displayFloatingBtn, setDisplayFloatingBtn] = useState(true);
 
   // переменная для управления масштабом карты
   const [currentZoom, setCurrentZoom] = useState(13);
@@ -174,8 +173,6 @@ function Home() {
       <FloatingActions
         displayFloatingBtn={displayFloatingBtn}
         setDisplayFloatingBtn={setDisplayFloatingBtn}
-        displayMap={displayMap}
-        setDisplayMap={setDisplayMap}
         isAddingMode={isAddingMode}
         user={user}
         displayLogout={displayLogout}
@@ -184,36 +181,27 @@ function Home() {
         handleCancelCreateIncident={handleCancelCreateIncident}
         getLocation={getLocation}
       />
-
-      {!displayMap && (
-        <div className="main-card">
-          <h1>Сервис мониторинга дорожных инцидентов</h1>
-          <IncidentsList
-            listRef={listRef}
-            incidentCards={incidentCards}
-            onViewOnMap={handleViewOnMap}
-            onViewDetails={handleViewDetails}
-          />
-        </div>
-        // main-card
-      )}
+      <SheetIncidentsList
+        listRef={listRef}
+        incidentCards={incidentCards}
+        onViewOnMap={handleViewOnMap}
+        onViewDetails={handleViewDetails}
+      />
 
       {showProgressForIncidentCards && (
         <ProgressBar incidents={incidents} incidentCards={incidentCards} />
       )}
 
-      {displayMap && (
-        <Map
-          userLocation={userLocation}
-          currentZoom={currentZoom}
-          incidents={incidents}
-          users={users}
-          tempMarker={tempMarker}
-          setTempMarker={setTempMarker}
-          isAddingMode={isAddingMode}
-          handleConfirmCreateIncident={handleConfirmCreateIncident}
-        />
-      )}
+      <Map
+        userLocation={userLocation}
+        currentZoom={currentZoom}
+        incidents={incidents}
+        users={users}
+        tempMarker={tempMarker}
+        setTempMarker={setTempMarker}
+        isAddingMode={isAddingMode}
+        handleConfirmCreateIncident={handleConfirmCreateIncident}
+      />
     </div>
     // page-home
   );
