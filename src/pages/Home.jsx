@@ -12,7 +12,6 @@ import { useLocation } from '@/features/home/model/getLocation';
 import { useIncidentCards } from '@/features/home/model/fetchIncidentCards';
 import { useScroll } from '@/features/home/model/handleScroll';
 import { FloatingActions } from '@/features/home/ui/floatingActions';
-import { IncidentsList } from '@/features/home/ui/incidentsList';
 import { ProgressBar } from '@/features/home/ui/progressBar';
 import { Map } from '@/features/home/ui/Map';
 import { SheetIncidentsList } from '@/features/home/ui/SheetIncidentsList';
@@ -87,7 +86,7 @@ function Home() {
   );
 
   // для хранения координат
-  const [userLocation, setUserLocation] = useState(null);
+  const [userLocation, setUserLocation] = useState([55.751244, 37.618423]);
   // для хранения флага загрузки
   const [loading, setLoading] = useState(true);
   const { getLocation } = useLocation({ setLoading, setUserLocation });
@@ -145,9 +144,9 @@ function Home() {
   // ============================================================================
   // РЕНДЕРИНГ
   // ============================================================================
-  if (loading || !userLocation) {
-    return <Spinner />;
-  }
+  // if (loading || !userLocation) {
+  //   return <Spinner />;
+  // }
 
   // ============================================================================
   // ЦЕНТРИРУЕТ КАРТУ ПО КООРДИНАТАМ ИНЦИДЕНТА
