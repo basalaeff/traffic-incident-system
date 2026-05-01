@@ -4,7 +4,7 @@
   "tsx": false,
   "tailwind": {
     "config": "",
-    "css": "src/css/index.css",
+    "css": "src/app/css/index.css",
     "baseColor": "neutral",
     "cssVariables": true,
     "prefix": ""
@@ -15,8 +15,8 @@
     "components": "@/shared",
     "utils": "@/lib/utils",
     "ui": "@/shared/ui",
-    "lib": "@/lib",
-    "hooks": "@/hooks"
+    "lib": "@/app/lib",
+    "hooks": "@/app/hooks"
   },
   "menuColor": "default",
   "menuAccent": "subtle",
