@@ -117,15 +117,15 @@ function Home() {
   // ============================================================================
   // СКРОЛЛ
   // ============================================================================
-  const listRef = useRef(null);
+  const [incidentCard, setIncidentCard] = useState(null);
 
   useEffect(() => {
-    const el = listRef.current;
+    const el = incidentCard;
     if (!el) return;
 
     el.addEventListener('scroll', handleScroll, { passive: true });
     return () => el.removeEventListener('scroll', handleScroll);
-  }, [handleScroll]);
+  }, [incidentCard, handleScroll]);
 
   // ============================================================================
   // ДЛЯ УПРАВЛЕНИЯ ОТОБРАЖЕНИЕМ ПРОГРЕСС БАРА
@@ -181,7 +181,7 @@ function Home() {
         getLocation={getLocation}
       />
       <SheetIncidentsList
-        listRef={listRef}
+        listRef={setIncidentCard}
         incidentCards={incidentCards}
         onViewOnMap={handleViewOnMap}
         onViewDetails={handleViewDetails}
