@@ -96,6 +96,9 @@ function Home() {
 
   const { handleAuthClick, displayLogout, user } = useHandleAuthClick();
 
+  // состояние для центрирования карты
+  const [isCentering, setIsCentering] = useState(false);
+
   // для хранения состояния кнопки добавления инцидента
   const [isAddingMode, setIsAddingMode] = useState(false);
   // временный маркер для отображения на карте
@@ -181,6 +184,7 @@ function Home() {
         handleCancelCreateIncident={handleCancelCreateIncident}
         getLocation={getLocation}
         loading={loading}
+        isCentering={isCentering}
       />
       <SheetIncidentsList
         listRef={setIncidentCard}
@@ -202,6 +206,7 @@ function Home() {
         setTempMarker={setTempMarker}
         isAddingMode={isAddingMode}
         handleConfirmCreateIncident={handleConfirmCreateIncident}
+        setIsCentering={setIsCentering}
       />
     </div>
     // page-home

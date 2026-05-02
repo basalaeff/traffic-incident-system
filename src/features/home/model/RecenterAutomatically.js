@@ -3,13 +3,16 @@
 // ============================================================================
 import { useEffect } from 'react';
 import { useMap } from 'react-leaflet';
-export const RecenterAutomatically = ({ location }) => {
+export const RecenterAutomatically = ({ location, setIsCentering }) => {
   const map = useMap();
 
   useEffect(() => {
     if (location) {
-      // Перемещает камеру к новым координатам
-      map.flyTo(location, map.getZoom());
+      setIsCentering(true);
+      map.flyTo(location, 13);
+      // map.flyTo(location, map.getZoom());
+      // Когда движение закончится, сбросить флаг
+      map.once('moveend', () => setIsCentering(false));
     }
   }, [location, map]);
 

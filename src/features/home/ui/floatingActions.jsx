@@ -12,6 +12,7 @@ export const FloatingActions = ({
   handleCancelCreateIncident,
   getLocation,
   loading,
+  isCentering,
 }) => {
   return (
     <div className="floating-btns">
@@ -36,7 +37,7 @@ export const FloatingActions = ({
         {/* Кнопка центрировать по геолокации */}
         {displayFloatingBtn && !displayLogout && (
           <button className="circle-btn" onClick={getLocation} title="Вернуться в координаты">
-            {loading ? (
+            {loading || isCentering ? (
               <Spinner color="var(--spinner-color)" />
             ) : (
               <img src="https://s.kontur.ru/common-v2/icons-ui/black/location-pin/location-pin-32-Regular.svg" />

@@ -19,6 +19,7 @@ export const Map = ({
   setTempMarker,
   isAddingMode,
   handleConfirmCreateIncident,
+  setIsCentering,
 }) => {
   return (
     <main className="map-container">
@@ -34,10 +35,9 @@ export const Map = ({
         // Крч планета это слишком много
         // Мне пока лень делать кластеризацию, поэтому просто ограничу масштаб
         maxZoom={18}
-
         // Временно выключен
         // minZoom={12}
-        
+
         // скрыл кнопки
         zoomControl={false}
         // Нужно указать стиль карты
@@ -51,7 +51,7 @@ export const Map = ({
           className="dark-tiles"
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
         />
-        <RecenterAutomatically location={userLocation} />
+        <RecenterAutomatically location={userLocation} setIsCentering={setIsCentering} />
         {/* Отрисовка маркеров */}
         {incidents?.map((incident) => {
           return (
@@ -95,7 +95,10 @@ export const Map = ({
               },
             }}
           >
-            <PopupTempMarker tempMarker={tempMarker} handleConfirmCreateIncident={handleConfirmCreateIncident} />
+            <PopupTempMarker
+              tempMarker={tempMarker}
+              handleConfirmCreateIncident={handleConfirmCreateIncident}
+            />
           </Marker>
         )}
       </MapContainer>
