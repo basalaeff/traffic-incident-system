@@ -1,24 +1,15 @@
-import { cn } from "@/app/lib/utils"
-import { Loader2Icon } from "lucide-react"
+import { cn } from '@/app/lib/utils';
+import { Loader2Icon } from 'lucide-react';
 
-function Spinner({
-  className,
-  ...props
-}) {
+export function Spinner({ className, color, style, ...props }) {
   return (
     <Loader2Icon
       role="status"
       aria-label="Loading"
-      className={cn("size-4 animate-spin", className)}
-      {...props} />
+      className={cn('size-6 animate-spin', className)}
+      stroke="currentColor"
+      style={{ color, ...style }}
+      {...props}
+    />
   );
 }
-
-export function SpinnerCircleBtn() {
-  return (
-    <div className="size-3">
-      <Spinner />
-    </div>
-  );
-}
-

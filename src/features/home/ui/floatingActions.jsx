@@ -1,4 +1,5 @@
 import Avatar from 'react-avatar';
+import { Spinner } from '@/shared/ui/spinner';
 
 export const FloatingActions = ({
   displayFloatingBtn,
@@ -10,6 +11,7 @@ export const FloatingActions = ({
   handleCreateIncident,
   handleCancelCreateIncident,
   getLocation,
+  loading,
 }) => {
   return (
     <div className="floating-btns">
@@ -34,7 +36,11 @@ export const FloatingActions = ({
         {/* Кнопка центрировать по геолокации */}
         {displayFloatingBtn && !displayLogout && (
           <button className="circle-btn" onClick={getLocation} title="Вернуться в координаты">
-            <img src="https://s.kontur.ru/common-v2/icons-ui/black/location-pin/location-pin-32-Regular.svg" />
+            {loading ? (
+              <Spinner color="var(--spinner-color)" />
+            ) : (
+              <img src="https://s.kontur.ru/common-v2/icons-ui/black/location-pin/location-pin-32-Regular.svg" />
+            )}
           </button>
         )}
 

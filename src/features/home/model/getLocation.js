@@ -8,6 +8,7 @@ import { saveGeoData } from './geo';
 // отобразится на экране
 export const useLocation = ({ setLoading, setUserLocation }) => {
   const getLocation = () => {
+    setLoading(true);
     // буду использовать объект navigator
     // Он встроен в браузер и дает доступ к функциям устройства
     // geolocation это его свойство. Я буду использовать его для определения местоположения

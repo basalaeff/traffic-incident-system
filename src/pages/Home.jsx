@@ -89,7 +89,7 @@ function Home() {
   // для хранения координат
   const [userLocation, setUserLocation] = useState(getGeoData());
   // для хранения флага загрузки
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
   const { getLocation } = useLocation({ setLoading, setUserLocation });
 
   const { incidents, users } = useIncidentsAndUsers();
@@ -180,6 +180,7 @@ function Home() {
         handleCreateIncident={handleCreateIncident}
         handleCancelCreateIncident={handleCancelCreateIncident}
         getLocation={getLocation}
+        loading={loading}
       />
       <SheetIncidentsList
         listRef={setIncidentCard}
