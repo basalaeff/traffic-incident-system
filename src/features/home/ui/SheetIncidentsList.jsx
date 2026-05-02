@@ -10,8 +10,16 @@ import {
   SheetTrigger,
 } from '@/shared/ui/sheet';
 import { IncidentsList } from './incidentsList';
+import { ProgressBar } from './progressBar';
 
-export const SheetIncidentsList = ({ listRef, incidentCards, onViewOnMap, onViewDetails }) => {
+export const SheetIncidentsList = ({
+  listRef,
+  incidentCards,
+  onViewOnMap,
+  onViewDetails,
+  incidents,
+  showProgressForIncidentCards,
+}) => {
   return (
     <Sheet>
       <SheetTrigger
@@ -33,6 +41,11 @@ export const SheetIncidentsList = ({ listRef, incidentCards, onViewOnMap, onView
             инцидента или отобразить его на карте.
           </SheetDescription>
         </SheetHeader>
+        {showProgressForIncidentCards && (
+          <div className="sheet-progress-bar ">
+            <ProgressBar incidents={incidents} incidentCards={incidentCards} />
+          </div>
+        )}
         <IncidentsList
           listRef={listRef}
           incidentCards={incidentCards}

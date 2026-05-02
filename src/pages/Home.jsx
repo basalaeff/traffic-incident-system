@@ -12,7 +12,6 @@ import { useLocation } from '@/features/home/model/getLocation';
 import { useIncidentCards } from '@/features/home/model/fetchIncidentCards';
 import { useScroll } from '@/features/home/model/handleScroll';
 import { FloatingActions } from '@/features/home/ui/floatingActions';
-import { ProgressBar } from '@/features/home/ui/progressBar';
 import { Map } from '@/features/home/ui/Map';
 import { SheetIncidentsList } from '@/features/home/ui/SheetIncidentsList';
 import { getGeoData } from '@/features/home/model/geo';
@@ -191,11 +190,9 @@ function Home() {
         incidentCards={incidentCards}
         onViewOnMap={handleViewOnMap}
         onViewDetails={handleViewDetails}
+        incidents={incidents}
+        showProgressForIncidentCards={showProgressForIncidentCards}
       />
-
-      {showProgressForIncidentCards && (
-        <ProgressBar incidents={incidents} incidentCards={incidentCards} />
-      )}
 
       <Map
         userLocation={userLocation}
