@@ -1,4 +1,5 @@
 import { toast } from 'react-toastify';
+import { saveGeoData } from './geo';
 
 // ============================================================================
 // ПОЛУЧЕНИЕ ГЕОЛОКАЦИИ
@@ -30,19 +31,12 @@ export const useLocation = ({ setLoading, setUserLocation }) => {
         // Получим значения и положим в массив
         // Если геолокация обновляется, то Home перезапускается
         setUserLocation([position.coords.latitude, position.coords.longitude]);
+        saveGeoData([position.coords.latitude, position.coords.longitude]);
         setLoading(false);
-      },
+      }
       // А если не получится? Тогда просто будем устанавливать исходную точку
       // Делаем приложение, которое будет использоваться внутри страны
       // Пусть это будет центр Москвы (55.751244, 37.618423). Так в самокате (украл идейку)
-      () => {
-        setUserLocation([55.751244, 37.618423]); // Москва
-        setLoading(false);
-        // Закинем в консоль разработчика
-        console.warn(
-          'Пользователь запретил доступ к геолокации или произошла ошибка. Использованы координаты по умолчанию.'
-        );
-      }
     );
   };
   return { getLocation };

@@ -15,6 +15,7 @@ import { FloatingActions } from '@/features/home/ui/floatingActions';
 import { ProgressBar } from '@/features/home/ui/progressBar';
 import { Map } from '@/features/home/ui/Map';
 import { SheetIncidentsList } from '@/features/home/ui/SheetIncidentsList';
+import { getGeoData } from '@/features/home/model/geo';
 
 function Home() {
   // Напишем массивы для хранения данных с использованием деструкционализации
@@ -86,7 +87,7 @@ function Home() {
   );
 
   // для хранения координат
-  const [userLocation, setUserLocation] = useState([55.751244, 37.618423]);
+  const [userLocation, setUserLocation] = useState(getGeoData());
   // для хранения флага загрузки
   const [loading, setLoading] = useState(true);
   const { getLocation } = useLocation({ setLoading, setUserLocation });
