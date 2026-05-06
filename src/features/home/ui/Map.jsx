@@ -51,7 +51,11 @@ export const Map = ({
           className="dark-tiles"
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
         />
-        <RecenterAutomatically location={userLocation} setIsCentering={setIsCentering} />
+        <RecenterAutomatically
+          location={userLocation}
+          zoom={currentZoom}
+          setIsCentering={setIsCentering}
+        />
         {/* Отрисовка маркеров */}
         {incidents?.map((incident) => {
           return (

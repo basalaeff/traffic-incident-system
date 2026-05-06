@@ -156,7 +156,6 @@ function Home() {
   // ============================================================================
   const handleViewOnMap = (incident) => {
     setUserLocation([incident.lat, incident.lng]);
-    setDisplayMap(true);
     setCurrentZoom(18);
   };
 
@@ -184,6 +183,7 @@ function Home() {
         getLocation={getLocation}
         loading={loading}
         isCentering={isCentering}
+        setCurrentZoom={setCurrentZoom}
       />
       <SheetIncidentsList
         listRef={setIncidentCard}

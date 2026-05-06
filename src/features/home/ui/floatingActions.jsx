@@ -13,6 +13,7 @@ export const FloatingActions = ({
   getLocation,
   loading,
   isCentering,
+  setCurrentZoom,
 }) => {
   return (
     <div className="floating-btns">
@@ -36,7 +37,14 @@ export const FloatingActions = ({
         )}
         {/* Кнопка центрировать по геолокации */}
         {displayFloatingBtn && !displayLogout && (
-          <button className="circle-btn" onClick={getLocation} title="Вернуться в координаты">
+          <button
+            className="circle-btn"
+            onClick={() => {
+              setCurrentZoom(13);
+              getLocation();
+            }}
+            title="Вернуться в координаты"
+          >
             {loading || isCentering ? (
               <Spinner color="var(--spinner-color)" />
             ) : (
