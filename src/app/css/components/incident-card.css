@@ -4,12 +4,15 @@
 /* ============================================================================ */
 .incidents-list {
   flex: 1; /* Занимает всё место между заголовком и низом */
-  overflow-y: auto; /* Включает скролл ТОЛЬКО здесь */
+  min-height: 0; /* Позволяет элементу сжиматься внутри flex-контейнера */
+  overflow-y: auto; /* Включает скролл  */
   padding: 12px 48px;
   display: flex;
   flex-direction: column;
   gap: 24px; /* Отступ между карточками */
   overscroll-behavior: contain; /* Чтобы скролл не убегал на страницу */
+  height: 100%;
+  width: 100%;
 }
 
 .incident-card {
@@ -55,26 +58,49 @@
   /* сверху справа снизу слева */
   flex: 0 0 100px 0;
 }
-.badge.active {
-  color: var(--status-danger-bg);
-} /* Стиль для активного статуса */
-.card-title {
+
+.incident-card-header {
+  display: flex; /* гибкие элементы */
+  flex-direction: row; /* элементы горизонтально */
+  gap: 5px; /* расстояние между элементами  */
+}
+.incident-card-title {
   margin: 8px 0;
   font-size: 1.1rem;
 } /* Отступы и размер заголовка */
-.card-desc {
+
+.incident-card-desc {
   margin: 0 0 10px;
   color: #555;
   font-size: 0.9rem;
 } /* Цвет и размер описания */
-.card-time {
+
+.incident-card-time {
   display: block;
   font-size: 0.8rem;
   color: #888;
 } /* Стили времени */
-.coords {
+
+.incident-card-coords {
   font-family: monospace;
   font-size: 0.85rem;
   color: #444;
 } /* Моноширинный шрифт координат */
 
+/* ============================================================================ */
+/* АДАПТАЦИЯ ДЛЯ МОБИЛЬНЫХ УСТРОЙСТВ */
+/* ============================================================================ */
+@media (max-width: 768px) {
+  .incidents-list {
+    padding: 6px 24px;
+  }
+  .incident-card {
+    flex-direction: column; /* Элементы перестраиваются в одну колонку */
+  }
+  .incident-card-first {
+    flex: 0 0 0 0;
+  }
+  .first-incident-second {
+    flex: 0 0 0 0;
+  }
+}

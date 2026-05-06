@@ -8,8 +8,10 @@ import { toast } from 'react-toastify';
 import axios from 'axios';
 // доступно только авторизированным пользователям
 // получаем текущего пользователя
-import { getCurrentUser } from '../auth';
+import { getCurrentUser } from '../features/authentication/model/auth';
+import { findUserByLogin, registerUser } from '../features/authentication/api/authAPI';
 import bcrypt from 'bcryptjs';
+import HomeBtn from '@/shared/ui/HomeBtn';
 
 function Registration() {
   const navigate = useNavigate(); //хук для переброса на авторизацию
@@ -100,7 +102,7 @@ function Registration() {
       // делаем максимально просто
       // запрашиваем введенный логин у сервера из db.json
       // если получили данные, значит логин уже существует, тогда выводим ошибку
-      const checkResponse = await axios.get(`http://localhost:3001/users?login=${login}`);
+      const checkResponse = await findUserByLogin(login);
       // если длина > 0, тогда данные есть
       if (checkResponse.data.length > 0) {
         throw new Error('Этот пользователь уже зарегистрирован!');
@@ -126,10 +128,10 @@ function Registration() {
       // ============================================================================
       // POST-ЗАПРОС НА СЕРВЕР http://localhost:3001/users
       // ============================================================================
-      await axios.post('http://localhost:3001/users', {
+      await registerUser({
         id: uuid,
         login,
-        password: hashedPassword,
+        password: hashedPassword
       });
 
       toast.success(`Пользователь зарегистрирован!`);
@@ -159,16 +161,7 @@ function Registration() {
     <div className="page">
       <div className="card">
         <div className="first-block">
-          <button
-            className="home-btn"
-            onClick={() => {
-              navigate('/');
-            }}
-            title="Главная"
-          >
-            <img src="https://s.kontur.ru/common-v2/icons-ui/black/building-home/building-home-32-Regular.svg" />
-          </button>
-          {/* home-btn */}
+          <HomeBtn />
           <h2>Регистрация</h2>
           <div className="subtitle ">Зарегистрируйте ваш новый аккаунт</div>
           {/* subtitle  */}

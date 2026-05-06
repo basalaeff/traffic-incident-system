@@ -9,7 +9,7 @@ import { toast } from 'react-toastify';
 import Home from './pages/Home';
 import IncidentDetail from './pages/IncidentDetail';
 import IncidentForm from './pages/IncidentForm';
-import Login from './pages/Login';
+import Authentication from './pages/Authentication';
 import Registration from './pages/Registration';
 
 // ============================================================================
@@ -27,10 +27,21 @@ const App = () => {
     }
     // Функции для установки состояния true/false
     const handleOnline = () => {
+      toast.dismiss();
       toast.success('Подключение восстановлено!');
     };
     const handleOffline = () => {
-      toast.warn('Упс! Кажется у вас пропал интернет. Восстановите подключение к интернету!');
+      toast.warn('Упс! Кажется у вас пропал интернет. Восстановите подключение к интернету!', {
+        // закрытие по таймеру выключено
+        autoClose: false,
+        // по клику закрыть нельзя
+        closeOnClick: false,
+        // и перетаскиванием тоже
+        draggable: false,
+        // крестик убрал тоже
+        closeButton: false,
+        theme: 'dark',
+      });
     };
     // создадим трекер для проверки
     // вызовет функцию при событии
@@ -60,7 +71,7 @@ const App = () => {
         <Route path="/editing-incident/:id" element={<IncidentForm />} />
         {/* page D */}
         {/* Если http://localhost:5173/login тогда отобразится Login(); */}
-        <Route path="/login" element={<Login />} />
+        <Route path="/login" element={<Authentication />} />
         {/* page E */}
         {/* Если http://localhost:5173/create-account тогда отобразится Registration(); */}
         <Route path="/create-account" element={<Registration />} />
