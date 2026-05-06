@@ -1,11 +1,11 @@
-# traffic-incident-system
+# traffic-incidents-map-project
 
 Интерактивное одностраничное приложение (SPA), разработанное с использованием современного стека технологий React.
 
 **Клонируйте репозиторий:**
 
 ```bash
-git clone git@github.com:basalaeff/traffic-incident-system.git
+git clone git@github.com:basalaeff/traffic-incidents-map-project.git
 ```
 
 **Установка зависимостей:**
