@@ -85,4 +85,17 @@ export const FloatingActions = ({
     //  floating-btns
   );
 };
+
+export const SheetIncidentsListButton = () => {
+  <button className="floating-btn-sheet" title="Список инцидентов">
+    <div className="btns-menu">
+      <button className="circle-btn" variant="outline">
+        <img
+          src="https://s.kontur.ru/common-v2/icons-ui/black/stack-h-down/stack-h-down-32-Regular.svg"
+          alt="Список"
+        />
+      </button>
+    </div>
+  </button>;
+};
 export default FloatingActions;

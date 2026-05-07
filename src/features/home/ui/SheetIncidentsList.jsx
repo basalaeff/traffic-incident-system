@@ -1,4 +1,3 @@
-import { Button } from '@/shared/ui/button';
 import {
   Sheet,
   SheetClose,
@@ -24,13 +23,13 @@ export const SheetIncidentsList = ({
     <Sheet>
       <SheetTrigger
         render={
-          <div className="floating-btn-sheet">
+          <button className="floating-btn-sheet">
             <div className="btns-menu">
-              <button className="circle-btn" variant="outline" title="Список инцидентов">
+              <div className="circle-btn" variant="outline" title="Список инцидентов">
                 <img src="https://s.kontur.ru/common-v2/icons-ui/black/stack-h-down/stack-h-down-32-Regular.svg" />
-              </button>
+              </div>
             </div>
-          </div>
+          </button>
         }
       />
       <SheetContent>
@@ -52,9 +51,6 @@ export const SheetIncidentsList = ({
           onViewOnMap={onViewOnMap}
           onViewDetails={onViewDetails}
         />
-        <SheetFooter>
-          <SheetClose render={<Button variant="outline">Close</Button>} />
-        </SheetFooter>
       </SheetContent>
     </Sheet>
   );
