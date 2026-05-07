@@ -95,7 +95,6 @@ function IncidentForm() {
     lng,
     userId,
     id,
-    incidentId,
     setIncidentId,
     setIncident
   );
