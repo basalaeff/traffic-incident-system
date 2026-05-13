@@ -13,14 +13,14 @@ export default defineConfig({
   },
   server: {
     host: '0.0.0.0',
-    port: 5173,
+    port: 5174,
   },
   build: {
-    outDir: 'dist',
+    outDir: 'dist-admin',
     emptyOutDir: true,
     rollupOptions: {
       input: {
-        admin: './index.html',
+        admin: './index-admin.html',
       },
     },
   },

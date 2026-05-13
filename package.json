@@ -1,12 +1,14 @@
 {
-  "name": "traffic-incident-system",
+  "name": "traffic-incidents-map-project",
   "private": true,
   "version": "0.0.0",
   "type": "module",
   "scripts": {
     "dev": "vite",
+    "dev:admin": "vite --config vite.admin.config.js --open /index-admin.html",
     "server": "json-server --watch db.json --port 3001",
     "build": "vite build",
+    "build:admin": "vite build --config vite.admin.config.js",
     "lint": "eslint .",
     "preview": "vite preview"
   },
